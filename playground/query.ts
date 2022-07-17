@@ -1,3 +1,4 @@
+import { TokenRole } from './token'
 /**
  * This is a fake user system where uid is generated randomly.
  * We want it to be the same even when refreshed the page,
@@ -15,6 +16,18 @@ export function get_uid() {
   }
   console.debug("uid =", uid);
   return uid;
+}
+
+export function get_role() {
+  const query = new URLSearchParams(location.search);
+  let role = query.get("role");
+  if (!role) {
+    role = 'admin';
+    update_query({ role });
+  }
+  console.debug("role =", role);
+
+  return ((role === 'admin') ? TokenRole.Admin : ((role === 'writer') ? TokenRole.Writer : TokenRole.Reader));
 }
 
 function update_query(set: Record<string, string | undefined>) {

@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Netless App Playground</title>
 </head>
+<script>window.global = window;</script>
+<script type="module">
+    import { Buffer } from "buffer/"; // <-- no typo here ("/")
+    import process from "process";
+    import EventEmitter from "events";
+        
+    window.Buffer = Buffer;
+    window.process = process;
+    window.EventEmitter = EventEmitter;
+</script>
 <body>
   <div id="app"></div>
   <script type="module" src="/playground/main.ts"></script>

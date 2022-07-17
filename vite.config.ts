@@ -8,6 +8,14 @@ export default defineConfig(({ mode }) => ({
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
+  resolve: {
+    alias: {
+      process: "process/browser",
+      stream: "stream-browserify",
+      zlib: "browserify-zlib",
+      util: 'util'
+    }
+  },
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),

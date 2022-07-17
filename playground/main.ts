@@ -1,13 +1,22 @@
-import { createFastboard, mount, Theme } from "@netless/fastboard";
-import { get_uid } from "./query";
+import { createFastboard,mount,Theme } from "@netless/fastboard";
+import { get_role,get_uid } from "./query";
 import { registering } from "./register";
 import "./style.css";
+import { roomToken } from "./token";
 
 main().catch(console.error);
 
 async function main() {
   await registering;
-
+  const netlessRoomToken = roomToken(
+    import.meta.env.VITE_AK, // 将 Your AK 替换成你从控制台获取的 AK。
+    import.meta.env.VITE_SK, // 将 Your SK 替换成你从控制台获取的 SK。
+    0, // Token 有效时间，单位为毫秒。设为 0 时，表示永不过期。
+    {
+      role: get_role(), // Token 的权限，可选值包括 TokenRole.Admin，TokenRole.Writer，TokenRole.Reader。
+      uuid: import.meta.env.VITE_ROOM_UUID, // 填入你的房间 UUID，可通过调用服务端创建房间 API 或获取房间列表 API 获取。
+    }
+  );
   const fastboard = await createFastboard({
     sdkConfig: {
       appIdentifier: import.meta.env.VITE_APPID,
@@ -16,10 +25,10 @@ async function main() {
     joinRoom: {
       uid: get_uid(),
       uuid: import.meta.env.VITE_ROOM_UUID,
-      roomToken: import.meta.env.VITE_ROOM_TOKEN,
+      roomToken: netlessRoomToken,
+      isWritable: (get_role() === "2") ? false : true,
     },
   });
-
   const $ui = setup();
 
   const fastboardUI = mount(fastboard, $ui.$whiteboard);
@@ -30,9 +39,14 @@ async function main() {
     Object.keys(manager.apps || {}).forEach(manager.closeApp.bind(manager));
   });
 
-  $ui.onThemeChanged(theme => fastboardUI.update({ theme }));
+  $ui.onThemeChanged((theme) => fastboardUI.update({ theme }));
 
-  expose({ fastboard, room: fastboard.room, manager: fastboard.manager, ui: fastboardUI });
+  expose({
+    fastboard,
+    room: fastboard.room,
+    manager: fastboard.manager,
+    ui: fastboardUI,
+  });
 }
 
 /** Put some object in `window` for debugging. */
@@ -69,10 +83,11 @@ function setup() {
     } else {
       theme = theme === "light" ? "dark" : "light";
     }
-    themeCallbacks.forEach(fn => fn(theme));
+    themeCallbacks.forEach((fn) => fn(theme));
     document.documentElement.dataset.theme = theme;
     $themeBtn.textContent = theme[0].toUpperCase() + theme.slice(1);
-    $themeBtn.title = "Click to change to " + (theme === "light" ? "dark" : "light");
+    $themeBtn.title =
+      "Click to change to " + (theme === "light" ? "dark" : "light");
   }
   toggleTheme(prefersDark);
   prefersDark.addEventListener("change", toggleTheme);
@@ -81,6 +96,8 @@ function setup() {
   return {
     $whiteboard,
     onReset: (fn: () => void) => (onResetCallback = fn),
-    onThemeChanged: (fn: (theme: Theme) => void) => (themeCallbacks.push(fn), fn(theme)),
+    onThemeChanged: (fn: (theme: Theme) => void) => (
+      themeCallbacks.push(fn), fn(theme)
+    ),
   };
 }
