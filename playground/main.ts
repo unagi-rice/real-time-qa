@@ -26,7 +26,7 @@ async function main() {
       uid: get_uid(),
       uuid: import.meta.env.VITE_ROOM_UUID,
       roomToken: netlessRoomToken,
-      isWritable: (get_role() === "2") ? false : true,
+      isWritable: (get_role() !== "2"),
     },
   });
   const $ui = setup();
