@@ -20,7 +20,7 @@ onMounted(() =>
 );
 
 watchEffect(() => {
-  console.log("App.vue: count =", count.value);
+  console.log("ExampleCounter.vue: count =", count.value);
 });
 </script>
 <template>

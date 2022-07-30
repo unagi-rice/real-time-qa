@@ -3,7 +3,6 @@ import type { NetlessApp } from "@netless/window-manager";
 import { createApp } from "vue";
 import styles from "./style.css?inline";
 import App from "./components/App.vue";
-import ExampleCounter from "./components/ExampleCounter.vue";
 
 /**
  * Register it before joining room:

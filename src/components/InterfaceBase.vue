@@ -6,7 +6,7 @@ export interface button{
       // id:number
       text:string
       event:string
-      handler?:string
+      // handler?:string
     }
 
 interface Props{
@@ -16,8 +16,8 @@ interface Props{
 }
 const props = defineProps<Props>()
 onMounted(()=>{
-  console.log('InterfaceBase:title=',props.title);
-  console.log('InterfaceBase:tag=',props.interface_tag);
+  // console.log('InterfaceBase:title=',props.title);
+  // console.log('InterfaceBase:tag=',props.interface_tag);
   }
 )
 
@@ -35,14 +35,13 @@ onMounted(()=>{
   'header'
   'main';
   column-gap: 37px;
-  row-gap: 37px;
+  row-gap: 0px;
 }
 
 .page-header {
   height:inherit;
   width:inherit;
   grid-area: header;
-  display:flex
 }
 
 .page-leftbar {
@@ -54,7 +53,9 @@ onMounted(()=>{
   width:inherit;
   grid-area: main;
 }
-
+.header-background {
+  background-color: #2b665e;
+}
 
 .content {
   color: #242424;
@@ -69,22 +70,27 @@ onMounted(()=>{
     display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: flex-start;
   box-sizing: border-box;
   margin: 0px -10px;
 }
+.flexbox-right{
+  justify-content: right;
+}
 .title
 {
   background-color:#00ffbb;
-  
+  color:#ffffff;
 }
 .tag{
   background-color:#ffbb00;
+  color:#ffffff;
+  padding:15px 31px;
   
 }
 .button-container{
-
+float:right
 }
 .button {
   background-color:#768d87;
@@ -111,15 +117,15 @@ onMounted(()=>{
 </style>
 <template>
 <div class="grid">
-  <div class="page-header">
+  <div class="page-header flexbox header-background">
     <div class="title">
       {{props.title}}
     </div>
     <div class="interface-tag">
       {{props.interface_tag}}
     </div>
-    <div class="button-container flexbox">
-      <a href="#" class="button" v-for="button in props.buttons" @button.event="button.handler">{{button.text}}</a>
+    <div class="button-container flexbox flexbox-right">
+      <a href="#" class="button" v-for="button in props.buttons" @click="$emit(button.event)">{{button.text}}</a>
     </div>
   </div>
   <div class="page-main">

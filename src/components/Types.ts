@@ -1,5 +1,8 @@
-// 按键
 
+export enum interfaces{
+    EmptyInterface,
+    ExampleCounter
+  }
 
 
 // 题目
