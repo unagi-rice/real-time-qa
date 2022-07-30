@@ -20,17 +20,17 @@ import ExampleCounter from "./components/ExampleCounter.vue";
  * Read more about how to make a netless app here:
  * https://github.com/netless-io/window-manager/blob/master/docs/develop-app.md
  */
-const RealTimeQA: NetlessApp = {
-  kind: "RealTimeQA",
+const Counter: NetlessApp = {
+  kind: "Counter",
   setup(context) {
     const box = context.getBox();
     box.mountStyles(styles);
 
     const $content = document.createElement("div");
-    $content.className = "app-real-time-qa";
+    $content.className = "app-counter";
     box.mountContent($content);
 
-    const app = createApp(App).provide("context", context);
+    const app = createApp(ExampleCounter).provide("context", context);
 
     app.mount($content);
 
@@ -40,4 +40,4 @@ const RealTimeQA: NetlessApp = {
   },
 };
 
-export default RealTimeQA;
+export default Counter;

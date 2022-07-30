@@ -8,3 +8,7 @@ yarn.lock
 .env
 .env.local
 .yarn
+
+# TODO: delete line when submitting
+# src/index2.ts 
+# src/components/ExampleCounter.vue

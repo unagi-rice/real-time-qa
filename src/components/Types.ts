@@ -1,9 +1,14 @@
+// 按键
+
+
+
 // 题目
 // 选择题部件
 export enum objectiveQuestionType {
     Multi = "multi",                     // 选择题
     UnorderedSequence = "unordered_seq", // 多选题
     // OrderedSequence="ordered_seq"
+    
 }
 export interface objectiveAnswerContainer {
     id: number,
