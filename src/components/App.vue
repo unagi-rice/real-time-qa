@@ -13,8 +13,8 @@ import ExampleCounter from "./ExampleCounter.vue";
 // app-wide context
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
+const $globVar = ref({})
 
-// 
 const current_interface = context.createStorage("interface",{currentInterface:interfaces.EmptyInterface});
 provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
 const current_interface_displayed = ref(interfaces.EmptyInterface);
@@ -33,12 +33,12 @@ onMounted(() =>{
 watchEffect(() => {
   console.debug("App.vue: current_interface_displayed =",current_interface_displayed.value);
 });
-
+function consoleLog(s:number){console.log(s);}
 
 </script>
 <template>
-<!-- list out interfaces -->
-<EmptyInterface v-show="current_interface_displayed == interfaces.EmptyInterface"/>
-<ExampleCounter v-show="current_interface_displayed == interfaces.ExampleCounter"/>
+<!-- NOTICE: list out interfaces and their props, emitters -->
+<EmptyInterface v-if="current_interface_displayed == interfaces.EmptyInterface" @console-log="consoleLog"/>
+<ExampleCounter v-if="current_interface_displayed == interfaces.ExampleCounter"/>
 </template>
  
