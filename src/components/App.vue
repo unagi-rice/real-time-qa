@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 // dependencies
 import { AppContext ,Storage} from "@netless/window-manager";
-import { computed, inject, onMounted, provide, ref, watchEffect } from "vue";
+import { computed, inject, onBeforeMount, onMounted, provide, ref, watchEffect } from "vue";
 import {login} from "./Auth";
 import {interfaces} from "./Types"
 
 // interfaces
-import EmptyInterface from "./EmptyInterface.vue";
-import ExampleCounter from "./ExampleCounter.vue";
+import EmptyInterface from "../interfaces/EmptyInterface.vue";
+import ExampleCounter from "../interfaces/ExampleCounter.vue";
 
 
 // app-wide context
@@ -24,6 +24,7 @@ const isTeacher = computed(()=>(login(context)))
 console.debug('App.vue: isTeacher?',isTeacher)
 
 
+
 onMounted(() =>{
   current_interface.addStateChangedListener(() => {
     current_interface_displayed.value = current_interface.state.currentInterface;
@@ -36,7 +37,7 @@ watchEffect(() => {
 function consoleLog(s:number){console.log(s);}
 
 </script>
-<template>
+<template v-if="isTeacher">
 <!-- NOTICE: list out interfaces and their props, emitters -->
 <EmptyInterface v-if="current_interface_displayed == interfaces.EmptyInterface" @console-log="consoleLog"/>
 <ExampleCounter v-if="current_interface_displayed == interfaces.ExampleCounter"/>

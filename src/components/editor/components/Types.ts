@@ -52,11 +52,3 @@ export interface questionBank {
     content: question[] // question1,question2,...
 }
 
-export function updateQuestionBank(questionBank1:questionBank,qbid:number,content_in:question[]){
-    
-}
-export function updateQuestion(question1:question,qid:number){}
-export interface userType {
-    id: string;
-    questionBanks: questionBank[];
-}

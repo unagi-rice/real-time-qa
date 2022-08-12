@@ -24,10 +24,9 @@ onMounted(()=>{
 // Expose API to 
 </script>
 <style>
-/*TODO: page-header,page-main running out of plugin window*/
+
+/* TODO: fit title bar to whole window; spread title , tag , buttons evenly */
 .grid {
-  height:inherit;
-  width:inherit;
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: auto minmax(160px, auto);
@@ -37,10 +36,12 @@ onMounted(()=>{
   column-gap: 37px;
   row-gap: 0px;
 }
-
-.page-header {
+.inherit-size{
   height:inherit;
   width:inherit;
+}
+
+.page-header {
   grid-area: header;
 }
 
@@ -116,7 +117,7 @@ float:right
 }
 </style>
 <template>
-<div class="grid">
+<div class="inherit-size grid">
   <div class="page-header flexbox header-background">
     <div class="title">
       {{props.title}}
