@@ -1,11 +1,11 @@
 <!-- 界面模板 -->
 <script setup lang="ts">
 import { onMounted,inject } from 'vue';
-import InterfaceBase from './InterfaceBase.vue'
-import {button as button} from './InterfaceBase.vue';
+import InterfaceBase from '../components/InterfaceBase.vue'
+import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
-import {interfaces} from './Types';
-import { emitter } from '@netless/window-manager/dist/InternalEmitter';
+import {interfaces} from '../components/Types';
+// import { emitter } from '@netless/window-manager/dist/InternalEmitter';
 
 const title = "Empty Interface";
 const tag = "tag";
