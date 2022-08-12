@@ -2,7 +2,7 @@
 // dependencies
 import { AppContext ,Storage} from "@netless/window-manager";
 import { computed, inject, onBeforeMount, onMounted, provide, ref, watchEffect } from "vue";
-import {login} from "./Auth";
+import {login, loginTeacher, checkTeacher} from "./Auth";
 import {interfaces} from "./Types"
 
 // interfaces
@@ -18,8 +18,7 @@ const $globVar = ref({})
 const current_interface = context.createStorage("interface",{currentInterface:interfaces.EmptyInterface});
 provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
 const current_interface_displayed = ref(interfaces.EmptyInterface);
-
-const isTeacher = computed(()=>(login(context)))
+const isTeacher = computed(()=>(loginTeacher(context) && checkTeacher(context)))
 
 console.debug('App.vue: isTeacher?',isTeacher)
 
@@ -42,4 +41,3 @@ function consoleLog(s:number){console.log(s);}
 <EmptyInterface v-if="current_interface_displayed == interfaces.EmptyInterface" @console-log="consoleLog"/>
 <ExampleCounter v-if="current_interface_displayed == interfaces.ExampleCounter"/>
 </template>
- 
