@@ -8,6 +8,7 @@ yarn.lock
 .env
 .env.local
 .yarn
+.vscode
 
 # TODO: delete line when submitting
 # src/index2.ts 
