@@ -21,6 +21,11 @@ import App from "./components/App.vue";
  */
 const RealTimeQA: NetlessApp = {
   kind: "RealTimeQA",
+  config:{
+    singleton : true,
+    minwidth : 400,
+    minheight : 200,
+  },
   setup(context) {
     const box = context.getBox();
     box.mountStyles(styles);
