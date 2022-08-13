@@ -1,7 +1,8 @@
 // NOTICE: record interfaces here
 export enum interfaces{
     EmptyInterface,
-    ExampleCounter
+    ExampleCounter,
+    StatsInterface
   }
 
 

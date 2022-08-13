@@ -8,6 +8,7 @@ import {interfaces} from "./Types"
 // interfaces
 import EmptyInterface from "../interfaces/EmptyInterface.vue";
 import ExampleCounter from "../interfaces/ExampleCounter.vue";
+import StatsInterface from "../interfaces/StatsInterface.vue";
 
 
 // app-wide context
@@ -44,4 +45,5 @@ function consoleLog(s:number){console.log(s);}
 <!-- NOTICE: list out interfaces and their props, emitters -->
 <EmptyInterface v-if="current_interface_displayed == interfaces.EmptyInterface" @console-log="consoleLog"/>
 <ExampleCounter v-if="current_interface_displayed == interfaces.ExampleCounter"/>
+<StatsInterface v-if="current_interface_displayed == interfaces.StatsInterface"/>
 </template>

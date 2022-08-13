@@ -37,7 +37,7 @@ function backfun(){
 }
 function nextfun(){
     // 转换界面至ExampleCounter
-    interfaceStorage?.setState({currentInterface:interfaces.ExampleCounter})
+    interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
 function wowfun(){

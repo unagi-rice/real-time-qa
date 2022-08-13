@@ -23,16 +23,19 @@
     "@milkdown/prose": "^6.3.1",
     "@milkdown/theme-nord": "^6.3.1",
     "@milkdown/vue": "^6.3.1",
+    "apexcharts": "^3.35.4",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
+    "element-plus": "^2.2.13",
     "events": "^3.3.0",
     "process": "^0.11.10",
     "remark-directive": "^2.0.1",
     "stream-browserify": "^3.0.0",
     "util": "^0.12.4",
     "uuid": "^8.3.0",
-    "vue": "^3.2.37"
+    "vue": "^3.2.37",
+    "vue3-apexcharts": "^1.4.1"
   },
   "devDependencies": {
     "@netless/fastboard": "^0.3.3",
@@ -40,6 +43,8 @@
     "@types/node": "^14.18.22",
     "@types/uuid": "^8.3.0",
     "@vitejs/plugin-vue": "^2.3.3",
+    "unplugin-auto-import": "^0.11.1",
+    "unplugin-vue-components": "^0.22.4",
     "vite": "^2.9.10",
     "white-web-sdk": "^2.16.24"
   },
