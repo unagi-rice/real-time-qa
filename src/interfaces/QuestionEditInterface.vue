@@ -1,7 +1,6 @@
 <template>
 
-<InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @back="backfun" @publish="publishfun"
->
+<InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @preview="previewfun" @back="backfun" @publish="publishfun" @save="savefun">
 <div class=" items">
   <div class="items-body" v-for="question_i in question_list" >
     <div class="items-body-content"><span>{{question_i.question}}</span></div>
@@ -9,7 +8,14 @@
 </div>
 <!--TODO:preset=question content, onswitch:copy content to current question, onsave:copy content from question list to question set in storage-->
 <VueEditor :editor="editor"/>
+
 </InterfaceBase>
+<Teleport :to="body" >
+<div :v-if="openPreview">
+  <AnsweringNodeVue :class="{active:showPreview}" :question="rippedQuestion" @made-response="handleResponse"/>
+  <button @click="openPreview = false;" >Close</button>
+</div>
+</Teleport>
 </template>
 
 <script setup lang="ts">
@@ -46,8 +52,8 @@ const buttons:button[] = [
     event:'back'
   },
   {
-    text:'next',
-    event:'next'
+    text:'preview',
+    event:'preview'
   },
   {
     text:'publish',
@@ -101,8 +107,8 @@ function publishfun(){
 
   // 转换界面至EmptyInterface
   interfaceStorage?.setState({currentInterface:interfaces.ExampleCounter})
-  return;
   // console.debug(interfaceStorage?.state.currentInterface)
+  return;
 }
 
 
@@ -119,15 +125,12 @@ onBeforeMount(()=>{
 onMounted(()=>{
 })
 
+let openPreview = false;
 
 
-const AnswerBlock: DefineComponent = defineComponent({
-    name: 'answer-block',
-	setup(){
-    // TODO:class = answer-block whitebox
-    // TODO:slot a <Teleport @v-if="clickedPreview"/>
-    }
-});
+function handleResponse(response:any){
+  console.log('response received:',response);
+}
 
 
 

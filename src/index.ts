@@ -1,8 +1,9 @@
 import type { NetlessApp } from "@netless/window-manager";
 
-import { createApp } from "vue";
+import { createApp ,computed} from "vue";
 import styles from "./style.css?inline";
 import App from "./components/App.vue";
+import {loginTeacher, checkTeacher} from "./components/Auth";
 
 /**
  * Register it before joining room:
@@ -28,19 +29,23 @@ const RealTimeQA: NetlessApp = {
   },
   setup(context) {
     const box = context.getBox();
-    box.mountStyles(styles);
+    const isTeacher = computed(()=>(loginTeacher(context) && checkTeacher(context)))
+    if(isTeacher.value){
 
-    const $content = document.createElement("div");
-    $content.className = "app-real-time-qa";
-    box.mountContent($content);
-
-    const app = createApp(App).provide("context", context);
-
-    app.mount($content);
-
-    context.emitter.on("destroy", () => {
-      app.unmount();
-    });
+      box.mountStyles(styles);// TODO:move login to here
+      
+      const $content = document.createElement("div");
+      $content.className = "app-real-time-qa";
+      box.mountContent($content);
+      
+      const app = createApp(App).provide("context", context);
+      
+      app.mount($content);
+      
+      context.emitter.on("destroy", () => {
+        app.unmount();
+      });
+    }
   },
 };
 

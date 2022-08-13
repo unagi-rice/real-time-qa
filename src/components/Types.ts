@@ -16,17 +16,12 @@ export enum objectiveQuestionType {
 export interface objectiveAnswerContainer<choiceType = string> {
     id: number,
     type: string,       // 
-    choice: [key: choiceType], // [a,b,c,d]
+    choice: {key: choiceType}, // [a,b,c,d]
     correctAnswer: number | number[], // matching id-type
-    get getType():string;
-    set setCorrectAnswer(newAnswer:number | number[]);
     test(chosen:choiceType):boolean;
 }
-export type Choice = {
-    id: number,
-    content: string,
-    binded_content: any
-}
+
+
 export enum subjectiveQuestionType {
     FreeResponse= 'free_res',      // 文字主观题
     // GraphicResponse= 'graph_res'// 绘图主观题
@@ -35,15 +30,14 @@ export enum subjectiveQuestionType {
 export type subjectiveAnswerContainer = {
     id:number,
     type:string,
-    content:any
+    correct_answer:string | undefined
 }
 export const  questionType = {...objectiveQuestionType , ...subjectiveQuestionType};
 export type questionType = typeof questionType;
 export type answerContainer = objectiveAnswerContainer | subjectiveAnswerContainer;
 export interface question {
     id: number;
-    content: any;
-    // example: content:["text1",component,"text2"]
+    content: (string | objectiveAnswerContainer | subjectiveAnswerContainer)[];
     
 }
 export interface questionBank {

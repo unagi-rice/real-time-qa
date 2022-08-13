@@ -1,8 +1,11 @@
 <template>
   <VueEditor :editor="editor" />
+
 </template>
 
 <script setup lang="ts">
+import { Teleport } from "vue";
+import AnsweringNodeVue from "../answer/AnsweringNode.vue";
 // core
 import { VueEditor, useEditor } from "@milkdown/vue";
 import { Editor, rootCtx, defaultValueCtx,editorViewOptionsCtx  } from "@milkdown/core";
@@ -15,6 +18,7 @@ import { TextSelection } from '@milkdown/prose/state';
 import { menu,Config as MenuConfig,defaultConfig, menuPlugin } from "@milkdown/plugin-menu";
 import { history } from "@milkdown/plugin-history";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
+import AnsweringNode from "../answer/AnsweringNode.vue";
 // import { emoji } from "@milkdown/plugin-emoji";
 // import { slash } from "@milkdown/plugin-slash";
 // import { prism } from "@milkdown/plugin-prism";
@@ -44,27 +48,27 @@ const editable = ()=>!readonly;
 
 let commands:MenuConfig = defaultConfig;
 commands.push([
-{
-            type: 'select',
-            text: '插入',
-            options: [
-                { id: '1', text: '单选题' },
-                { id: '2', text: '填空题' },
-                { id: '3', text: '主观题' },
-                // { id: '0', text: 'Plain Text' },
-            ],
-            disabled: (view) => {
-                const { state } = view;
-                const heading = state.schema.nodes['heading']; // TODO: align definition with qa, see if heading is HML specific
-                if (!heading) return true;
-                const setToHeading = (level: number) => setBlockType(heading, { level })(state);
-                return (
-                    !(view.state.selection instanceof TextSelection) ||
-                    !(setToHeading(1) || setToHeading(2) || setToHeading(3))
-                );
-            },
-            onSelect: (id) => (Number(id) ? ['TurnIntoHeading', Number(id)] : ['TurnIntoText', null]), // TODO: command ['commandName', argument]
-        },
+  {
+    type: 'select',
+    text: '插入',
+    options: [
+      { id: '1', text: '单选题' },
+      { id: '2', text: '填空题' },
+      { id: '3', text: '主观题' },
+      // { id: '0', text: 'Plain Text' },
+    ],
+    disabled: (view) => {
+      const { state } = view;
+      const nodeqa = state.schema.nodes['nodeqa']; // TODO: does nodeqa exists in editorState.schema.nodes
+      if (!nodeqa) return true;
+      const insertQANode = (type: number) => setBlockType(nodeqa, { type })(state);
+      return (
+        !(view.state.selection instanceof TextSelection) ||
+        !(insertQANode(1) || insertQANode(2) || insertQANode(3))
+      );
+    },
+    onSelect: (id) => (Number(id) ? ['TurnIntoHeading', Number(id)] : ['TurnIntoText', null]), // TODO: command ['commandName', argument]
+  },
 ])
 
 const { editor } = useEditor((root) =>

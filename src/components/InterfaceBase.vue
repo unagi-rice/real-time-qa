@@ -50,8 +50,8 @@ onMounted(()=>{
 }
 
 .page-main {
-  height:inherit;
-  width:inherit;
+  height:100%;
+  width:100%;
   grid-area: main;
 }
 .header-background {
@@ -81,10 +81,12 @@ onMounted(()=>{
 }
 .title
 {
+  text-align: left;
   background-color:#00ffbb;
   color:#ffffff;
 }
 .tag{
+  text-align: left;
   background-color:#ffbb00;
   color:#ffffff;
   padding:15px 31px;
@@ -104,7 +106,9 @@ float:right
   color:#ffffff;
   font-family:Verdana;
   font-size:17px;
-  padding:15px 31px;
+
+  /* margin:0.5em 1em; */
+  padding:0.5em 1em;
   text-decoration:none;
   text-shadow:-3px -3px 50px #2b665e;
 }
