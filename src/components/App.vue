@@ -1,30 +1,49 @@
-<template>
-  <button @click="count++">{{ count }}</button>
-</template>
-
 <script lang="ts" setup>
-import type { AppContext } from "@netless/window-manager";
+// dependencies
+import { AppContext ,Storage} from "@netless/window-manager";
+import { computed, inject, onBeforeMount, onMounted, provide, ref, watchEffect } from "vue";
+import {loginTeacher, checkTeacher} from "./Auth";
+import {interfaces} from "./Types"
 
-import { computed, inject, onMounted, ref, watchEffect } from "vue";
+// interfaces
+import EmptyInterface from "../interfaces/EmptyInterface.vue";
+import ExampleCounter from "../interfaces/ExampleCounter.vue";
+import StatsInterface from "../interfaces/StatsInterface.vue";
 
+
+// app-wide context
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
+const $globVar = ref({})
 
-const storage = context.createStorage("counter", { count: 0 });
-const real_count = ref(storage.state.count);
+const current_interface = context.createStorage("interface",{currentInterface:interfaces.EmptyInterface});
+provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
+const current_interface_displayed = ref(interfaces.EmptyInterface);
 
-const count = computed<number>({
-  get: () => real_count.value,
-  set: (count) => storage.setState({ count }),
-});
 
-onMounted(() =>
-  storage.addStateChangedListener(() => {
-    real_count.value = storage.state.count;
+const isTeacher = computed(()=>(loginTeacher(context) && checkTeacher(context)))
+
+console.debug('App.vue: isTeacher?',isTeacher.value)
+
+onBeforeMount(()=>{
+  
+})
+
+onMounted(() =>{
+  current_interface.addStateChangedListener(() => {
+    current_interface_displayed.value = current_interface.state.currentInterface;
   })
-);
+});
 
 watchEffect(() => {
-  console.log("App.vue: count =", count.value);
+  console.debug("App.vue: current_interface_displayed =",current_interface_displayed.value);
 });
+function consoleLog(s:number){console.log(s);}
+
 </script>
+<template v-if="isTeacher">
+<!-- NOTICE: list out interfaces and their props, emitters -->
+<EmptyInterface v-if="current_interface_displayed == interfaces.EmptyInterface" @console-log="consoleLog"/>
+<ExampleCounter v-if="current_interface_displayed == interfaces.ExampleCounter"/>
+<StatsInterface v-if="current_interface_displayed == interfaces.StatsInterface"/>
+</template>

@@ -1,3 +1,7 @@
 {
-  "cSpell.words": ["fastboard", "nocheck"]
+  "cSpell.words": [
+    "fastboard",
+    "nocheck"
+  ],
+  "editor.tabSize": 2
 }

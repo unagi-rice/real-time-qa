@@ -11,7 +11,7 @@ async function main() {
   const netlessRoomToken = roomToken(
     import.meta.env.VITE_AK, // 将 Your AK 替换成你从控制台获取的 AK。
     import.meta.env.VITE_SK, // 将 Your SK 替换成你从控制台获取的 SK。
-    0, // Token 有效时间，单位为毫秒。设为 0 时，表示永不过期。
+    3600000, // Token 有效时间，单位为毫秒。设为 0 时，表示永不过期。
     {
       role: get_role(), // Token 的权限，可选值包括 TokenRole.Admin，TokenRole.Writer，TokenRole.Reader。
       uuid: import.meta.env.VITE_ROOM_UUID, // 填入你的房间 UUID，可通过调用服务端创建房间 API 或获取房间列表 API 获取。
