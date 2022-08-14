@@ -14,12 +14,27 @@ export enum objectiveQuestionType {
     // OrderedSequence="ordered_seq"
     
 }
-export interface objectiveAnswerContainer<choiceType = string> {
-    id: number,
-    type: string,       // 
-    choice: {key: choiceType}, // [a,b,c,d]
-    correctAnswer: number | number[], // matching id-type
-    test(chosen:choiceType):boolean;
+export class objectiveAnswerContainer<choiceType = string> {
+    id: number;
+    type: string;       // 
+    choice: {key: choiceType}; // [a,b,c,d]
+    correctAnswer: number | number[]; // matching id-type
+    public markdown()
+    {
+        let 
+        return`\`\`\`qa-objective
+id:${this.id}
+type:${this.type}
+choice:${}
+`;}
+
+    
+    constructor(init:{id:number,type:string,choice:{key:choiceType},correctAnswer: number | number[]})
+    {
+        [this.id,this.type,this.choice,this.correctAnswer] = [init.id,init.type,init.choice,init.correctAnswer];
+
+    }
+
 }
 
 

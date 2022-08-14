@@ -18,8 +18,8 @@ const buttons: button[] = [
     event: "back",
   },
   {
-    text: "next",
-    event: "next",
+    text: "stat",
+    event: "stat",
   },
   {
     text: "wow",
@@ -115,9 +115,11 @@ const chartOptions = {
     :interface_tag="tag"
     :buttons="buttons"
     @back="backfun"
-    @next="nextfun"
+    @stat="nextfun"
     @wow="loginTeacher(context) && checkTeacher(context)"
   >
+  <el-container>
+
     <el-row type="flex" justify="center">
       <el-space fill direction="vertical" style="width: 85%">
         <el-card class="box-card">
@@ -156,5 +158,6 @@ const chartOptions = {
         </el-card>
       </el-space>
     </el-row>
+  </el-container>
   </InterfaceBase>
 </template>

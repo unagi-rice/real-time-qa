@@ -35,6 +35,8 @@ const props = defineProps<{
   modelValue: string;
 }>();
 
+// add listener for modelValue to editor.action(replaceAll(props.modelValue,true)) when it changes
+
 const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
 }>(); // TODO: output current content, input current content
