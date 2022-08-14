@@ -18,8 +18,7 @@ const props = defineProps<Props>()
 onMounted(()=>{
   // console.log('InterfaceBase:title=',props.title);
   // console.log('InterfaceBase:tag=',props.interface_tag);
-  }
-)
+})
 
 // Expose API to 
 </script>
@@ -36,13 +35,14 @@ onMounted(()=>{
   column-gap: 37px;
   row-gap: 0px;
 }
-.inherit-size{
-  height:inherit;
-  width:inherit;
+.full-fit-size{
+  height:100%;
+  width:100%;
 }
 
 .page-header {
   grid-area: header;
+
 }
 
 .page-leftbar {
@@ -74,28 +74,34 @@ onMounted(()=>{
   justify-content: flex-end;
   align-items: flex-start;
   box-sizing: border-box;
-  margin: 0px -10px;
 }
 .flexbox-right{
   justify-content: right;
 }
+.title-container{
+  
+  flex-grow: 3;
+}
 .title
 {
   text-align: left;
-  background-color:#00ffbb;
+  flex-grow: 3;
   color:#ffffff;
+  max-width:90%;
+  height: 100%;
 }
-.tag{
-  text-align: left;
-  background-color:#ffbb00;
+.interface-tag{
+  text-align: right;
+  flex-grow: 1;
+  /* background-color:#ffffff; */
   color:#ffffff;
-  padding:15px 31px;
+  max-width:10%;
+  height: 100%;
+  
   
 }
-.button-container{
-float:right
-}
-.button {
+
+el-button{
   background-color:#768d87;
   -webkit-border-radius:28px;
   -moz-border-radius:28px;
@@ -104,7 +110,6 @@ float:right
   display:inline-block;
   cursor:pointer;
   color:#ffffff;
-  font-family:Verdana;
   font-size:17px;
 
   /* margin:0.5em 1em; */
@@ -113,28 +118,37 @@ float:right
   text-shadow:-3px -3px 50px #2b665e;
 }
 .button:hover {
- background-color:#6c7c7c;
+  background-color:#6c7c7c;
 }
 .button:active {
- position:relative;
- top:1px;
+  position:relative;
+  top:1px;
+}
+.title-container > div{
+  padding:15px 31px;
+}
+.page-header > button{
+  margin:15px 0px;
+}
+*{
+  font-family: 'PingFang SC';
 }
 </style>
 <template>
-<div class="inherit-size grid">
-  <div class="page-header flexbox header-background">
-    <div class="title">
-      {{props.title}}
+<el-container type="common-layout" class="full-fit-size ">
+  <el-header>
+    <div class="page-header flexbox header-background">
+      <div class="title-container flexbox flexbox-right">
+        
+        <div class="title">{{props.title}}</div>
+      <div class="interface-tag">{{props.interface_tag}}</div>
+      </div>
+        <el-button type="primary" class="button" v-for="button in props.buttons" @click="$emit(button.event)">{{button.text}}
+        </el-button>
     </div>
-    <div class="interface-tag">
-      {{props.interface_tag}}
-    </div>
-    <div class="button-container flexbox flexbox-right">
-      <a href="#" class="button" v-for="button in props.buttons" @click="$emit(button.event)">{{button.text}}</a>
-    </div>
-  </div>
-  <div class="page-main">
+  </el-header>
+  <el-main class="page-main">
     <slot/>
-  </div>
-</div>
+  </el-main>
+</el-container>
 </template>
