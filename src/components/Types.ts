@@ -2,7 +2,9 @@
 export enum interfaces{
     EmptyInterface,
     ExampleCounter,
-    StatsInterface
+    StatsInterface,
+    QuestionEditInterface,
+    QuestionAnswerInterface,
   }
 
 
@@ -17,21 +19,14 @@ export enum objectiveQuestionType {
 export class objectiveAnswerContainer<choiceType = string> {
     id: number;
     type: string;       // 
-    choice: {key: choiceType}; // [a,b,c,d]
+    choices: {[key:string]: choiceType}; // [a,b,c,d] 
     correctAnswer: number | number[]; // matching id-type
-    public markdown()
-    {
-        let 
-        return`\`\`\`qa-objective
-id:${this.id}
-type:${this.type}
-choice:${}
-`;}
+    // public markdown(){}
 
     
     constructor(init:{id:number,type:string,choice:{key:choiceType},correctAnswer: number | number[]})
     {
-        [this.id,this.type,this.choice,this.correctAnswer] = [init.id,init.type,init.choice,init.correctAnswer];
+        [this.id,this.type,this.choices,this.correctAnswer] = [init.id,init.type,init.choice,init.correctAnswer];
 
     }
 
@@ -43,28 +38,73 @@ export enum subjectiveQuestionType {
     // GraphicResponse= 'graph_res'// 绘图主观题
 }
 // 主观题部件
-export type subjectiveAnswerContainer = {
-    id:number,
-    type:string,
-    correct_answer:string | undefined
+export class subjectiveAnswerContainer{
+    id:number;
+    type:string;
+    correctAnswer:string | undefined;
+
+    constructor(init:{id:number, type:string, correctAnswer: string | undefined}){
+        this.id = init.id;
+        this.type = init.type;
+        this.correctAnswer = init.correctAnswer;
+    }
 }
 export const  questionType = {...objectiveQuestionType , ...subjectiveQuestionType};
 export type questionType = typeof questionType;
 export type answerContainer = objectiveAnswerContainer | subjectiveAnswerContainer;
+
 export interface question {
     id: number;
     content: (string | objectiveAnswerContainer | subjectiveAnswerContainer)[];
-    
 }
+
+export function defaultTestObjQuestion(id: number = 0) {
+    let newQuestion = <question>{id: id, content:[
+                "你的老婆是谁？",
+                {
+                    id: id, 
+                    type: objectiveQuestionType.Multi,
+                    choice: ["两仪式", 
+                             "两仪式 ❤", 
+                             "两仪式 ❤❤", 
+                             "两仪式 ❤❤❤"],
+                    correctAnswer: 3 
+            },
+            ]};
+    return newQuestion;
+}
+
+
+export function maskObjQuestionAns(q: question) {
+    if (q.content[1] instanceof objectiveAnswerContainer ){
+        q.content[1].correctAnswer = -1;
+        console.log("mask correctAnswer of objectiveAnswerContainer");
+    } else if (q.content[1] instanceof subjectiveAnswerContainer){
+        q.content[1].correctAnswer = "";
+        console.log("mask correctAnswer of subjectiveAnswerContainer");
+    }
+}
+
 export interface questionBank {
     id: number;
     title: string;
     content: question[] // question1,question2,...
+
 }
 
-export function updateQuestionBank(questionBank1:questionBank,qbid:number,content_in:question[]){
+export function defaultTestQuestionBank() {
+    let newQuestionBank = <questionBank>{
+        id: 0,
+        title: "TestBank",
+        content: [defaultTestObjQuestion(0), defaultTestObjQuestion(1), defaultTestObjQuestion(2)]
+    }
+    return newQuestionBank
+}
+
+export function updateQuestionBank(questionBank1:questionBank, qbid:number,content_in:question[]){
     
 }
+
 export function updateQuestion(question1:question,qid:number){}
 export interface userType {
     id: string;
