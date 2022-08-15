@@ -1,6 +1,7 @@
 {
   "include": ["playground", "src"],
   "compilerOptions": {
+    "jsx": "preserve",
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
@@ -8,6 +9,6 @@
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "types": ["vite/client"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
   }
 }
