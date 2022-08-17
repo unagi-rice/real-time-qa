@@ -1,8 +1,11 @@
+import {v1 as getuuid} from 'uuid'
+
 // NOTICE: record interfaces here
 export enum interfaces{
     EmptyInterface,
     ExampleCounter,
     StatsInterface,
+    IndividualStatsInterface,
     QuestionEditInterface,
     QuestionAnswerInterface,
     MainInterface,
@@ -12,10 +15,12 @@ export enum interfaces{
 // 题目
 // 选择题部件
 export enum objectiveQuestionType {
-    Multi = "multi",                     // 选择题
-    UnorderedSequence = "unordered_seq", // 多选题
+    Multi,           // 选择题
+    UnorderedSequence, // 多选题
+    // OrderedSequence="ordered_seq"
+    FillBlank, // 填空题
     
-}
+  }
 type objectiveAnswerKeyType = (number | string)
 
 export interface objectiveAnswerContainer {
@@ -83,25 +88,35 @@ export function defaultTestObjQuestion(id: number = 0) {
                 {
                     id: id, 
                     type: objectiveQuestionType.Multi,
-                    choice: ["两仪式", 
-                             "两仪式 ❤", 
-                             "两仪式 ❤❤", 
-                             "两仪式 ❤❤❤"],
+                    choice: {1:"两仪式", 
+                             2:"两仪式 ❤", 
+                             3:"两仪式 ❤❤", 
+                             4:"两仪式 ❤❤❤"},
                     correctAnswer: 3 
             },
             ]};
     return newQuestion;
 }
 
-
+// hide correctAnswer of answerContainer when previewing question
 export function maskObjQuestionAns(q: question) {
-    if (q.content[1] instanceof objectiveAnswerContainer ){
-        q.content[1].correctAnswer = -1;
-        console.log("mask correctAnswer of objectiveAnswerContainer");
-    } else if (q.content[1] instanceof subjectiveAnswerContainer){
-        q.content[1].correctAnswer = "";
-        console.log("mask correctAnswer of subjectiveAnswerContainer");
-    }
+    q.content.forEach(
+        (value)=>{
+            if (typeof value === 'string')return value;
+            if (value.type === objectiveQuestionType[objectiveQuestionType.Multi])
+            {
+                const newValue:objectiveAnswerKeyType = typeof (value as multiChoice).correctAnswer === 'string' ? '' : -1;
+                (value as multiChoice).correctAnswer = newValue;
+            }
+            else if (value.type === objectiveQuestionType[objectiveQuestionType.FillBlank])
+            {
+                const newValue:objectiveAnswerKeyType = '';
+                (value as fillBlank).correctAnswer = newValue;
+            }
+            // else if (value.type === )
+        }
+    )
+    
 }
 
 export interface questionBank {
@@ -111,14 +126,11 @@ export interface questionBank {
 
 }
 
-export function defaultTestQuestionBank() {
-    let newQuestionBank = <questionBank>{
+export const defaultTestQuestionBank=(()=>  ({
         id: 0,
         title: "TestBank",
         content: [defaultTestObjQuestion(0), defaultTestObjQuestion(1), defaultTestObjQuestion(2)]
-    }
-    return newQuestionBank
-}
+    } as questionBank));
 
 export function updateQuestionBank(questionBank1:questionBank, qbid:number,content_in:question[]){
     
