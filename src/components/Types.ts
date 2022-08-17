@@ -86,10 +86,10 @@ export function defaultTestObjQuestion(id: number = 0) {
                 {
                     id: id, 
                     type: objectiveQuestionType.Multi,
-                    choice: ["两仪式", 
-                             "两仪式 ❤", 
-                             "两仪式 ❤❤", 
-                             "两仪式 ❤❤❤"],
+                    choice: {1:"两仪式", 
+                             2:"两仪式 ❤", 
+                             3:"两仪式 ❤❤", 
+                             4:"两仪式 ❤❤❤"},
                     correctAnswer: 3 
             },
             ]};
