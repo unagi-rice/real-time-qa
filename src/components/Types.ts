@@ -1,3 +1,5 @@
+import {v1 as getuuid} from 'uuid'
+
 // NOTICE: record interfaces here
 export enum interfaces{
     EmptyInterface,
