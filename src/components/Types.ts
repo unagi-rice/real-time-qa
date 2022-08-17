@@ -96,7 +96,26 @@ export function defaultTestObjQuestion(id: number = 0) {
     return newQuestion;
 }
 
-
+// hide correctAnswer of answerContainer when previewing question
+export function maskObjQuestionAns(q: question) {
+    q.content.forEach(
+        (value)=>{
+            if (typeof value === 'string')return value;
+            if (value.type === objectiveQuestionType[objectiveQuestionType.Multi])
+            {
+                const newValue:objectiveAnswerKeyType = typeof (value as multiChoice).correctAnswer === 'string' ? '' : -1;
+                (value as multiChoice).correctAnswer = newValue;
+            }
+            else if (value.type === objectiveQuestionType[objectiveQuestionType.FillBlank])
+            {
+                const newValue:objectiveAnswerKeyType = '';
+                (value as fillBlank).correctAnswer = newValue;
+            }
+            // else if (value.type === )
+        }
+    )
+    
+}
 
 export interface questionBank {
     id: number;
