@@ -5,6 +5,7 @@ export enum interfaces{
     StatsInterface,
     QuestionEditInterface,
     QuestionAnswerInterface,
+    MainInterface,
   }
 
 

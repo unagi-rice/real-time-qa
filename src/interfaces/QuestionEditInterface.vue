@@ -1,6 +1,13 @@
 <template>
 
-<InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @preview="previewfun" @back="backfun" @publish="publishfun" @save="savefun">
+<InterfaceBase class="container" 
+  :title="title" 
+  :interface_tag="tag" 
+  :buttons="buttons" 
+  @preview="previewfun"
+  @back="backfun" 
+  @publish="publishfun" 
+  @save="savefun">
 <el-container type="common layout">
 
 </el-container>

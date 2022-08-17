@@ -5,15 +5,13 @@ import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
 import {interfaces} from '../components/Types';
-import {loginTeacher, checkTeacher} from '../components/Auth'
-// import { emitter } from '@netless/window-manager/dist/InternalEmitter';
 
-const title = "Empty Interface";
+const title = "Main Interface";
 const tag = "tag";
 const buttons:button[] = [
     {
-        text:'back',
-        event:'back'
+        text:'edit',
+        event:'edit'
     },
     {
         text:'next',
@@ -43,7 +41,14 @@ function nextfun(){
 function wowfun(){
     alert('WOW!');
 }
-
+function editfun(){
+    interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
+    console.debug(interfaceStorage?.state.currentInterface)
+}
+function createfun(){
+    interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
+    console.debug(interfaceStorage?.state.currentInterface)
+}
 const emit = defineEmits<{
 (e:'console-log',id:number):void
 // usage: emit('console-log',3) to pass 3 to parent component in event 'console-log'
@@ -62,13 +67,43 @@ onMounted(()=>{
 传入
 @back, @next为以上buttons中所定义的事件event，backfun、nextfun为事件的处理函数
 -->
-<InterfaceBase :title="title" :interface_tag="tag" :buttons="buttons" 
-@back="backfun" @next="nextfun" @wow="loginTeacher(context) && checkTeacher(context)">
+    <InterfaceBase 
+        :title="title" 
+        :interface_tag="tag" 
+        :buttons="buttons" 
+        @edit="editfun" 
+        @create="createfun" >
 
+        <el-container>
 
+    <el-row type="flex" justify="center">
+      <el-space fill direction="vertical" style="width: 85%">
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <span>题目 #1： 你的老婆是谁？</span>
+            </div>
+          </template>
+        </el-card>
 
-<h1>Lorem Ipsum</h1><br/>
-<span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <span>题目 #2： 你的老婆是谁？</span>
+            </div>
+          </template>
+        </el-card>
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <span>题目 #3： 最希望成为谁的老公 / 老婆</span>
+            </div>
+          </template>
+        </el-card>
+      </el-space>
+    </el-row>
+  </el-container>
 
-</InterfaceBase>
+    </InterfaceBase>
+
 </template>
