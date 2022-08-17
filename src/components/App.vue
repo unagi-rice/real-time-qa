@@ -9,6 +9,7 @@ import {interfaces} from "./Types"
 import EmptyInterface from "../interfaces/EmptyInterface.vue";
 import ExampleCounter from "../interfaces/ExampleCounter.vue";
 import StatsInterface from "../interfaces/StatsInterface.vue";
+import IndividualStatsInterface from "../interfaces/IndStatsInterface.vue";
 
 
 // app-wide context
@@ -46,4 +47,5 @@ function consoleLog(s:number){console.log(s);}
 <EmptyInterface v-if="current_interface_displayed == interfaces.EmptyInterface" @console-log="consoleLog"/>
 <ExampleCounter v-if="current_interface_displayed == interfaces.ExampleCounter"/>
 <StatsInterface v-if="current_interface_displayed == interfaces.StatsInterface"/>
+<IndividualStatsInterface v-if="current_interface_displayed == interfaces.IndividualStatsInterface"/>
 </template>

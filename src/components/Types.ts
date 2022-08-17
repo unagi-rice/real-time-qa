@@ -5,6 +5,7 @@ export enum interfaces{
     EmptyInterface,
     ExampleCounter,
     StatsInterface,
+    IndividualStatsInterface,
     QuestionEditInterface,
     QuestionAnswerInterface,
   }
