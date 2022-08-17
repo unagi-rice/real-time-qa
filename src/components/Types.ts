@@ -13,41 +13,59 @@ export enum interfaces{
 export enum objectiveQuestionType {
     Multi = "multi",                     // 选择题
     UnorderedSequence = "unordered_seq", // 多选题
-    // OrderedSequence="ordered_seq"
     
 }
-export class objectiveAnswerContainer<choiceType = string> {
-    id: number;
-    type: string;       // 
-    choices: {[key:string]: choiceType}; // [a,b,c,d] 
-    correctAnswer: number | number[]; // matching id-type
-    // public markdown(){}
+type objectiveAnswerKeyType = (number | string)
 
+export interface objectiveAnswerContainer {
+    readonly id: string,
+    readonly type: string,     // 
+    choice?: {[key :objectiveAnswerKeyType]:string}, // [a:content1,b,c,d]
+    correctAnswer: objectiveAnswerKeyType | objectiveAnswerKeyType[], // matching id-type
+    set setCorrectAnswer(newAnswer:objectiveAnswerKeyType | objectiveAnswerKeyType[]);
+    test(chosen:objectiveAnswerKeyType | objectiveAnswerKeyType[]):boolean;
+}
+export class multiChoice implements objectiveAnswerContainer{
+    readonly id = getuuid();
+    readonly type = objectiveQuestionType[objectiveQuestionType.Multi];
+    choice:{[key :objectiveAnswerKeyType]:string} = {}
+    correctAnswer: objectiveAnswerKeyType = '';
     
-    constructor(init:{id:number,type:string,choice:{key:choiceType},correctAnswer: number | number[]})
-    {
-        [this.id,this.type,this.choices,this.correctAnswer] = [init.id,init.type,init.choice,init.correctAnswer];
-
+    set setCorrectAnswer(newAnswer: objectiveAnswerKeyType) {
+      if (this.choice[newAnswer] !== undefined)
+      {
+        this.correctAnswer = newAnswer;
+      }
     }
+    test(chosen:objectiveAnswerKeyType){
+      return chosen == this.correctAnswer;
+    }
+  }
+  export class fillBlank implements objectiveAnswerContainer{
+    readonly id = getuuid();
+    readonly type = objectiveQuestionType[objectiveQuestionType.FillBlank];
+    correctAnswer: string = '';
+    
+    set setCorrectAnswer(newAnswer: string) {
+      // TODO: determine if need to let teacher read the answer
+        this.correctAnswer = newAnswer;
+    }
+    test(chosen:string){
+      return chosen == this.correctAnswer;
+    }
+  }
 
-}
 
 
 export enum subjectiveQuestionType {
     FreeResponse= 'free_res',      // 文字主观题
-    // GraphicResponse= 'graph_res'// 绘图主观题
 }
 // 主观题部件
-export class subjectiveAnswerContainer{
-    id:number;
-    type:string;
-    correctAnswer:string | undefined;
-
-    constructor(init:{id:number, type:string, correctAnswer: string | undefined}){
-        this.id = init.id;
-        this.type = init.type;
-        this.correctAnswer = init.correctAnswer;
-    }
+// 主观题部件
+export interface subjectiveAnswerContainer <contentType=string>{
+  readonly id:number,
+  readonly type:string,
+  marking:(answer:contentType)=>boolean
 }
 export const  questionType = {...objectiveQuestionType , ...subjectiveQuestionType};
 export type questionType = typeof questionType;
