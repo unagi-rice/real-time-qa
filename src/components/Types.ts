@@ -13,10 +13,12 @@ export enum interfaces{
 // 题目
 // 选择题部件
 export enum objectiveQuestionType {
-    Multi = "multi",                     // 选择题
-    UnorderedSequence = "unordered_seq", // 多选题
+    Multi,           // 选择题
+    UnorderedSequence, // 多选题
+    // OrderedSequence="ordered_seq"
+    FillBlank, // 填空题
     
-}
+  }
 type objectiveAnswerKeyType = (number | string)
 
 export interface objectiveAnswerContainer {
@@ -95,15 +97,6 @@ export function defaultTestObjQuestion(id: number = 0) {
 }
 
 
-export function maskObjQuestionAns(q: question) {
-    if (q.content[1] instanceof objectiveAnswerContainer ){
-        q.content[1].correctAnswer = -1;
-        console.log("mask correctAnswer of objectiveAnswerContainer");
-    } else if (q.content[1] instanceof subjectiveAnswerContainer){
-        q.content[1].correctAnswer = "";
-        console.log("mask correctAnswer of subjectiveAnswerContainer");
-    }
-}
 
 export interface questionBank {
     id: number;
@@ -112,14 +105,11 @@ export interface questionBank {
 
 }
 
-export function defaultTestQuestionBank() {
-    let newQuestionBank = <questionBank>{
+export const defaultTestQuestionBank=(()=>  ({
         id: 0,
         title: "TestBank",
         content: [defaultTestObjQuestion(0), defaultTestObjQuestion(1), defaultTestObjQuestion(2)]
-    }
-    return newQuestionBank
-}
+    } as questionBank));
 
 export function updateQuestionBank(questionBank1:questionBank, qbid:number,content_in:question[]){
     
