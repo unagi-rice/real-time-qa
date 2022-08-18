@@ -10,6 +10,8 @@ import EmptyInterface from "../interfaces/EmptyInterface.vue";
 import ExampleCounter from "../interfaces/ExampleCounter.vue";
 import StatsInterface from "../interfaces/StatsInterface.vue";
 
+import MainInterfaceVue from "../interfaces/MainInterface.vue";
+
 
 // app-wide context
 const context = inject<AppContext>("context");
