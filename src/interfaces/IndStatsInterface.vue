@@ -18,8 +18,8 @@ const buttons: button[] = [
     event: "back",
   },
   {
-    text: "stat",
-    event: "stat",
+    text: "next",
+    event: "next",
   },
   {
     text: "wow",
@@ -37,13 +37,15 @@ console.debug(
   interfaceStorage.state.currentInterface
 );
 function backfun() {
-  // 转换界面至 EmptyInterface
-  interfaceStorage?.setState({ currentInterface: interfaces.EmptyInterface });
+  // 转换界面至 StatsInterface
+  interfaceStorage?.setState({ currentInterface: interfaces.StatsInterface });
   console.debug(interfaceStorage?.state.currentInterface);
 }
 function nextfun() {
   // 转换界面至 IndividualStatsInterface
-  interfaceStorage?.setState({ currentInterface: interfaces.IndividualStatsInterface });
+  interfaceStorage?.setState({
+    currentInterface: interfaces.IndividualStatsInterface,
+  });
   console.debug(interfaceStorage?.state.currentInterface);
 }
 function wowfun() {
@@ -59,48 +61,8 @@ onMounted(() => {
   console.debug("emptyInterface.vue:tag=", tag);
   emit("console-log", 4);
 });
-const tableData = [
-  {
-    response: "两仪式",
-  },
-  {
-    response: "两仪式 ❤",
-  },
-];
-const series = [
-  {
-    data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380],
-  },
-];
-const chartOptions = {
-  chart: {
-    type: "bar",
-    height: 350,
-  },
-  plotOptions: {
-    bar: {
-      borderRadius: 4,
-      horizontal: true,
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  xaxis: {
-    categories: [
-      "两仪式",
-      "两仪式 ❤",
-      "两仪式 ❤❤",
-      "两仪式 ❤❤❤",
-      "两仪式 ❤❤❤❤",
-      "两仪式 ❤❤❤❤❤",
-      "两仪式 ❤❤❤❤❤❤",
-      "两仪式 ❤❤❤❤❤❤❤",
-      "两仪式 ❤❤❤❤❤❤❤❤",
-      "两仪式 ❤❤❤❤❤❤❤❤❤",
-    ],
-  },
-};
+
+const inputQns1 = "两仪式";
 </script>
 
 <!--定义展示的模块-->
@@ -115,11 +77,32 @@ const chartOptions = {
     :interface_tag="tag"
     :buttons="buttons"
     @back="backfun"
-    @stat="nextfun"
+    @next="nextfun"
     @wow="loginTeacher(context) && checkTeacher(context)"
   >
-  <el-container>
-
+    <el-row type="flex" justify="center">
+      <el-col :span="8"
+        >
+        <el-select
+          v-model="value"
+          class="m-2"
+          placeholder="User"
+          size="default"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-col>
+      <el-col :span="12">
+        <div class="slider-demo-block">
+          <el-slider v-model="value" show-input />
+        </div>
+      </el-col>
+    </el-row>
     <el-row type="flex" justify="center">
       <el-space fill direction="vertical" style="width: 85%">
         <el-card class="box-card">
@@ -128,20 +111,7 @@ const chartOptions = {
               <span>题目 #1： 你的老婆是谁？</span>
             </div>
           </template>
-          <el-table :data="tableData" stripe style="width: 100%">
-            <el-table-column prop="response" label="Response" />
-          </el-table>
-        </el-card>
-
-        <el-card class="box-card">
-          <template #header>
-            <div class="card-header">
-              <span>题目 #2： 你的老婆是谁？</span>
-            </div>
-          </template>
-          <el-table :data="tableData" stripe style="width: 100%">
-            <el-table-column prop="response" label="Response" />
-          </el-table>
+          <el-input v-model="inputQns1" readonly />
         </el-card>
         <el-card class="box-card">
           <template #header>
@@ -149,15 +119,35 @@ const chartOptions = {
               <span>题目 #3： 最希望成为谁的老公 / 老婆</span>
             </div>
           </template>
-          <VueApexCharts
-            type="bar"
-            height="350"
-            :options="chartOptions"
-            :series="series"
-          ></VueApexCharts>
+          <div style="text-align: center; display: block">
+            <el-radio-group v-model="radio1" class="radioDiv">
+              <div>
+                <el-radio label="1" size="large">Option 1</el-radio>
+              </div>
+              <div>
+                <el-radio label="2" size="large">Option 2</el-radio>
+              </div>
+            </el-radio-group>
+          </div>
         </el-card>
       </el-space>
     </el-row>
-  </el-container>
   </InterfaceBase>
 </template>
+
+<style scoped>
+.slider-demo-block {
+  display: flex;
+  align-items: center;
+}
+.slider-demo-block .el-slider {
+  margin-top: 0;
+  margin-left: 15px;
+}
+.radioDiv {
+  display: table;
+  width: auto;
+  margin: 0 auto;
+  text-align: left;
+}
+</style>
