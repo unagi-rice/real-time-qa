@@ -1,12 +1,18 @@
 <template>
-
 <InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @preview="previewfun" @back="backfun" @publish="publishfun" @save="savefun">
 <el-container type="common layout">
+<<<<<<< HEAD
 <Transition>
   <div id="list-container" v-show="largeWindow || !editingQuestion" >
     <el-card v-for="ques in questions" shadow="hover">{{ques.markdown()}}</el-card>
   </div>
 </Transition>
+=======
+
+</el-container>
+<div>
+</div>
+>>>>>>> 963ec096d791103dd52a09544a5f2b26518f7aef
 <!--TODO:preset=question content, onswitch:copy content to current question, onsave:copy content from question list to question set in storage-->
 <VueEditor :editor="editor" :modelValue="question"/>
 </el-container>

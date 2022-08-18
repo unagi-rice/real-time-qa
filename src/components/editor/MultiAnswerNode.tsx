@@ -9,6 +9,9 @@ import { Node } from 'prosemirror-model';
 VueNodeContainer
 
 </script>
-<template>
 
+
+<template>
+<div>
+  
 </template>

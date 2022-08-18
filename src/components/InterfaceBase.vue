@@ -130,6 +130,7 @@ onMounted(()=>{
   padding:0 6px 0 0;
 }
 </style>
+
 <template>
 <el-container type="common-layout" class="full-fit-size ">
   <el-header>
