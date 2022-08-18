@@ -27,17 +27,20 @@ const buttons:button[] = [
 ]
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
-const interfaceStorage= inject<Storage<{currentInterface:interfaces}>>("interface");
-if (!interfaceStorage) throw new Error("must call provide('interface') before mount App");
+const interfaceStorage = 
+    inject<Storage<{currentInterface:interfaces}>>("interface");
+if (!interfaceStorage) 
+    throw new Error("must call provide('interface') before mount App");
+
 console.debug('EmptyInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
 function backfun(){
     // 转换界面至EmptyInterface
-    interfaceStorage?.setState({currentInterface:interfaces.EmptyInterface})
+    interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
 function nextfun(){
     // 转换界面至ExampleCounter
-    interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
+    interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
 function wowfun(){
@@ -51,7 +54,7 @@ const emit = defineEmits<{
 onMounted(()=>{
     console.debug('emptyInterface.vue:title=',title);
   console.debug('emptyInterface.vue:tag=',tag);
-  emit('console-log',4);
+  emit('console-log',0);
   })
 </script>
 

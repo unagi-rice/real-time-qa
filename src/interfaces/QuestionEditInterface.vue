@@ -1,9 +1,9 @@
 <template>
-
 <InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @preview="previewfun" @back="backfun" @publish="publishfun" @save="savefun">
 <el-container type="common layout">
 
 </el-container>
+<div>
 </div>
 <!--TODO:preset=question content, onswitch:copy content to current question, onsave:copy content from question list to question set in storage-->
 <VueEditor :editor="editor"/>

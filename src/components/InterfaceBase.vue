@@ -134,6 +134,7 @@ el-button{
   font-family: 'PingFang SC';
 }
 </style>
+
 <template>
 <el-container type="common-layout" class="full-fit-size ">
   <el-header>
