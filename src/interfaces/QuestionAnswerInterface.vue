@@ -3,7 +3,7 @@ import { ref,onMounted,inject,provide,defineComponent,DefineComponent, onBeforeM
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
-import {interfaces,question as Question, questionBank as QuestionBank, defaultTestQuestionBank, userType} from '../components/Types';
+import {interfaces,question as Question, questionBank as QuestionBank, defaultTestQuestionBank, userType,objectiveAnswerContainer} from '../components/Types';
 import {getQuestionBank} from '../components/utils/user'
 import { Props } from 'unist-util-is';
 import { createStructuralDirectiveTransform } from '@vue/compiler-core';
@@ -77,7 +77,8 @@ onMounted(()=>{
 <InterfaceBase
         :title="title" 
         :interface_tag="tag" 
-        :buttons="buttons" @back="backfun" @next="nextfun" @wow="loginTeacher(context) && checkTeacher(context)">
+        :buttons="buttons" @back="backfun" @next="nextfun" >
+        <h1>Hello World</h1>
 <!--
 <el-container>
 

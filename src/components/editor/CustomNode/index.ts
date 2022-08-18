@@ -2,11 +2,6 @@
 
 import { AtomList } from '@milkdown/utils';
 
-import { QANode } from './node';
+export  { iframe3 } from './node';
 
-export * from './remark-qa';
 
-export const qanode = AtomList.create([QANode()]);
-
-export type { Options } from './node';
-export { InsertQA } from './node';

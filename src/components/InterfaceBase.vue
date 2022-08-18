@@ -101,7 +101,7 @@ onMounted(()=>{
   
 }
 
-el-button{
+.el-button{
   background-color:#768d87;
   -webkit-border-radius:28px;
   -moz-border-radius:28px;
@@ -117,13 +117,6 @@ el-button{
   text-decoration:none;
   text-shadow:-3px -3px 50px #2b665e;
 }
-.button:hover {
-  background-color:#6c7c7c;
-}
-.button:active {
-  position:relative;
-  top:1px;
-}
 .title-container > div{
   padding:15px 31px;
 }
@@ -132,6 +125,9 @@ el-button{
 }
 *{
   font-family: 'PingFang SC';
+}
+.el-header,.el-main{
+  padding:0 6px 0 0;
 }
 </style>
 <template>

@@ -3,14 +3,14 @@
 
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { Teleport } from "vue";
 import AnsweringNodeVue from "../answer/AnsweringNode.vue";
 // core
-import { VueEditor, useEditor } from "@milkdown/vue";
+import { VueEditor, useEditor ,RenderVue} from "@milkdown/vue";
 import { Editor, rootCtx, defaultValueCtx,editorViewOptionsCtx  } from "@milkdown/core";
 import { nord } from "@milkdown/theme-nord";
-import { commonmark } from "@milkdown/preset-commonmark";
+import { commonmark ,paragraph} from "@milkdown/preset-commonmark";
 import { setBlockType } from '@milkdown/prose/commands';
 import { TextSelection } from '@milkdown/prose/state';
 
@@ -19,6 +19,7 @@ import { menu,Config as MenuConfig,defaultConfig, menuPlugin } from "@milkdown/p
 import { history } from "@milkdown/plugin-history";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import AnsweringNode from "../answer/AnsweringNode.vue";
+import { question as Question } from "../Types";
 // import { emoji } from "@milkdown/plugin-emoji";
 // import { slash } from "@milkdown/plugin-slash";
 // import { prism } from "@milkdown/plugin-prism";
@@ -31,8 +32,11 @@ import AnsweringNode from "../answer/AnsweringNode.vue";
 
 // import "prismjs/themes/prism.css";
 
+// qa nodes
+import { AtomList } from "@milkdown/utils";
+
 const props = defineProps<{
-  modelValue: string;
+  modelValue: Question;
 }>();
 
 // add listener for modelValue to editor.action(replaceAll(props.modelValue,true)) when it changes
@@ -40,13 +44,13 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
 }>(); // TODO: output current content, input current content
-
+AtomList
 let output = '';
 let jsonOutput = {};
 let readonly = false;
 const editable = ()=>!readonly;
 
-
+const hi = <div/>
 
 let commands:MenuConfig = defaultConfig;
 commands.push([
@@ -72,6 +76,8 @@ commands.push([
     onSelect: (id) => (Number(id) ? ['TurnIntoHeading', Number(id)] : ['TurnIntoText', null]), // TODO: command ['commandName', argument]
   },
 ])
+
+
 
 const { editor } = useEditor((root) =>
   Editor.make()
@@ -102,12 +108,13 @@ const { editor } = useEditor((root) =>
 
     })
     .use(nord)
+    .use(commonmark)
+    .use(menu.configure(menuPlugin,{config:commands,}))
+    
+    .use(history)
     // .use(emoji)
     // .use(slash)
-    .use(commonmark)
     // .use(menu)
-    .use(menu.configure(menuPlugin,{config:commands,}))
-    .use(history)
     // .use(prism)
     // .use(tooltip)
     // .use(indent)

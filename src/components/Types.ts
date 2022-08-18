@@ -97,24 +97,26 @@ export function defaultTestObjQuestion(id: number = 0) {
 }
 
 // hide correctAnswer of answerContainer when previewing question
-export function maskObjQuestionAns(q: question) {
-    q.content.forEach(
-        (value)=>{
-            if (typeof value === 'string')return value;
+export function maskObjQuestionAns(question_in: question):question {
+    let question_out:question = structuredClone(question_in);
+    question_out.content.forEach(
+        (value,index)=>{
+            if (typeof value === 'string')return;
             if (value.type === objectiveQuestionType[objectiveQuestionType.Multi])
             {
-                const newValue:objectiveAnswerKeyType = typeof (value as multiChoice).correctAnswer === 'string' ? '' : -1;
-                (value as multiChoice).correctAnswer = newValue;
+                const newValue:objectiveAnswerKeyType = typeof (question_out.content[index] as multiChoice).correctAnswer === 'string' ? '' : -1;
+                (question_out.content[index] as multiChoice).correctAnswer = newValue;
             }
             else if (value.type === objectiveQuestionType[objectiveQuestionType.FillBlank])
             {
                 const newValue:objectiveAnswerKeyType = '';
-                (value as fillBlank).correctAnswer = newValue;
+                (question_out.content[index] as fillBlank).correctAnswer = newValue;
             }
-            // else if (value.type === )
+            // else if (value.type === objectiveQuestionType[objectiveQuestionType.UnorderedSequence])
+            // set correctAnswer []
         }
     )
-    
+    return question_out;
 }
 
 export interface questionBank {
