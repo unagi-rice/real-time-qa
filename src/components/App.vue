@@ -11,6 +11,7 @@ import ExampleCounter from "../interfaces/ExampleCounter.vue";
 import StatsInterface from "../interfaces/StatsInterface.vue";
 import MainInterface from "../interfaces/MainInterface.vue";
 import IndividualStatsInterface from "../interfaces/IndStatsInterface.vue";
+import QuestionAnswerInterface from "../interfaces/QuestionAnswerInterface.vue";
 
 
 // app-wide context
@@ -50,4 +51,5 @@ function consoleLog(s:number){console.log(s);}
 <ExampleCounter v-if="current_interface_displayed == interfaces.ExampleCounter"/>
 <StatsInterface v-if="current_interface_displayed == interfaces.StatsInterface"/>
 <IndividualStatsInterface v-if="current_interface_displayed == interfaces.IndividualStatsInterface"/>
+<QuestionAnswerInterface v-if="current_interface_displayed == interfaces.QuestionAnswerInterface"/>
 </template>

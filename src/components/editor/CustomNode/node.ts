@@ -1,208 +1,149 @@
-// TODO: create a node which alert()
-// TODO: make it run
-// TODO: change to <Teleport> from vue
-// TODO: move back to real-time-qa code
-/* Copyright 2021, Milkdown by Mirone. */
-import { createCmd, createCmdKey, themeManagerCtx,type ThemeInnerEditorType, type RemarkPlugin,createSlice } from '@milkdown/core';
-import { expectDomTypeError } from '@milkdown/exception';
-import { setBlockType } from '@milkdown/prose/commands';
-import { InputRule } from '@milkdown/prose/inputrules';
-import { NodeSelection } from '@milkdown/prose/state';
-import type { NodeView } from '@milkdown/prose/view';
-import { createNode } from '@milkdown/utils';
-import type { MilkdownPlugin } from '@milkdown/core';
-import { stringLiteral } from '@babel/types';
+import {createCmd, createSlice, editorViewCtx, EditorViewReady, type MilkdownPlugin, type RemarkPlugin } from "@milkdown/core";
+import { AtomList, createNode, type NodeCreator, type UnknownRecord } from "@milkdown/utils";
+import { commonmark } from "@milkdown/preset-commonmark";
+import { nord } from "@milkdown/theme-nord";
+import { listener, listenerCtx } from "@milkdown/plugin-listener";
+import { InputRule } from "prosemirror-inputrules";
+import type { Fragment, Node } from '@milkdown/prose/model';
+import type { RenderVue } from "@milkdown/vue";
+
 import directive from "remark-directive";
-import type {  Node } from '@milkdown/prose/model';
-import { customAlphabet } from 'nanoid';
+import {InsertSmth} from '.';
 
-import {remarkQA} from '.';
-import {getStyle} from './style';
+import "./style.css";
+import { setBlockType } from "prosemirror-commands";
+import { inject } from "vue";
+import type { question } from "../Types";
 
-import {type question  as Question,type questionBank,questionType,type answerContainer, objectiveQuestionType} from '../components/Types'
+// TODO: question types
 
-const nanoid = customAlphabet('abcedfghicklmn', 10);
+const id = "QANode";
 
-const getId = (node?: Node) => node?.attrs?.['identity'] || nanoid();
-
-// import 
-
-// import { getStyle } from './style';
-// import { getId } from './utility';
-
-const inputRegex = /^```qa$/;
+export class smljClass{
+  member=3;
+  needShow=false;
+  show(){this.needShow = !this.needShow}
+  Alert(){alert('greeting from smljClass')}
+}
 
 
-export type Options = {
-    placeholder: {
-        empty: string;
-        error: string;
+
+export function myAlert(){
+  // const injectedValue = inject<question>('') 
+}
+export const EditorSlice = createSlice(new smljClass(),'smljState')
+
+
+export const QANode:(view:ReturnType<RenderVue<Node>>)=>NodeCreator<string,UnknownRecord> = (view)=>createNode((utils,options) => ({
+  id,
+  schema: function(ctx) {
+    const editor = ctx.get(EditorSlice);
+    function toggleNeedShow(){
+      // alert('test')
+      editor.needShow = !(editor.needShow)
+      console.debug(editor);
+      // editor.Alert();
     };
-    // theme: mermaidAPI.Theme;
-    // themeCSS: string;
-};
-export const InsertQA = createCmdKey('InsertQA');
-const questionState = createSlice({id:0,content:[]},'questions')
-
-export const QANode = createNode<string,Options>((utils,options)=>{
-    // const theme = options?.theme ?? undefined;
-    // const themeCSS = options?.themeCSS ?? undefined;
-
-    const id = 'QANode';
-
-    const placeholder = {
-        empty: 'Empty',
-        error: 'Error',
-        ...(options?.placeholder ?? {}),
-    };
-
-    return {// format can be found
-        id,
-        schema: (ctx) => {
-            const currQuestionState = ctx.get(questionState);
-            return {// format can be found in ProseMirror Reference manual https://prosemirror.net/docs/ref/#model.NodeSpec
-            content: 'block+',
-            group: 'inline',
-            marks: '',
-            defining: true,
-            atom: true,
-            isolating: true,
-            attrs: {
-                type: {default:questionType.FreeResponse},// 
-                identity: {// to identify component
-                    default: '',
-                },
-                question:{default:''},
-                
-            },
-            // method to parse DOM into attr
-            // TODO: 
-            parseDOM: [
-                {
-                    tag: `div[data-type="${id}"]`,
-                    preserveWhitespace: 'full',
-                    getAttrs: (dom) => {
-                        if (!(dom instanceof HTMLElement)) {
-                            throw expectDomTypeError(dom);
-                        }
-                        return {
-                            type:'',
-                            identity: dom.id,
-                            question: dom.dataset['question'],
-                        };
-                    },
-                },
-            ],
-            // CORE, can be used with vue component,return type: DOMOutputSpec
-            toDOM: (node) => {
-                const identity = getId(node);
-                
-                return [
-                    'div',
-                    {
-                        id: identity,
-                        class: utils.getClassName(node.attrs, 'mermaid'),
-                        'data-type': id,
-                        'data-question': node.attrs['question'] || node.textContent || '', 
-                    },
-                    0,
-                ];
-            },
-            // TODO: 
-            parseMarkdown: {
-                match: ({ type }) => type === id,
-                runner: (state, node, type) => {
-                    const question = node['question'] as string;
-                    state.openNode(type, { question });
-                    if (question) {
-                        state.addText(question);// just put raw text
-                        
-                    }
-                    state.closeNode();
-                },
-            },
-            toMarkdown: {
-                match: (node) => node.type.name === id,
-                runner: (state, node) => {
-                    state.addNode('code', undefined, node.content.firstChild?.text || '', { lang: 'real-time-qa' });
-                },
-            },
-        }},
-        commands: (nodeType) => [createCmd(InsertQA, () => setBlockType(nodeType, { id: getId() }))],
-        // used to define node view for the plugin.
-        view: (ctx) => (node, view, getPos) => {
-            const currentId = node.type;
-            let header = '';
-            let currNode = node;
-
-            const nodeId = getId(currNode);
-            
-            // TODO: HTMLElement for question
-            class qaNodeHTML{
-                element:HTMLElement|'';
-                questions: questionType[];
-                constructor (){
-                    this.element = ''
-                    this.questions = []
-                }
-
+    return {
+      attrs: {
+        question: { default: '' }
+      },
+      group: "inline",
+      inline: true,
+      marks: "",
+      atom: true,
+      parseDOM: [
+        {
+          tag: "div",
+          getAttrs: (dom) => {
+            if (!(dom instanceof HTMLElement)) {
+              throw new Error();
             }
-
-            const qaNodeHTML_instance = new qaNodeHTML;
-
-            
-            const renderer = utils.themeManager.get('qa', {
-                view,
-                getPos,
-                editable: () => view.editable,
-                render: (code:JSON) => {
-                    try {
-                        if (!code) {
-                            renderer.preview.innerHTML = placeholder.empty;
-                        } else {
-                            renderer.preview.innerHTML = qaNodeHTML_instance.render;
-                        }
-                    } catch {
-                        const error = document.getElementById('d' + currentId);
-                        if (error) {
-                            error.remove();
-                        }
-                        renderer.preview.innerHTML = placeholder.error;
-                    } finally {
-                        renderer.dom.appendChild(renderer.preview);
-                    }
-                },
-            });
-            if (!renderer) return {} as NodeView;
-
-            const { dom, contentDOM, onUpdate, onDestroy } = renderer;
-            onUpdate(currNode);
-            
             return {
-                dom,
-                contentDOM,
-                update: (updatedNode) => {
-                    if (updatedNode.type.name !== id) return false; // only update node with same type
-                    currNode = updatedNode;
-                    onUpdate(currNode);
-                    return true;
-                },
-                destroy: onDestroy,
+              src:"hi",
+              question: dom.getAttribute("question")
             };
-        },
-        //  trigger by typing and make node
-        // inputRules: (nodeType) => [
-        //     new InputRule(inputRegex, (state, _match, start, end) => {
-        //         //
-        //         const $start = state.doc.resolve(start);
-        //         if (!$start.node(-1).canReplaceWith($start.index(-1), $start.indexAfter(-1), nodeType)) return null;
-        //         const tr = state.tr.delete(start, end).setBlockType(start, start, nodeType, { id: getId() });
+          },
+          // getContent: get HTMLContent
+        }
+      ],
+      toDOM: (node) => {
+        const button = document.createElement('div');
+        button.classList.add(id);
+        button.innerHTML = 'clickMe';
+        button.onclick = ()=>{
+          toggleNeedShow();
+          myAlert();
+        }
+        const editorBox = document.createElement('div');
+        editorBox.onchange = (e)=>{
+          const target = e.target;
+          if (!(target instanceof HTMLSelectElement))
+            return;
+          const view = ctx.get(editorViewCtx);
+          if (!view.editable) {
+            target.value = node.attrs['language'];
+            return;
+          }
 
-        //         return tr.setSelection(NodeSelection.create(tr.doc, start - 1));
-        //     }),
-        // ],
-        remarkPlugins: () => [directive as RemarkPlugin],
-    };
-});
+          const { top, left } = target.getBoundingClientRect();
+          const result = view.posAtCoords({ top, left });
+          if (!result) return;
+
+          const { tr } = view.state;
+
+          view.dispatch(
+            tr.setNodeMarkup(result.inside, undefined, {
+                ...node.attrs,
+            }),
+          );
+        }
+        return {
+          dom:button,
+          contentDOM:editorBox
+        }
+        },
+      parseMarkdown: {
+        match: (node) => {
+          return node.type === "textDirective" && node.name === id;
+        },
+        runner: (state, node, type) => {
+          state.addNode(type, { question: (node.attributes as { question: string }).question });
+        }
+      },
+      // TODO: change 
+      toMarkdown: {
+        match: (node) => node.type.name === id,
+        runner: (state, node) => {
+          state.addNode("textDirective", undefined, undefined, {
+            name: id,
+            attributes: {
+              question: node.attrs.question
+            }
+          });
+        }
+      }
+  }},
+  inputRules: (nodeType) => [
+    new InputRule(
+      /\$iframe\{question="(?<question>[^"]+)?"?\]/,
+      (state, match, start, end) => {
+        const [okay, question = ""] = match;
+        const { tr } = state;
+        if (okay) {
+          tr.replaceWith(start, end, nodeType.create({ question }));
+        }
+
+        return tr;
+      }
+    )
+  ],
+  commands: (nodeType) => [createCmd(InsertSmth, () => setBlockType(nodeType))],
+
+  remarkPlugins: () => [directive as RemarkPlugin],
+  view:(ctx)=>{
+    return view(ctx);
+  }
+}),[EditorSlice]);
 
 
