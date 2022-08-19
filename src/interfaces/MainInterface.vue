@@ -5,6 +5,7 @@ import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
 import {interfaces} from '../components/Types';
+import { ArrowDownBold, Delete, Edit, Histogram } from '@element-plus/icons-vue';
 
 const title = "Main Interface";
 const tag = "tag";
@@ -14,8 +15,8 @@ const buttons:button[] = [
         event:'edit'
     },
     {
-        text:'next',
-        event:'next'
+        text:'create',
+        event:'create'
     },
     {
         text:'wow',
@@ -67,43 +68,51 @@ onMounted(()=>{
 传入
 @back, @next为以上buttons中所定义的事件event，backfun、nextfun为事件的处理函数
 -->
-    <InterfaceBase 
-        :title="title" 
-        :interface_tag="tag" 
-        :buttons="buttons" 
-        @edit="editfun" 
-        @create="createfun" >
+  <InterfaceBase 
+    :title="title" 
+    :interface_tag="tag" 
+    :buttons="buttons" 
+    @edit="editfun" 
+    @create="createfun" >
 
-        <el-container>
-
-    <el-row type="flex" justify="center">
-      <el-space fill direction="vertical" style="width: 85%">
-        <el-card class="box-card">
+    <el-container>
+      <el-space wrap>
+        <el-card v-for="i in 10" :key="i" class="box-card" style="width: 750px">
+          
           <template #header>
             <div class="card-header">
-              <span>题目 #1： 你的老婆是谁？</span>
+              <el-row justify="space-between" align="middle">
+                <span>{{ 'Test ' + i }}</span>
+                <el-button-group class="ml-4">
+                  <el-button class="button" text bg type="primary">Preview</el-button>
+                  <el-button class="button" text bg type="primary">Edit</el-button>
+                  <el-button class="button" text bg type="primary">Publish</el-button>
+                  <el-button class="button" text bg type="primary">Statistics</el-button>
+                  <el-button class="button" text bg type="danger">Delete</el-button>
+                </el-button-group>
+              </el-row>
             </div>
           </template>
-        </el-card>
 
-        <el-card class="box-card">
-          <template #header>
-            <div class="card-header">
-              <span>题目 #2： 你的老婆是谁？</span>
-            </div>
-          </template>
-        </el-card>
-        <el-card class="box-card">
-          <template #header>
-            <div class="card-header">
-              <span>题目 #3： 最希望成为谁的老公 / 老婆</span>
-            </div>
-          </template>
+          <div v-for="o in 3" :key="o" class="text item">
+            <el-card class="box-card">
+              <el-row justify="space-between" align="middle">
+                <el-col :span="18">
+                  <span>{{ 'Question ' + o }}</span>
+                </el-col>
+                <el-button-group class="ml-4">
+                  <el-button type="primary"><el-icon color="#FFFFFF"><Edit /></el-icon></el-button>
+                  <el-button type="primary"><el-icon color="#FFFFFF"><Histogram /></el-icon></el-button>
+                  <el-button type="danger" ><el-icon color="#FFFFFF"><Delete /></el-icon></el-button>
+                </el-button-group>
+              </el-row>
+            </el-card>
+          </div>
+          <el-row justify="center" align="top">
+            <el-button bg :icon="ArrowDownBold">More</el-button>
+          </el-row>
         </el-card>
       </el-space>
-    </el-row>
-  </el-container>
-
-    </InterfaceBase>
-
+    </el-container>
+  </InterfaceBase>
 </template>

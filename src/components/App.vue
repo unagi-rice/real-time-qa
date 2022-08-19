@@ -9,8 +9,8 @@ import {interfaces} from "./Types"
 import EmptyInterface from "../interfaces/EmptyInterface.vue";
 import ExampleCounter from "../interfaces/ExampleCounter.vue";
 import StatsInterface from "../interfaces/StatsInterface.vue";
-
-import MainInterfaceVue from "../interfaces/MainInterface.vue";
+import MainInterface from "../interfaces/MainInterface.vue";
+import IndividualStatsInterface from "../interfaces/IndStatsInterface.vue";
 
 
 // app-wide context
