@@ -14,7 +14,6 @@ import { method } from 'lodash';
 import { init } from '../components/editor/CustomNode/shim';
 
 const title = "Question Answering";
-const tag = "tag";
 const buttons: button[] = [
     {
         text: 'Last Question',
@@ -53,16 +52,25 @@ const props = withDefaults(defineProps<Props>(), {
 interface QAStorage {
     pageid: number;
     answerBank: AnswerBank;
+    tag: string
 }
 
-const storage = context.createStorage<QAStorage>("QAInterface", { pageid: 0, answerBank:initAnswerBank(getUid(context), props.questionBank)})
+const storage = context.createStorage<QAStorage>("QAInterface", { 
+    pageid: 0, 
+    answerBank:initAnswerBank(getUid(context), props.questionBank),
+    tag: "1 / " + props.questionBank.content.length.toString()})
 const real_pageid = ref(storage.state.pageid);
 const real_ansBank = ref(storage.state.answerBank);
+const real_tag = ref(storage.state.tag);
 
 const pageid = computed<number>({
     get: () => real_pageid.value,
-    set: (pageid) => storage.setState({ pageid }),
+    set: (pageid) => {
+        storage.setState({ pageid:pageid, tag:(pageid+1).toString() + " / " + props.questionBank.content.length.toString()});
+        // storage.setState({tag: pageid.toString() + " / " + props.questionBank.content.length.toString()});
+    },
 });
+
 
 
 function backfun() {
@@ -72,6 +80,7 @@ function backfun() {
     }
     else {
         console.debug("Invalid backward. CurId=", pageid)
+        console.debug('QuestionAnswerInterface.vue.tag=', real_tag);
     }
 }
 
@@ -82,7 +91,7 @@ function nextfun() {
     }
     else {
         console.debug("Invalid forward[1]. CurId=", pageid)
-        console.debug("Invalid forward[2]. CurId=", pageid)
+        console.debug('QuestionAnswerInterface.vue.tag=', real_tag);
     }
 }
 
@@ -93,16 +102,17 @@ function finishfun() {
 onMounted(() => {
     storage.addStateChangedListener(() => {
         real_pageid.value = storage.state.pageid;
+        real_tag.value = storage.state.tag;
     })
     console.debug('QuestionAnswerInterface.vue.title=', title);
-    console.debug('QuestionAnswerInterface.vue.title=', tag);
+    console.debug('QuestionAnswerInterface.vue.title=', real_tag);
 })
 
 </script>
 
 <template>
 
-    <InterfaceBase :title="title" :interface_tag="tag" :buttons="buttons" @back="backfun" @next="nextfun"
+    <InterfaceBase :title="title" :interface_tag="real_tag" :buttons="buttons" @back="backfun" @next="nextfun"
         @wow="loginTeacher(context) && checkTeacher(context)">
         <div v-for="(c, index) in props.questionBank.content[pageid].content">
             <el-card class="box-card">
@@ -122,7 +132,7 @@ onMounted(() => {
                 <div v-if="c instanceof unorderedSequenceChoice">
                     <el-checkbox-group v-model="real_ansBank.content[pageid].content[index]">
                         <div v-for="(cc, cidx) in (c as unorderedSequenceChoice).choice">
-                            <el-checkbox :label=cidx>
+                            <el-checkbox :label=cidx border>
                                 {{cc}}
                             </el-checkbox>
                         </div>
@@ -132,3 +142,21 @@ onMounted(() => {
         </div>
     </InterfaceBase>
 </template>
+
+<style>
+.el-radio-group{
+    display: table;
+}
+.el-radio{
+    margin-bottom: 2px;
+    width: 100%;
+}
+
+.el-checkbox-group{
+    display: table;
+}
+.el-checkbox{
+    margin-bottom: 2px;
+    width: 100%;
+}
+</style>
