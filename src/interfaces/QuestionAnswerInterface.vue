@@ -102,28 +102,7 @@ onMounted(() => {
 
 <template>
 
-<<<<<<< HEAD
-<InterfaceBase
-        :title="title" 
-        :interface_tag="tag" 
-        :buttons="buttons" @back="backfun" @next="nextfun" >
-        <h1>Hello World</h1>
-<!--
-<el-container>
 
-    <el-card class="box-card">
-        <template #header>
-            <div class="card-header">
-                <span>question.</span>
-            </div>
-        </template>
-    </el-card>
-    
-</el-container>
--->
-</InterfaceBase>
-</template>
-=======
     <InterfaceBase :title="title" :interface_tag="tag" :buttons="buttons" @back="backfun" @next="nextfun"
         @wow="loginTeacher(context) && checkTeacher(context)">
         <div v-for="(c, index) in props.questionBank.content[pageid].content">
@@ -154,4 +133,3 @@ onMounted(() => {
         </div>
     </InterfaceBase>
 </template>
->>>>>>> 963ec096d791103dd52a09544a5f2b26518f7aef

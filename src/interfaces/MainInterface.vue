@@ -46,8 +46,8 @@ function editfun(){
     interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
-function createfun(){
-    interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
+function statsfun(){
+    interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
 const emit = defineEmits<{
@@ -73,7 +73,8 @@ onMounted(()=>{
     :interface_tag="tag" 
     :buttons="buttons" 
     @edit="editfun" 
-    @create="createfun" >
+    @create="backfun" 
+    @wow="wowfun">
 
     <el-container>
       <el-space wrap>
@@ -87,7 +88,7 @@ onMounted(()=>{
                   <el-button class="button" text bg type="primary">Preview</el-button>
                   <el-button class="button" text bg type="primary">Edit</el-button>
                   <el-button class="button" text bg type="primary">Publish</el-button>
-                  <el-button class="button" text bg type="primary">Statistics</el-button>
+                  <el-button class="button" text bg type="primary" @click="statsfun">Statistics</el-button>
                   <el-button class="button" text bg type="danger">Delete</el-button>
                 </el-button-group>
               </el-row>
@@ -109,7 +110,7 @@ onMounted(()=>{
             </el-card>
           </div>
           <el-row justify="center" align="top">
-            <el-button bg :icon="ArrowDownBold">More</el-button>
+            <el-button class="button" bg text><el-icon color="#39393A"><ArrowDownBold /></el-icon></el-button>
           </el-row>
         </el-card>
       </el-space>

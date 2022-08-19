@@ -12,6 +12,10 @@ const title = "Empty Interface";
 const tag = "tag";
 const buttons:button[] = [
     {
+        text:'main',
+        event:'main'
+    },
+    {
         text:'back',
         event:'back'
     },
@@ -43,6 +47,11 @@ function nextfun(){
     interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
+function mainfun(){
+    // 转换界面至ExampleCounter
+    interfaceStorage?.setState({currentInterface:interfaces.MainInterface})
+    console.debug(interfaceStorage?.state.currentInterface)
+}
 function wowfun(){
     alert('WOW!');
 }
@@ -66,7 +75,7 @@ onMounted(()=>{
 @back, @next为以上buttons中所定义的事件event，backfun、nextfun为事件的处理函数
 -->
 <InterfaceBase :title="title" :interface_tag="tag" :buttons="buttons" 
-@back="backfun" @next="nextfun" @wow="loginTeacher(context) && checkTeacher(context)">
+@back="backfun" @next="nextfun" @wow="loginTeacher(context) && checkTeacher(context)" @main="mainfun">
 
 
 
