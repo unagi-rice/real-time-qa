@@ -78,17 +78,17 @@ onMounted(()=>{
 
     <el-container>
       <el-space wrap>
-        <el-card v-for="i in 10" :key="i" class="box-card" style="width: 750px">
-          
+        <el-card v-for="i in 10" :key="i" class="box-card" style="width: 785px">
+        
           <template #header>
             <div class="card-header">
               <el-row justify="space-between" align="middle">
                 <span>{{ 'Test ' + i }}</span>
                 <el-button-group class="ml-4">
-                  <el-button class="button" text bg type="primary">Preview</el-button>
-                  <el-button class="button" text bg type="primary">Edit</el-button>
-                  <el-button class="button" text bg type="primary">Publish</el-button>
-                  <el-button class="button" text bg type="primary" @click="statsfun">Statistics</el-button>
+                  <!-- <el-button class="button" text bg type="primary">Preview</el-button> -->
+                  <el-button class="button" text bg >Edit</el-button>
+                  <el-button class="button" text bg >Publish</el-button>
+                  <el-button class="button" text bg @click="statsfun">Statistics</el-button>
                   <el-button class="button" text bg type="danger">Delete</el-button>
                 </el-button-group>
               </el-row>
@@ -102,8 +102,8 @@ onMounted(()=>{
                   <span>{{ 'Question ' + o }}</span>
                 </el-col>
                 <el-button-group class="ml-4">
-                  <el-button type="primary"><el-icon color="#FFFFFF"><Edit /></el-icon></el-button>
-                  <el-button type="primary"><el-icon color="#FFFFFF"><Histogram /></el-icon></el-button>
+                  <el-button type="success"><el-icon color="#FFFFFF"><Edit /></el-icon></el-button>
+                  <el-button type="success"><el-icon color="#FFFFFF"><Histogram /></el-icon></el-button>
                   <el-button type="danger" ><el-icon color="#FFFFFF"><Delete /></el-icon></el-button>
                 </el-button-group>
               </el-row>
