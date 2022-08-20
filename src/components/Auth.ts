@@ -21,6 +21,16 @@ export function login(context: AppContext): boolean {
   console.log("Auth.ts:", uid, "login successfully");
   return room.isWritable;
 }
+
+/**
+ * case 1: as the first writable member call this function, 
+ *    caller's UID will be recorded as teacher and is able to access
+ *    question editing features of this app
+ * case 2: else, UID of the caller will be recorded as student,
+ *    and can only make answering response when a QA session is published by teacher
+ * @param context AppContext provided by root component of app
+ * @returns true
+ */
 export function loginTeacher(context: AppContext): boolean {
   const uid = getUid(context);
   const defaultState:AuthSnapshot = { teacher: [], student: [] };
@@ -33,28 +43,34 @@ export function loginTeacher(context: AppContext): boolean {
   storage.setState(tempState);
   return true;
 }
-export function checkTeacher(context: AppContext): boolean {
+
+/**
+ * 
+ * @param context AppContext provided by root component of app
+ * @returns 
+ */
+export function checkTeacher(context: AppContext): boolean { // TODO: return void
   const uid = getUid(context);
   const storage = context.createStorage<AuthSnapshot>("TeacherStudent");
   console.log(JSON.stringify(storage.state));
   if(storage.state.teacher[0] === uid) return true;
   else return false;
 }
-export function makeAuthSnapshot(
-  context: AppContext | undefined
-): AuthSnapshot {
-  let result: AuthSnapshot;
-  let room = context?.getRoom();
-  if (room)
-    // for all members in this room,
-    room.state.roomMembers.forEach((member) => {
-      const uid = member.memberId;
-      // TODO:no api available to access other member's writability
-      // if is writable, add into teacher
-      // if is not writable, add into student
-    });
+
+/**
+ * called when window is closed(onDestroy)
+ * @param context AppContext provided by root component of app
+ */
+export function logoutTeacher(context: AppContext): void {
+  const uid = getUid(context);
+  const isTeacher:boolean = checkTeacher(context);
+  const storage = context.createStorage<AuthSnapshot>("TeacherStudent", defaultState);
+  let tempState = structuredClone(storage.state);
+  if (storage.state.teacher.length === 0) throw new Error("room is already empty, logout failed");
+  if(isTeacher)tempState.teacher.remove(uid);
+  if(storage.state.teacher[0] !== uid && !storage.state.student.includes(uid)) 
+    tempState.student.remove(uid);
+  storage.setState(tempState);
 }
-  
-  // can non writable user view modal and 
-  // TODO: restoreAuthSnapshot
+
 

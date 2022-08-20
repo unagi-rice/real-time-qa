@@ -2,11 +2,10 @@
 
 import { AtomList } from '@milkdown/utils';
 
-import { QANode } from './node';
+export  * from './node';
 
-export * from './remark-qa';
+export * from './command'
 
-export const qanode = AtomList.create([QANode()]);
 
-export type { Options } from './node';
-export { InsertQA } from './node';
+
+// TODO: create AtomList here

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { inject, defineComponent, DefineComponent } from 'vue';
 import { Editor, rootCtx } from '@milkdown/core';
 import { VueEditor, useEditor} from '@milkdown/vue';
