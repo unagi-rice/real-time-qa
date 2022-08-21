@@ -1,4 +1,4 @@
-import {v1 as getuuid} from 'uuid'
+import { v1 as getuuid } from 'uuid';
 /** 全部界面 */
 export enum interfaces{
     EmptyInterface,
@@ -116,9 +116,17 @@ export interface answer {
 
 // 答案库，又称“答卷”
 export interface answerBank {
-  uid: string; 
+  uid: string;
   qid: string;
   content: answer[];
+}
+
+export interface QAStorage {
+  pageid: number;
+  questionBank: questionBank;
+  answerBanks: { [key: string]: answerBank };
+  tag: string;
+  allowAnswer: boolean;
 }
 
 export function defaultTestMultiChoice() {
