@@ -108,7 +108,7 @@ onMounted(()=>{
   display:inline-block;
   cursor:pointer;
   color:#ffffff;
-  font-size:17px;
+  font-size:13px;
 
   /* margin:0.5em 1em; */
   padding:0.5em 1em;

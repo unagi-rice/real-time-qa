@@ -185,6 +185,7 @@ onMounted(() => {
 
 <div v-if="checkTeacher(context)">
     <InterfaceBase :title="title" :interface_tag="real_tag" :buttons="buttons" @back="backfun" @start="startfun" @shut="shutfun" @next="nextfun"
+
         @wow="loginTeacher(context) && checkTeacher(context)">
         <div v-for="(c, index) in real_queBank.content[pageid].content">
             <el-card class="box-card">
@@ -248,6 +249,7 @@ onMounted(() => {
     </InterfaceBase>
 </div>
 </template>
+<<<<<<< HEAD
 
 <style>
 .el-radio-group {
@@ -269,3 +271,5 @@ onMounted(() => {
 }
 </style>
 
+=======
+>>>>>>> 728778eecbe9738b1e0e66b3b14b573912830fa1

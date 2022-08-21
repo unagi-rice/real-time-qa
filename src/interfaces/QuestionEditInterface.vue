@@ -1,4 +1,5 @@
 <template>
+
 <InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @preview="previewfun" @back="backfun" @publish="publishfun" @save="savefun">
 <el-container type="common layout">
 <Transition>
@@ -26,7 +27,23 @@ import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
 import {interfaces,question,questionBank,userType} from '../components/Types';
 import {getQuestionBank} from '../components/utils/user'
+/*TODO:
+Milkdown | Commands
+https://milkdown.dev/commands#example-command-without-argument
 
+Milkdown | plugin-menu
+https://milkdown.dev/plugin-menu
+
+[Milkdown] editor Integration Guide
+https://programming.vip/docs/milkdown-editor-integration-guide.html
+
+ProseMirror Reference manual
+https://prosemirror.net/docs/ref/#view.EditorProps.nodeViews
+
+ProseMirror Reference manual
+https://prosemirror.net/docs/ref/#view.EditorProps.nodeViews
+
+*/
 
 
 const title = "";
@@ -150,7 +167,21 @@ $dark-pri: #0B5AA2;
   background-color: $pri;
 }
 
+.items {
+  max-width: 24vx;
+  min-width: 12rem;
+  width: 100%;
+  background: $sec;
+  box-shadow: 0 3px 6px rgba(black,0.16), 0 3px 6px rgba(black,0.23);
+  border-top: 10px solid $dark-pri;
+}
 
+@media(min-width: 1276px){
+
+  .items {
+    
+  }
+}
 
 
 </style>

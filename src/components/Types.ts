@@ -7,6 +7,7 @@ export enum interfaces{
     IndividualStatsInterface,
     QuestionEditInterface,
     QuestionAnswerInterface,
+    MainInterface,
   }
 /**
 生命循环：

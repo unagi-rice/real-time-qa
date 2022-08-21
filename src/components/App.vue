@@ -9,6 +9,7 @@ import {interfaces} from "./Types"
 import EmptyInterface from "../interfaces/EmptyInterface.vue";
 import ExampleCounter from "../interfaces/ExampleCounter.vue";
 import StatsInterface from "../interfaces/StatsInterface.vue";
+import MainInterface from "../interfaces/MainInterface.vue";
 import IndividualStatsInterface from "../interfaces/IndStatsInterface.vue";
 import QuestionAnswerInterface from "../interfaces/QuestionAnswerInterface.vue";
 
@@ -20,7 +21,7 @@ const $globVar = ref({})
 
 const current_interface = context.createStorage<{currentInterface: interfaces}>("interface", {currentInterface: interfaces.EmptyInterface});
 provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
-const current_interface_displayed = ref(interfaces.EmptyInterface);
+const current_interface_displayed = ref(interfaces.MainInterface);
 
 
 const isTeacher = computed(()=>(loginTeacher(context) && checkTeacher(context)))
@@ -45,6 +46,7 @@ function consoleLog(s:number){console.log(s);}
 </script>
 <template v-if="isTeacher">
 <!-- NOTICE: list out interfaces and their props, emitters -->
+<MainInterface v-if="current_interface_displayed == interfaces.MainInterface"/>
 <EmptyInterface v-if="current_interface_displayed == interfaces.EmptyInterface" @console-log="consoleLog"/>
 <ExampleCounter v-if="current_interface_displayed == interfaces.ExampleCounter"/>
 <StatsInterface v-if="current_interface_displayed == interfaces.StatsInterface"/>

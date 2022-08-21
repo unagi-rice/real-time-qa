@@ -6,6 +6,7 @@ import App from "./components/App.vue";
 import App2 from "./components/App2.vue";
 import {loginTeacher, checkTeacher} from "./components/Auth";
 import {interfaces} from "./components/Types"
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 /**
  * Register it before joining room:
@@ -45,6 +46,10 @@ const RealTimeQA: NetlessApp = {
       
       const app = createApp(App).provide("context", context);
       
+      for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+        app.component(key, component)
+      }
+
       app.mount($content);
       
       context.emitter.on("destroy", () => {
@@ -59,6 +64,10 @@ const RealTimeQA: NetlessApp = {
       box.mountContent($content);
 
       const app = createApp(App2).provide("context", context);
+
+      for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+        app.component(key, component)
+      }
       
       app.mount($content);
 
@@ -68,5 +77,7 @@ const RealTimeQA: NetlessApp = {
     }
   },
 };
+
+
 
 export default RealTimeQA;
