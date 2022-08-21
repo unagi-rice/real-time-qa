@@ -16,9 +16,12 @@
   "dependencies": {
     "@milkdown/core": "^6.3.1",
     "@milkdown/plugin-block": "^6.3.2",
-    "@milkdown/plugin-history": "^6.3.1",
+    "@milkdown/plugin-clipboard": "^6.3.2",
+    "@milkdown/plugin-history": "^6.3.2",
+    "@milkdown/plugin-indent": "^6.3.2",
     "@milkdown/plugin-listener": "^6.3.1",
     "@milkdown/plugin-menu": "^6.3.1",
+    "@milkdown/plugin-tooltip": "^6.3.2",
     "@milkdown/preset-commonmark": "^6.3.1",
     "@milkdown/prose": "^6.3.1",
     "@milkdown/theme-nord": "^6.3.1",

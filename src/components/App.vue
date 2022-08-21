@@ -23,6 +23,7 @@ provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
 const current_interface_displayed = ref(interfaces.EmptyInterface);
 
 
+
 const isTeacher = computed(()=>(loginTeacher(context) && checkTeacher(context)))
 
 console.debug('App.vue: isTeacher?',isTeacher.value)

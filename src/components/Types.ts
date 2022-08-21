@@ -120,8 +120,16 @@ export interface answerBank {
   content: answer[];
 }
 
+export interface QATuple{
+  question:question
+  answer: (answer|answer[])
+} 
+
+// export function testCorrectness(question_in:question,answer_in:answer,correctAnswer:)
+
+// 问题样本生成函数
 export function defaultTestMultiChoice() {
-  let newQuestion = <question>
+  return <question>
         { id: getuuid(),
           content:[
               "你的老婆是谁？",
@@ -130,11 +138,10 @@ export function defaultTestMultiChoice() {
                            3:"两仪式 ❤❤", 
                            4:"两仪式 ❤❤❤"}),
           ]};
-  return newQuestion;
 }
 
 export function defaultTestUnorderedSequenceChoice(){
-let newQuestion = <question>{ id: getuuid(),
+return <question>{ id: getuuid(),
   content:[
       "你的老婆是谁？",
       new unorderedSequenceChoice({1:"两仪式", 
@@ -142,21 +149,19 @@ let newQuestion = <question>{ id: getuuid(),
                    3:"两仪式 ❤❤", 
                    4:"两仪式 ❤❤❤"}),
   ]};
-return newQuestion;
 }
 
 export function defaultTestFillBlank(){
-let newQuestion = <question>{ id: getuuid(),
+return <question>{ id: getuuid(),
   content:[
       "你的老婆是谁？",
       new fillBlank(),
   ]};
-return newQuestion;
 }
 
 
 export function defaultTestMixed(){
-let newQuestion = <question> { id: getuuid(),
+return <question> { id: getuuid(),
   content: [
     "你的老婆是谁？",
     new multiChoice({1:"两仪式", 
@@ -170,7 +175,6 @@ let newQuestion = <question> { id: getuuid(),
     new fillBlank(),
   ]
 }
-return newQuestion;
 }
 
 export const defaultTestQuestionBank=(()=>  ({

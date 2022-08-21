@@ -1,32 +1,36 @@
+<!-- 
+when larger than large: list && editor
+large <= size <= small: list fixed width, hide on select, show on editor.back
+      editor width:100% on select
+size < small: list 100%,  hide on select, show on editor.back
+      editor width:100% on select
+
+usable property: element.clientWidth
+https://www.w3schools.com/jsref/dom_obj_all.asp
+https://element-plus.org/en-US/component/drawer.html
+ -->
 <template>
 <InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @preview="previewfun" @back="backfun" @publish="publishfun" @save="savefun">
 <el-container type="common layout">
-<Transition>
-  <div id="list-container" v-show="largeWindow || !editingQuestion" >
-    <el-card v-for="ques in questions" shadow="hover">{{ques.markdown()}}</el-card>
-  </div>
-</Transition>
+  <el-drawer id="question-list" v-show="largeWindow || !editingQuestion" >
+    <el-card v-for="ques in questions" :key="ques.id" shadow="hover">{{ques.markdown()}}</el-card>
+  </el-drawer>
 <!--TODO:preset=question content, onswitch:copy content to current question, onsave:copy content from question list to question set in storage-->
-<VueEditor :editor="editor" :modelValue="question"/>
+<VueEditor :modelValue="question"/>
 </el-container>
 
 </InterfaceBase>
-<Teleport :to="body" >
-<div :v-if="openPreview">
-  <AnsweringNodeVue :class="{active:showPreview}" :question="rippedQuestion" @made-response="handleResponse"/>
-  <button @click="openPreview = false;" >Close</button>
-</div>
-</Teleport>
+
 </template>
 
 <script setup lang="ts">
-import { ref,onMounted,inject,provide,defineComponent,DefineComponent, onBeforeMount } from 'vue';
+import { ref,onMounted,inject,provide,onBeforeMount,computed } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
 import {interfaces,question,questionBank,userType} from '../components/Types';
 import {getQuestionBank} from '../components/utils/user'
-
+import VueEditor from '../components/editor/VueEditor.vue'
 
 
 const title = "";
@@ -77,6 +81,24 @@ function saveData(){
 function askSave():boolean{
   return isSaved || window.confirm('您还有未保存的更动，确定离开此界面吗？');
 }
+
+const smallWidth = 424;
+const mediumWidth = 920;
+const smallWindow = computed(()=>{
+  const currentWindowWidth = document.querySelector('div.app-real-time-qa')?.clientWidth;
+  if(currentWindowWidth !== undefined){
+    return currentWindowWidth < smallWidth;
+  }
+  throw Error('app window not found');
+})
+const largeWindow = computed(()=>{
+  const currentWindowWidth = document.querySelector('div.app-real-time-qa')?.clientWidth;
+  if(currentWindowWidth !== undefined){
+    return currentWindowWidth > mediumWidth;
+  }
+  throw Error('app window not found');
+})
+
 
 // emit related
 function backfun(){
@@ -130,27 +152,23 @@ function handleResponse(response:any){
 
 
 
-<style lang="scss">
-$pri: #128CFC;
-$sec: #fffffe;
-$dark-pri: #0B5AA2;
-* {
-  box-sizing: border-radius;
+<style lang="css">
+
+
+.left-column.large-window,.left-column.medium-window{
+  width:424px;
 }
-.list-container {
-  border: 1px solid black;
-  
-  height:100%;
-  position: relative;
-  top: 0; right: 0; bottom: 0; left: 0;
-  margin: auto;
-  
-  display: grid;
-  place-items: center;
-  background-color: $pri;
+.left-column.small-window{
+  width: 100%;
 }
 
 
+.back-button.large-window{
+  visibility:hidden;
+}
+.back-button.medium-window.showing-editor, .back-button.small-window.showing-editor{
+  visibility:block;
+}
 
 
 </style>
