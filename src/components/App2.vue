@@ -19,7 +19,7 @@ if (!context) throw new Error("must call provide('context') before mount App");
 
 const current_interface = context.createStorage<{currentInterface: interfaces}>("interface");
 provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
-const current_interface_displayed = ref(interfaces.EmptyInterface);
+const current_interface_displayed = ref(current_interface.state.currentInterface);
 
 const isTeacher = computed(()=>(loginTeacher(context) && checkTeacher(context)))
 

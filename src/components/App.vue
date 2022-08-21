@@ -18,7 +18,7 @@ const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
 const $globVar = ref({})
 
-const current_interface = context.createStorage("interface",{currentInterface:interfaces.EmptyInterface});
+const current_interface = context.createStorage<{currentInterface: interfaces}>("interface", {currentInterface: interfaces.EmptyInterface});
 provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
 const current_interface_displayed = ref(interfaces.EmptyInterface);
 

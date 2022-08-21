@@ -36,7 +36,7 @@ export function loginTeacher(context: AppContext): boolean {
   const defaultState:AuthSnapshot = { teacher: [], student: [] };
   const storage = context.createStorage<AuthSnapshot>("TeacherStudent", defaultState);
   let tempState = structuredClone(storage.state);
-  storage.setState(defaultState); // uncomment this line to reset state of storage
+  // storage.setState(defaultState); // uncomment this line to reset state of storage
   if (storage.state.teacher.length === 0) tempState.teacher.push(uid);
   else if(storage.state.teacher[0] !== uid && !storage.state.student.includes(uid)) 
     tempState.student.push(uid);

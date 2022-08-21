@@ -79,22 +79,27 @@ const storage = context.createStorage<QAStorage>("QAInterface", {
     tag: "1 / " + props.questionBank.content.length.toString()
 })
 */
+
+const uid = getUid(context);
 const storage = (() => {
     if (checkTeacher(context)) {
         return context.createStorage<QAStorage>("QAInterface", {
         pageid: 0,
         questionBank: props.questionBank,
-        answerBanks: (() => { 
-            const _storage = context.createStorage<AuthSnapshot>("TeacherStudent");
+        answerBanks: (() => {
             let newAnswerBanks = {} as {[key: string]: AnswerBank};
-            for (let stu in _storage.state.student) {
-                newAnswerBanks[stu] = initAnswerBank(stu, props.questionBank);
-            }
             return newAnswerBanks;
         })(),
         tag: "1 / " + props.questionBank.content.length.toString(),
         allowAnswer: false})
     } else {
+        const _storage = context.createStorage<QAStorage>("QAInterface");
+        let tempState = structuredClone(_storage.state);
+        while (tempState.questionBank === undefined) {
+            tempState = structuredClone(_storage.state);
+        }
+        tempState.answerBanks[uid] = initAnswerBank(uid, tempState.questionBank);
+        _storage.setState(tempState);
         return context.createStorage<QAStorage>("QAInterface");
     }
 })()
@@ -102,9 +107,10 @@ const storage = (() => {
 
 
 const real_pageid = ref(storage.state.pageid);
-const real_ansBank = ref(storage.state.answerBanks[getUid(context)]);
+const real_ansBank = ref(storage.state.answerBanks[uid]);
 const real_tag = ref(storage.state.tag);
 const real_allowAns = ref(storage.state.allowAnswer);
+const real_queBank = ref(storage.state.questionBank);
 
 const pageid = computed<number>({
     get: () => real_pageid.value,
@@ -180,22 +186,23 @@ onMounted(() => {
 <div v-if="checkTeacher(context)">
     <InterfaceBase :title="title" :interface_tag="real_tag" :buttons="buttons" @back="backfun" @start="startfun" @shut="shutfun" @next="nextfun"
         @wow="loginTeacher(context) && checkTeacher(context)">
-        <div v-for="(c, index) in props.questionBank.content[pageid].content">
+        <div v-for="(c, index) in real_queBank.content[pageid].content">
             <el-card class="box-card">
                 <div v-if="typeof (c) == 'string'">
                     <span>{{ c }}</span>
                 </div>
-                <div v-if="c instanceof multiChoice">
+                <div v-else-if="c.type === 'Multi'">
+                    <span>MultiChoice</span>
                     <el-radio-group type="vertical">
                         <div v-for="(cc, cidx) in (c as multiChoice).choice">
                             <el-radio :label=cidx border>{{ cc }}</el-radio>
                         </div>
                     </el-radio-group>
                 </div>
-                <div v-if="c instanceof fillBlank">
+                <div v-else-if="c.type === 'FillBlank'">
                     <el-input placeholder="输入你的答案" />
                 </div>
-                <div v-if="c instanceof unorderedSequenceChoice">
+                <div v-else-if="c.type === 'UnorderedSequence'">
                     <el-checkbox-group>
                         <div v-for="(cc, cidx) in (c as unorderedSequenceChoice).choice">
                             <el-checkbox :label=cidx border>
@@ -210,24 +217,24 @@ onMounted(() => {
 </div>
 
 
-<div v-else>
-    <InterfaceBase :title="title"  :interface_tag="real_tag" :buttons="buttons" @wow="loginTeacher(context) && checkTeacher(context)">
-        <div v-for="(c, index) in props.questionBank.content[pageid].content">
+<div v-else-if="allowAns">
+    <InterfaceBase :title="title"  :interface_tag="real_tag" @wow="loginTeacher(context) && checkTeacher(context)">
+        <div v-for="(c, index) in real_queBank.content[pageid].content">
             <el-card class="box-card">
                 <div v-if="typeof (c) == 'string'">
                     <span>{{ c }}</span>
                 </div>
-                <div v-if="c instanceof multiChoice">
+                <div v-else-if="c.type === 'Multi'">
                     <el-radio-group v-model="real_ansBank.content[pageid].content[index]" type="vertical">
                         <div v-for="(cc, cidx) in (c as multiChoice).choice">
                             <el-radio :label=cidx border>{{ cc }}</el-radio>
                         </div>
                     </el-radio-group>
                 </div>
-                <div v-if="c instanceof fillBlank">
+                <div v-else-if="c.type === 'FillBlank'">
                     <el-input v-model="real_ansBank.content[pageid].content[index]" placeholder="输入你的答案" />
                 </div>
-                <div v-if="c instanceof unorderedSequenceChoice">
+                <div v-else-if="c.type === 'UnorderedSequence'">
                     <el-checkbox-group v-model="real_ansBank.content[pageid].content[index]">
                         <div v-for="(cc, cidx) in (c as unorderedSequenceChoice).choice">
                             <el-checkbox :label=cidx border>
