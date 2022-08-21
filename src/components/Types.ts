@@ -1,4 +1,4 @@
-import {v1 as getuuid} from 'uuid'
+import { v1 as getuuid } from 'uuid';
 /** 全部界面 */
 export enum interfaces{
     EmptyInterface,
@@ -7,6 +7,7 @@ export enum interfaces{
     IndividualStatsInterface,
     QuestionEditInterface,
     QuestionAnswerInterface,
+    MainInterface,
   }
 /**
 生命循环：
@@ -115,19 +116,19 @@ export interface answer {
 
 // 答案库，又称“答卷”
 export interface answerBank {
-  uid: string; 
+  uid: string;
   qid: string;
   content: answer[];
 }
 
-export interface QATuple{
-  question:question
-  answer: (answer|answer[])
-} 
+export interface QAStorage {
+  pageid: number;
+  questionBank: questionBank;
+  answerBanks: { [key: string]: answerBank };
+  tag: string;
+  allowAnswer: boolean;
+}
 
-// export function testCorrectness(question_in:question,answer_in:answer,correctAnswer:)
-
-// 问题样本生成函数
 export function defaultTestMultiChoice() {
   return <question>
         { id: getuuid(),

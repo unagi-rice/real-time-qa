@@ -13,11 +13,11 @@ apps.push({
     fastboard.manager.addApp({ kind: App.kind });
   },
 });
-apps.push({
-  kind: ExampleCounter.kind,
-  label: ExampleCounter.kind.replace(/([a-z])([A-Z])/g, "$1 $2"),
-  icon: logo,
-  onClick: fastboard => {
-    fastboard.manager.addApp({ kind: ExampleCounter.kind });
-  },
-});
+// apps.push({
+//   kind: ExampleCounter.kind,
+//   label: ExampleCounter.kind.replace(/([a-z])([A-Z])/g, "$1 $2"),
+//   icon: logo,
+//   onClick: fastboard => {
+//     fastboard.manager.addApp({ kind: ExampleCounter.kind });
+//   },
+// });

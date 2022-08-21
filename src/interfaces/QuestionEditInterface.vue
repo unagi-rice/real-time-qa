@@ -10,6 +10,7 @@ https://www.w3schools.com/jsref/dom_obj_all.asp
 https://element-plus.org/en-US/component/drawer.html
  -->
 <template>
+
 <InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @preview="previewfun" @back="backfun" @publish="publishfun" @save="savefun">
 <el-container type="common layout">
   <el-drawer id="question-list" v-show="largeWindow || !editingQuestion" >
@@ -162,6 +163,16 @@ function handleResponse(response:any){
   width: 100%;
 }
 
+.items {
+  max-width: 24vx;
+  min-width: 12rem;
+  width: 100%;
+  background: $sec;
+  box-shadow: 0 3px 6px rgba(black,0.16), 0 3px 6px rgba(black,0.23);
+  border-top: 10px solid $dark-pri;
+}
+
+@media(min-width: 1276px){
 
 .back-button.large-window{
   visibility:hidden;

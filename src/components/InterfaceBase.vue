@@ -68,7 +68,7 @@ onMounted(()=>{
   padding: 10px;
 }
 .flexbox{
-    display: flex;
+  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -85,20 +85,18 @@ onMounted(()=>{
 .title
 {
   text-align: left;
-  flex-grow: 3;
+  flex-grow: 2;
   color:#ffffff;
-  max-width:90%;
+  max-width:70%;
   height: 100%;
 }
 .interface-tag{
   text-align: right;
-  flex-grow: 1;
+  flex-grow: 2;
   /* background-color:#ffffff; */
   color:#ffffff;
-  max-width:10%;
+  max-width: 100%;
   height: 100%;
-  
-  
 }
 
 .el-button{
@@ -110,7 +108,7 @@ onMounted(()=>{
   display:inline-block;
   cursor:pointer;
   color:#ffffff;
-  font-size:17px;
+  font-size:13px;
 
   /* margin:0.5em 1em; */
   padding:0.5em 1em;
@@ -118,7 +116,7 @@ onMounted(()=>{
   text-shadow:-3px -3px 50px #2b665e;
 }
 .title-container > div{
-  padding:15px 31px;
+  padding:15px 30px;
 }
 .page-header > button{
   margin:15px 0px;
