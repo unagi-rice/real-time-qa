@@ -50,6 +50,14 @@ function statsfun(){
     interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
+function indstatsfun(){
+    interfaceStorage?.setState({currentInterface:interfaces.IndividualStatsInterface})
+    console.debug(interfaceStorage?.state.currentInterface)
+}
+function pubfun(){
+    interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
+    console.debug(interfaceStorage?.state.currentInterface)
+}
 const emit = defineEmits<{
 (e:'console-log',id:number):void
 // usage: emit('console-log',3) to pass 3 to parent component in event 'console-log'
@@ -86,8 +94,8 @@ onMounted(()=>{
                 <span>{{ 'Test ' + i }}</span>
                 <el-button-group class="ml-4">
                   <!-- <el-button class="button" text bg type="primary">Preview</el-button> -->
-                  <el-button class="button" text bg >Edit</el-button>
-                  <el-button class="button" text bg >Publish</el-button>
+                  <el-button class="button" text bg @click="editfun">Edit</el-button>
+                  <el-button class="button" text bg @click="pubfun">Publish</el-button>
                   <el-button class="button" text bg @click="statsfun">Statistics</el-button>
                   <el-button class="button" text bg type="danger">Delete</el-button>
                 </el-button-group>
@@ -103,14 +111,14 @@ onMounted(()=>{
                 </el-col>
                 <el-button-group class="ml-4">
                   <el-button type="success"><el-icon color="#FFFFFF"><Edit /></el-icon></el-button>
-                  <el-button type="success"><el-icon color="#FFFFFF"><Histogram /></el-icon></el-button>
+                  <el-button type="success" @click="indstatsfun"><el-icon color="#FFFFFF"><Histogram /></el-icon></el-button>
                   <el-button type="danger" ><el-icon color="#FFFFFF"><Delete /></el-icon></el-button>
                 </el-button-group>
               </el-row>
             </el-card>
           </div>
           <el-row justify="center" align="top">
-            <el-button class="button" bg text><el-icon color="#39393A"><ArrowDownBold /></el-icon></el-button>
+            <el-button class="button" bg text @click="pubfun"><el-icon color="#39393A"><ArrowDownBold /></el-icon></el-button>
           </el-row>
         </el-card>
       </el-space>

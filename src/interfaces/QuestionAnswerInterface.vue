@@ -249,7 +249,6 @@ onMounted(() => {
     </InterfaceBase>
 </div>
 </template>
-<<<<<<< HEAD
 
 <style>
 .el-radio-group {
@@ -271,5 +270,3 @@ onMounted(() => {
 }
 </style>
 
-=======
->>>>>>> 728778eecbe9738b1e0e66b3b14b573912830fa1
