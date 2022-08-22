@@ -1,48 +1,44 @@
-<!-- 界面模板 -->
 <script setup lang="ts">
 import { onMounted,inject } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
-import {interfaces} from '../components/Types';
+import {interfaces, questionBank} from '../components/Types';
+import {resetAuth} from '../components/Auth'
 import { ArrowDownBold, Delete, Edit, Histogram } from '@element-plus/icons-vue';
+import {questionBankStorage} from '../components/utils/user'
 
-const title = "Main Interface";
+
+const title = "主界面";
 const tag = "tag";
 const buttons:button[] = [
-    {
-        text:'edit',
-        event:'edit'
-    },
-    {
-        text:'create',
-        event:'create'
-    },
-    {
-        text:'wow',
-        event:'wow'
-    },
+  {
+    text:'edit',
+    event:'edit'
+  },
+  {
+    text:'create',
+    event:'create'
+  },
 
 ]
+const emit = defineEmits<{
+(e:'publish',id:number):void
+// usage: emit('console-log',3) to pass 3 to parent component in event 'console-log'
+}>()
+
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
 const interfaceStorage= inject<Storage<{currentInterface:interfaces}>>("interface");
 if (!interfaceStorage) throw new Error("must call provide('interface') before mount App");
 console.debug('EmptyInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
-function backfun(){
-    // 转换界面至EmptyInterface
-    interfaceStorage?.setState({currentInterface:interfaces.EmptyInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
-}
-function nextfun(){
-    // 转换界面至ExampleCounter
-    interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
-}
-function wowfun(){
-    alert('WOW!');
-}
-function editfun(){
+
+
+
+
+
+function editfun(questionBankID:string){
+  
     interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
@@ -50,22 +46,15 @@ function statsfun(){
     interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
-function indstatsfun(){
-    interfaceStorage?.setState({currentInterface:interfaces.IndividualStatsInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
-}
+
 function pubfun(){
+  // TODO:emit publish event
     interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
-const emit = defineEmits<{
-(e:'console-log',id:number):void
-// usage: emit('console-log',3) to pass 3 to parent component in event 'console-log'
-}>()
+
 onMounted(()=>{
-    console.debug('emptyInterface.vue:title=',title);
-  console.debug('emptyInterface.vue:tag=',tag);
-  emit('console-log',4);
+    console.debug('switched interface:title=',title,'tag=',tag);
   })
 </script>
 
@@ -84,14 +73,14 @@ onMounted(()=>{
     @create="backfun" 
     @wow="wowfun">
 
-    <el-container>
+    <el-container style="width: 100%">
       <el-space wrap>
-        <el-card v-for="i in 10" :key="i" class="box-card" style="width: 785px">
+        <el-card v-for="questionBank_i in questionBanks" :key="questionBank_i" class="box-card" >
         
           <template #header>
             <div class="card-header">
               <el-row justify="space-between" align="middle">
-                <span>{{ 'Test ' + i }}</span>
+                <span>{{ 'Test ' + questionBank_i.name }}</span>
                 <el-button-group class="ml-4">
                   <!-- <el-button class="button" text bg type="primary">Preview</el-button> -->
                   <el-button class="button" text bg @click="editfun">Edit</el-button>
@@ -102,8 +91,8 @@ onMounted(()=>{
               </el-row>
             </div>
           </template>
-
-          <div v-for="o in 3" :key="o" class="text item">
+          <el-button @click="resetAuth(context)"></el-button>
+          <!-- <div v-for="o in 3" :key="o" class="text item">
             <el-card class="box-card">
               <el-row justify="space-between" align="middle">
                 <el-col :span="18">
@@ -119,9 +108,12 @@ onMounted(()=>{
           </div>
           <el-row justify="center" align="top">
             <el-button class="button" bg text @click="pubfun"><el-icon color="#39393A"><ArrowDownBold /></el-icon></el-button>
-          </el-row>
+          </el-row> -->
         </el-card>
       </el-space>
     </el-container>
+    <el-dialog>
+      <!--TODO: give a name for newly created questionBank-->
+    </el-dialog>
   </InterfaceBase>
 </template>

@@ -62,9 +62,9 @@ export function checkTeacher(context: AppContext): boolean { // TODO: return voi
  * @param context AppContext provided by root component of app
  */
 export function logoutTeacher(context: AppContext): void {
-  const uid = getUid(context);
+  const uid = getUid(context) as string;
   const isTeacher:boolean = checkTeacher(context);
-  const storage = context.createStorage<AuthSnapshot>("TeacherStudent", defaultState);
+  const storage = context.createStorage<AuthSnapshot>("TeacherStudent");
   let tempState = structuredClone(storage.state);
   if (storage.state.teacher.length === 0) throw new Error("room is already empty, logout failed");
   if(isTeacher)tempState.teacher.remove(uid);
@@ -73,4 +73,10 @@ export function logoutTeacher(context: AppContext): void {
   storage.setState(tempState);
 }
 
+export function resetAuth(context:AppContext){
+  const defaultState:AuthSnapshot = { teacher: [], student: [] };
 
+  const storage = context.createStorage<AuthSnapshot>("TeacherStudent",defaultState);
+  storage.setState(defaultState); // uncomment this line to reset state of storage
+  console.log(storage.state)
+}
