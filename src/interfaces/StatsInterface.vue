@@ -72,44 +72,113 @@ Object.keys(storage.state.answerBanks).map((key) => {
   });
 });
 
-let QAStats: {
+interface tableData {
+  response: string;
+}
+
+interface chartSeries {
+  data: number[];
+}
+
+interface chartOptions {
+  chart: {
+    type: string; // default "bar"
+    height: number; // default 350
+  };
+  plotOptions: {
+    bar: {
+      borderRadius: number; // default 4
+      horizontal: boolean; // default true
+    };
+  };
+  dataLabels: {
+    enabled: boolean; // default false
+  };
+  xaxis: {
+    categories: string[]; // choices
+  };
+}
+
+let defaultChartOptions: chartOptions = {
+  chart: {
+    type: "bar",
+    height: 350,
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 4,
+      horizontal: true,
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  xaxis: {
+    categories: [],
+  },
+};
+
+interface Stats {
   name: string;
-  answers: { type: string; content: (string | number | number[])[] };
-}[] = [];
+  answers: {
+    type: string;
+    content: tableData[] | chartSeries[];
+    chartOptions?: chartOptions | null;
+  }[];
+}
+
+let QAStats: Stats[] = [];
 storage.state.questionBank.content.map((qns) => {
-  let QAStat: {
-    name: string;
-    answers: { type: string; content: (string | number | number[])[] }[];
-  } = {
+  let QAStat: Stats = {
     name: qns.content[0].toString(),
     answers: [],
   };
-  if (qns.content.length > 2) {
-    qns.content.forEach((c, index) => {
-      if (index === 0) return;
-      QAStat.answers.push({
-        type: c.type,
-        content: (() => {
-          let ansContent: (string | number | number[])[] = [];
+  qns.content.forEach((c, index) => {
+    if (index === 0) return;
+    QAStat.answers.push({
+      type: c.type,
+      content: (() => {
+        if (c.type === "FillBlank") {
+          let ansContent: tableData[] = [];
           Answers[qns.id].map((ans) => {
-            ansContent.push(ans[index - 1]);
+            ansContent.push({ response: ans[index - 1] });
           });
           return ansContent;
-        })(),
-      });
-    });
-  } else {
-    QAStat.answers.push({
-      type: qns.content[1].type,
-      content: (() => {
-        let ansContent: (string | number | number[])[] = [];
-        Answers[qns.id].map((ans) => {
-          ansContent.push(ans[0]);
+        } else if (c.type === "Multi") {
+          let ansContent: chartSeries = {
+            data: Array.apply(null, Array(Object.keys(c.choice).length)).map(
+              (x, i) => 0
+            ),
+          };
+          Answers[qns.id].map((ans) => {
+            ansContent.data[ans[index - 1]] += 1;
+          });
+          return [[ansContent]];
+        } else if (c.type === "UnorderedSequence") {
+          let ansContent: chartSeries = {
+            data: Array.apply(null, Array(Object.keys(c.choice).length)).map(
+              (x, i) => 0
+            ),
+          };
+          Answers[qns.id].map((ans) => {
+            ans[index - 1].map((multi) => {
+              ansContent.data[multi] += 1;
+            });
+          });
+          return [ansContent];
+        }
+      })(),
+      chartOptions: (() => {
+        if (c.type !== "Multi" || c.type !== "UnorderedSequence") return null;
+        let cOpt: chartOptions = { ...defaultChartOptions };
+        c.choice.map((choice) => {
+          cOpt.xaxis.categories.push(choice);
         });
-        return ansContent;
+        return cOpt;
       })(),
     });
-  }
+  });
+  QAStats.push(QAStat);
 });
 
 const emit = defineEmits<{
@@ -121,14 +190,15 @@ onMounted(() => {
   console.debug("emptyInterface.vue:tag=", tag);
   emit("console-log", 4);
 });
-const tableData = [
+/*const tableData = [
   {
     response: "两仪式",
   },
   {
     response: "两仪式 ❤",
   },
-];
+];*/
+/*
 const series = [
   {
     data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380],
@@ -162,7 +232,7 @@ const chartOptions = {
       "两仪式 ❤❤❤❤❤❤❤❤❤",
     ],
   },
-};
+};*/
 </script>
 
 <!--定义展示的模块-->
@@ -183,16 +253,32 @@ const chartOptions = {
     <el-container>
       <el-row type="flex" justify="center">
         <el-space fill direction="vertical" style="width: 85%">
-          <el-card
-            v-for="(c, index) in QAStats"
-            class="box-card"
-          >
-          </el-card>
-          <template #header>
+          <el-card v-for="(c, index) in QAStats" class="box-card">
+            <template #header>
               <div class="card-header">
                 <span>{{ c.name }}</span>
               </div>
             </template>
+            <div v-for="(cc, cidx) in QAStats.answers">
+              <el-table
+                v-if="cc.type === 'FillBlank'"
+                :data="cc.content"
+                stripe
+                style="width: 100%"
+              >
+                <el-table-column prop="response" label="Response" />
+              </el-table>
+              <VueApexCharts
+                v-else-if="
+                  cc.type === 'Multi' || cc.type === 'UnorderedSequence'
+                "
+                type="bar"
+                height="350"
+                :options="cc.chartOptions"
+                :series="cc.content"
+              ></VueApexCharts>
+            </div>
+          </el-card>
         </el-space>
       </el-row>
     </el-container>
