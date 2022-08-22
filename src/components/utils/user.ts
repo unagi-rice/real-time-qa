@@ -1,18 +1,20 @@
 import { Node } from '@milkdown/prose/model';
 import { v1 as uuidv1 } from 'uuid';
 import { inject } from 'vue';
-import { questionBank,userType } from '../Types';
+import { questionBank} from '../Types';
 
 
 export const getId = (node?: Node) => {node?.attrs?.['identity'] || uuidv1()};
 
-export function getQuestionBank(qid:string):questionBank | undefined
-{
-  const userStorage = inject<userType>('user');
-  // TODO: design user storage
 
-  return userStorage.questions[qid] | undefined; 
+export const questionBankStorage = {
+  content:JSON.parse(localStorage.getItem("questionBanks") ?? JSON.stringify([])), // questionBank's are saved locally in browser
+  save:(storage_in?:questionBank)=>localStorage.setItem("questionBanks", storage_in ?? questionBankStorage.content),
 }
-export function updateQuestionBank(uid:string):void {
-
+function exportData(content:any, fileName:string, contentType:any) {
+  var a = document.createElement("a");
+  var file = new Blob([content], {type: contentType});
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.click();
 }
