@@ -5,11 +5,10 @@ import { computed, inject, onBeforeMount, onMounted, provide, ref, watchEffect }
 import {loginTeacher, checkTeacher} from "./Auth";
 import {interfaces} from "./Types"
 
-// Only QAInterface availble for students
+// Only QAInterface available for students
 
 import QuestionAnswerInterface from "../interfaces/QuestionAnswerInterface.vue";
-import EmptyInterface from "../interfaces/EmptyInterface.vue";
-import { constant } from "lodash";
+
 
 // app-wide context
 const context = inject<AppContext>("context");
@@ -21,38 +20,27 @@ const current_interface = context.createStorage<{currentInterface: interfaces}>(
 provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
 const current_interface_displayed = ref(current_interface.state.currentInterface);
 
-const isTeacher = computed(()=>(loginTeacher(context) && checkTeacher(context)))
+const isTeacher = computed(()=>{loginTeacher(context);return checkTeacher(context)})
 const startAnswering = ref(false)
 
-console.debug('App2.vue: isTeacher?',isTeacher.value)
+console.debug('AppStudent.vue: isTeacher?',isTeacher.value)
 
-onBeforeMount(()=>{
 
-})
 
 onMounted(() =>{
-  context.addMagixEventListener('start-answering', ()=>{
-    startAnswering.value = true;
-  } )
-  context.addMagixEventListener('stop-answering', ()=>{
-    startAnswering.value = true;
-  } )
-  context.addMagixEventListener('next-question',()=>{
-    
-  })
+  
   current_interface.addStateChangedListener(() => {
     current_interface_displayed.value = current_interface.state.currentInterface; // DK if it will work 
   })
 });
 
 watchEffect(() => {
-  console.debug("App2.vue: current_interface_displayed =",current_interface_displayed.value);
+  console.debug("AppStudent.vue: current_interface_displayed =",current_interface_displayed.value);
 });
-function consoleLog(s:number){console.log(s);}
 
 </script>
 
-<template v-if="!isTeacher">
-<QuestionAnswerInterface v-if="current_interface_displayed == interfaces.QuestionAnswerInterface && startAnswering"/>
+<template >
+<QuestionAnswerInterface v-if="current_interface_displayed == interfaces.QuestionAnswerInterface"/>
 <div v-else/>
 </template>

@@ -1,67 +1,88 @@
-
-<!-- 
-editable:
-  true: editing
-  false: preview / answering 
-
- -->
 <template>
-  <button @click="consoleLog">output</button>
-  <button @click="toggleReadOnly">toggle readable</button>
-  <button @click="updateEditor">update</button>
-  <button @click="setEditor">set</button>
+  <el-button @click="openPreview">预览</el-button>
   <VueEditor :editor="editor" />
-  
-  <!-- </Teleport> -->
-  <!-- <div v-if="showPreview" style="width:50px;height:50px;border-style:solid;border-width:2px;">show if true</div> -->
+  <el-dialog v-model="dialogPreviewVisible" title="预览">
+    <div v-for="(c, index) in question.content">
+        <span v-if="typeof (c) == 'string'" v-html="micromark(c)"/>
+        <el-input v-else-if="c.type === 'FillBlank'" placeholder="输入你的答案" />
+        <div v-else-if="c.type === 'Multi'">
+          <!-- <span>MultiChoice</span> -->
+          <el-radio-group type="vertical">
+            <div v-for="(cc, cidx) in (c as multiChoice).choice">
+              <el-radio :label=cidx border>{{ cc }}</el-radio>
+            </div>
+          </el-radio-group>
+        </div>
+        <div v-else-if="c.type === 'UnorderedSequence'">
+          <el-checkbox-group>
+              <div v-for="(cc, cidx) in (c as unorderedSequenceChoice).choice">
+                <el-checkbox :label=cidx border>
+                  {{ cc }}
+                </el-checkbox>
+              </div>
+          </el-checkbox-group>
+        </div>
+    </div>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { h,inject,defineComponent,ref, provide, watch} from "vue";
+import { h,inject,ref, provide, watch} from "vue";
+import { answer, type question,type multiChoice,type unorderedSequenceChoice} from "../Types";
+import { micromark } from "micromark";
 
 // core
 import { VueEditor, useEditor ,type RenderVue} from "@milkdown/vue";
 import { Editor, rootCtx, defaultValueCtx,editorViewOptionsCtx, type MilkdownPlugin  } from "@milkdown/core";
 import { nord } from "@milkdown/theme-nord";
-import { commonmark, paragraph } from "@milkdown/preset-commonmark";
-import { setBlockType } from '@milkdown/prose/commands';
-import { TextSelection } from '@milkdown/prose/state';
-// plugin
+import { commonmark,  } from "@milkdown/preset-commonmark";
+// Milkdown plugin
 import { menu,type Config as MenuConfig,defaultConfig, menuPlugin  } from "@milkdown/plugin-menu";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { block } from "@milkdown/plugin-block";   
-import { codeFence } from "@milkdown/preset-commonmark";// for qa node
 import type { Node } from '@milkdown/prose/model';
 import { AtomList, forceUpdate, insert } from '@milkdown/utils';
-import "prismjs/themes/prism.css";
-import { answer, fillBlank, objectiveQuestionType, type objectiveAnswerContainer, type question, type subjectiveAnswerContainer } from "../Types";
-
-import { MultiNode,UnorderedSequenceNode,FillBlankNode,FreeResponseNode } from "./CustomNode";
-import {InsertMulti,InsertUnorderedSequence,InsertFillBlank,InsertFreeResponse} from "./CustomNode"
-import MultiVue from "./CustomNode/Multi.vue";
-import FillBlankNodeVue from "./CustomNode/FillBlank.vue";
-import UnorderedSequenceVue from "./CustomNode/UnorderedSeqNode.vue";
-
 import { history } from "@milkdown/plugin-history";
 import { indent } from "@milkdown/plugin-indent";
 import { clipboard } from "@milkdown/plugin-clipboard";
 import { tooltip } from "@milkdown/plugin-tooltip";
 
+// custom markdown node
+import { MultiNode,UnorderedSequenceNode,FillBlankNode,FreeResponseNode } from "./CustomNode";
+import {InsertMulti,InsertUnorderedSequence,InsertFillBlank,InsertFreeResponse} from "./CustomNode"
+import MultiVue from "./CustomNode/Multi.vue";
+import FillBlankNodeVue from "./CustomNode/FillBlank.vue";
+import UnorderedSequenceVue from "./CustomNode/UnorderedSeqNode.vue";
+import { questionAnswer2Markdown } from "./MarkdownUtils";
+
+
 const props = defineProps<{
-  mode:"edit"|"preview"|"answer"
   question:question 
-  answer?:answer
+  answer:answer
 }>();
 
 const emit = defineEmits<{
-  (e: "update", question: question,answer:answer): void;
-  (e: "answered", answer:answer):void
+  (e: "update", question: question,answer:answer): void
 }>();
 
 
+// reactive controlling variable
+const dialogPreviewVisible = ref(false)
+const currEditorValue = ref('')
+
+const openPreview = ()=>{dialogPreviewVisible.value = true;}
 
 
+// TODO: set dafault value of editor when loaded
+watch(()=>props.question.id,()=>{
+  currEditorValue.value = questionAnswer2Markdown(props.question,props.answer)
 
+}
+)
+
+// TODO: listen to props.question.id, load question-answer to markdown onchange
+
+// setting up editor
 let commands:MenuConfig = (defaultConfig);
 commands[0].push(
   {
@@ -85,11 +106,6 @@ commands[0].push(
   },
 )
 
-function updateEditor(){
-  editor?.editor.value?.action(forceUpdate())
-}
-
-
 let output = '';
 let jsonOutput = {};
 let readonly = false;
@@ -105,7 +121,7 @@ const { editor } = useEditor((root,renderVue) =>{
     .config((ctx) => {
       // rootCtx: Save the root dom that milkdown should load on.
       ctx.set(rootCtx, root);
-      ctx.set(defaultValueCtx, );// TODO: set dafault value of editor when loaded
+      ctx.set(defaultValueCtx, currEditorValue.value);
       ctx.set(editorViewOptionsCtx, { editable });
       // });
     })
@@ -113,7 +129,7 @@ const { editor } = useEditor((root,renderVue) =>{
         // markdown string listener
         ctx.get(listenerCtx)
         .markdownUpdated((ctx, markdown, prevMarkdown) => {
-            output = markdown;// BUG: not updated after editting node
+            output = markdown;// TEST-ITEM: if updated after editting node
             // console.log('output changed to',output)
         })
         .updated((ctx, doc, prevDoc) => {
@@ -121,14 +137,13 @@ const { editor } = useEditor((root,renderVue) =>{
           console.log(doc.textContent)
         })
         .beforeMount((ctx)=>{
-           // TODO: load question
           console.log('output initialized to',output)
         })
 
     })
     .use(nord)
     .use(commonmark)
-    // .use(menu)
+    .use(block)
     .use(history)
     .use(tooltip)
     .use(indent)
@@ -137,12 +152,11 @@ const { editor } = useEditor((root,renderVue) =>{
     .use(customNodes)
     .use(menu.configure(menuPlugin,{config:commands,}))
 });
-
-
-
 provide('editor',editor);
 
-// console.info('editor:',editor)
+
+
+
 function consoleLog(){
   console.log('jsonOutput =',jsonOutput)
   console.log('showPreview = ',output)
@@ -155,6 +169,7 @@ function toggleReadOnly(){
 function setEditor(){
   editor.editor.value?.action(insert('\nresetted'))
 }
+
 </script>
 
 <style scoped>
