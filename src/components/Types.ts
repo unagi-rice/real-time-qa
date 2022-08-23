@@ -197,5 +197,10 @@ export function updateQuestionBank(questionBank1:questionBank, qbid:number,conte
 export function updateQuestion(question1:question,qid:number){}
 
 
+export const QuoBankInit=(()=>  ({
+  id: getuuid(),
+  questionBanks: [defaultTestQuestionBank()]
+} as userType));
+
 
 

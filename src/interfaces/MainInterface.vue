@@ -3,11 +3,12 @@ import { onMounted,inject, ref } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
-import {interfaces, question, questionBank} from '../components/Types';
+import {interfaces, questionBank, QuoBankInit, userType} from '../components/Types';
 import {resetAuth} from '../components/Auth'
 import { ArrowDownBold, Delete, Edit, Histogram } from '@element-plus/icons-vue';
 import {questionBankStorage} from '../components/utils/user'
-import { ElDialog } from 'element-plus';
+import { v1 as getuuid } from 'uuid';
+import { Content } from '@milkdown/vue';
 
 
 const title = "主界面";
@@ -45,10 +46,11 @@ function createfun(){
   
 }
 
+
 function editfun(questionBankID:string){
-  
-  interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
-  console.debug(interfaceStorage?.state.currentInterface)
+    emit('edit',questionBankID)
+    interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
+    console.debug(interfaceStorage?.state.currentInterface)
 }
 function statsfun(){
   // TODO: change props of statInterface
@@ -58,14 +60,22 @@ function statsfun(){
 
 function pubfun(){
   // TODO:emit publish event
+    emit('publish', getuuid())
     interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
+function createfun(){
+  let newQuestionBank = {id: getuuid(), title: "Test"+ getuuid(), content: []} as questionBank
+  questionBankStorage.save(newQuestionBank)
+}
+
+
 
 onMounted(()=>{
     console.debug('switched interface:title=',title,'tag=',tag);
   })
 </script>
+
 
 <!--定义展示的模块-->
 <template>
@@ -79,17 +89,16 @@ onMounted(()=>{
     :interface_tag="tag" 
     :buttons="buttons" 
     @edit="editfun" 
-    @create="createfun" 
-    @wow="wowfun">
+    @create="createfun" >
 
     <el-container style="width: 100%">
       <el-space wrap>
-        <el-card v-for="questionBank_i in questionBanks" :key="questionBank_i" class="box-card" >
+        <el-card v-for="questionBank_i in questionBankStorage.content" :key="questionBank_i" class="box-card" >
         
           <template #header>
             <div class="card-header">
               <el-row justify="space-between" align="middle">
-                <span>{{ 'Test ' + questionBank_i.name }}</span>
+                <span>{{ 'Test ' + questionBank_i.title }}</span>
                 <el-button-group class="ml-4">
                   <!-- <el-button class="button" text bg type="primary">Preview</el-button> -->
                   <el-button class="button" text bg @click="editfun">Edit</el-button>

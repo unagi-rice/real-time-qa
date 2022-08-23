@@ -136,7 +136,7 @@ storage.state.questionBank.content.map((qns) => {
   qns.content.forEach((c, index) => {
     if (index === 0) return;
     QAStat.answers.push({
-      type: c.type,
+      type: typeof c.type,
       content: (() => {
         if (c.type === "FillBlank") {
           let ansContent: tableData[] = [];
