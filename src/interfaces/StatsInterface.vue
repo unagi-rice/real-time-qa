@@ -128,8 +128,7 @@ interface Stats {
 }
 
 let QAStats: Stats[] = [];
-let pageId = ref(0);
-storage.state.questionBank[pageId].content.map((qns) => {
+storage.state.questionBank.content.map((qns) => {
   let QAStat: Stats = {
     name: qns.content[0].toString(),
     answers: [],
@@ -137,7 +136,7 @@ storage.state.questionBank[pageId].content.map((qns) => {
   qns.content.forEach((c, index) => {
     if (index === 0) return;
     QAStat.answers.push({
-      type: c.type,
+      type: typeof c.type,
       content: (() => {
         if (c.type === "FillBlank") {
           let ansContent: tableData[] = [];
