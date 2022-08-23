@@ -54,7 +54,7 @@ function pubfun(){
 }
 function createfun(){
   let newQuestionBank = {id: getuuid(), title: "Test"+ getuuid(), content: []} as questionBank
-  QuoBankInit.questionBanks.push(newQuestionBank)
+  questionBankStorage.save(newQuestionBank)
 }
 
 
@@ -81,7 +81,7 @@ onMounted(()=>{
 
     <el-container style="width: 100%">
       <el-space wrap>
-        <el-card v-for="questionBank_i in QuoBankInit.questionBanks" :key="questionBank_i" class="box-card" >
+        <el-card v-for="questionBank_i in questionBankStorage.content" :key="questionBank_i" class="box-card" >
         
           <template #header>
             <div class="card-header">
