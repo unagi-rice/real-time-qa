@@ -3,7 +3,7 @@ import { onMounted,inject } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
-import {interfaces, questionBank, userType} from '../components/Types';
+import {interfaces, questionBank, QuoBankInit, userType} from '../components/Types';
 import {resetAuth} from '../components/Auth'
 import { ArrowDownBold, Delete, Edit, Histogram } from '@element-plus/icons-vue';
 import {questionBankStorage} from '../components/utils/user'
@@ -36,9 +36,6 @@ if (!interfaceStorage) throw new Error("must call provide('interface') before mo
 console.debug('EmptyInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
 
 
-
-
-
 function editfun(questionBankID:string){
     emit('edit',questionBankID)
     interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
@@ -57,7 +54,7 @@ function pubfun(){
 }
 function createfun(){
   let newQuestionBank = {id: getuuid(), title: "Test"+ getuuid(), content: []} as questionBank
-  userType.questionBanks.push(newQuestionBank)
+  QuoBankInit.questionBanks.push(newQuestionBank)
 }
 
 
@@ -84,7 +81,7 @@ onMounted(()=>{
 
     <el-container style="width: 100%">
       <el-space wrap>
-        <el-card v-for="questionBank_i in userType.questionBanks" :key="questionBank_i" class="box-card" >
+        <el-card v-for="questionBank_i in QuoBankInit.questionBanks" :key="questionBank_i" class="box-card" >
         
           <template #header>
             <div class="card-header">
