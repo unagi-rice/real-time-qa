@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted,inject } from 'vue';
+import { onMounted,inject, ref } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
@@ -7,6 +7,7 @@ import {interfaces, question, questionBank} from '../components/Types';
 import {resetAuth} from '../components/Auth'
 import { ArrowDownBold, Delete, Edit, Histogram } from '@element-plus/icons-vue';
 import {questionBankStorage} from '../components/utils/user'
+import { ElDialog } from 'element-plus';
 
 
 const title = "主界面";
@@ -34,9 +35,15 @@ const interfaceStorage= inject<Storage<{currentInterface:interfaces}>>("interfac
 if (!interfaceStorage) throw new Error("must call provide('interface') before mount App");
 console.debug('EmptyInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
 
+const questionBanks = questionBankStorage.content() as questionBank[];
+const qBankName = ref("questionBank " + questionBanks.length.toString())
+const creatingQBank = ref(false)
 
-
-
+function createfun(){
+  // dialog
+  creatingQBank.value = true;
+  
+}
 
 function editfun(questionBankID:string){
   
@@ -44,6 +51,7 @@ function editfun(questionBankID:string){
   console.debug(interfaceStorage?.state.currentInterface)
 }
 function statsfun(){
+  // TODO: change props of statInterface
     interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
     console.debug(interfaceStorage?.state.currentInterface)
 }
@@ -71,7 +79,7 @@ onMounted(()=>{
     :interface_tag="tag" 
     :buttons="buttons" 
     @edit="editfun" 
-    @create="backfun" 
+    @create="createfun" 
     @wow="wowfun">
 
     <el-container style="width: 100%">
@@ -113,8 +121,10 @@ onMounted(()=>{
         </el-card>
       </el-space>
     </el-container>
-    <el-dialog>
+    <el-dialog v-if="creatingQBank" title="创建新题集">
       <!--TODO: give a name for newly created questionBank-->
+      <p>新题集名称：</p>
+      <el-input v-model="qBankName"/>
     </el-dialog>
   </InterfaceBase>
 </template>

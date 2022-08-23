@@ -24,15 +24,8 @@ interface Props {
   preview: Boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  question: () => defaultTestObjQuestion(), 
-  preview: () => false
-});
+const props = defineProps<Props>()
 
-
-const emit = defineEmits<{
-  (e:'made-response',response:any[]):void
-}>()
 
 const isPreview = props.preview;
 

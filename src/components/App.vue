@@ -47,7 +47,7 @@ watchEffect(() => {
 // emit handler
 function consoleLog(s:number){console.log(s);}
 function onPublish(questionBankID:questionBank["id"]){
-  const idMatch = ()
+  currQuestionBank.value = ((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === questionBankID;))
   current_interface_displayed.value = interfaces.QuestionAnswerInterface;
 }
 function onEdit(questionBankID:questionBank["id"]){
@@ -58,8 +58,6 @@ function onEdit(questionBankID:questionBank["id"]){
 <template v-if="isTeacher">
 <!-- NOTICE: list out interfaces and their props, emitters -->
 <MainInterface v-if="current_interface_displayed == interfaces.MainInterface" @edit="onEdit" @publish="onPublish"/>
-<!-- <EmptyInterface v-if="current_interface_displayed == interfaces.EmptyInterface" @console-log="consoleLog"/> -->
-<!-- <ExampleCounter v-if="current_interface_displayed == interfaces.ExampleCounter"/> -->
 <StatsInterface v-if="current_interface_displayed == interfaces.StatsInterface"/>
 <IndividualStatsInterface v-if="current_interface_displayed == interfaces.IndividualStatsInterface"/>
 <QuestionAnswerInterface v-if="current_interface_displayed == interfaces.QuestionAnswerInterface" :questionBank_id="currQuestionBankID"/>

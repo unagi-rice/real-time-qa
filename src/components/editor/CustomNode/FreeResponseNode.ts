@@ -81,7 +81,7 @@ export const FreeResponseNode:NodeCreator<string,UnknownRecord> = createNode((ut
       },
       parseMarkdown: {
         match: (node) => {
-          return node.type === "leafDirective" && node.id === id;// TODO:
+          return node.type === "leafDirective" && node.id === id;
         },
         runner: (state, node, type) => {
           type markdownNodeType = {
