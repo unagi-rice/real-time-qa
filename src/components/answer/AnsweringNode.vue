@@ -1,22 +1,9 @@
 <template>
 <div id="question-area">
-<span>{{question.id}} {{question.content[0]}}</span>
+  <VueEditor mode="preview" /> <!--TODO:align with prop of vueEditor-->
+<!--TODO: insert content-->
 </div>
-<el-divider border-style="double" />
-<h1 v-if="question.content[1].type == 'multi'">
-<el-button 
-  v-for="choice in choices">
-{{choice}}
-</el-button>
-</h1>
 
-<h1 v-if="question.content[1].type == 'unordered_seq'">
-
-</h1>
-
-<h1 v-if="question.content[1].type == 'unordered_seq'">
-
-</h1>
 </template>
 
 

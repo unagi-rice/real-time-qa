@@ -3,10 +3,9 @@ import { ref, onMounted, inject, provide, defineComponent, DefineComponent, onBe
 import InterfaceBase from '../components/InterfaceBase.vue'
 import { button as button } from '../components/InterfaceBase.vue';
 import { AppContext, Storage } from '@netless/window-manager'
-import { interfaces, question as Question, questionBank as QuestionBank, defaultTestQuestionBank, userType, objectiveQuestionType, answerBank as AnswerBank, multiChoice, fillBlank, unorderedSequenceChoice, initAnswerBank, answerBank } from '../components/Types';
+import { interfaces, question as Question, questionBank as QuestionBank, defaultTestQuestionBank, answerBank as AnswerBank, multiChoice, fillBlank, unorderedSequenceChoice, initAnswerBank, answerBank } from '../components/Types';
 import { loginTeacher, checkTeacher, getUid, AuthSnapshot } from '../components/Auth'
 import { v1 as getuuid } from 'uuid'
-import { getQuestionBank } from '../components/utils/user'
 import { Props } from 'unist-util-is';
 import { createStructuralDirectiveTransform } from '@vue/compiler-core';
 import VueApexCharts from 'vue3-apexcharts';
@@ -28,7 +27,7 @@ const buttons: button[] = [
     {
         text: 'Stop',
         event: 'shut'
-    }
+    },
     //{
     //    text:'Finish Answering',
     //    event:'finish'
@@ -46,7 +45,7 @@ console.debug(
 );
 
 
-export interface Props {
+interface Props {
     questionBank?: QuestionBank,
     preview?: boolean
 }
@@ -80,7 +79,7 @@ const storage = context.createStorage<QAStorage>("QAInterface", {
 })
 */
 
-const uid = getUid(context);
+const uid = getUid(context) as string;
 const storage = (() => {
     if (checkTeacher(context)) {
         return context.createStorage<QAStorage>("QAInterface", {
@@ -162,8 +161,11 @@ function startfun() {
 }
 
 function shutfun() {
-    allowAns.value = false;
-    console.log("shut answering.")
+    setTimeout(() => {
+        allowAns.value = false;
+        console.log("shut answering.")
+        
+    }, 1000);
     // interface returns to be blank.
 }
 

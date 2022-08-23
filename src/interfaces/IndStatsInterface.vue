@@ -1,4 +1,4 @@
-<!-- 界面模板 -->
+<!--  -->
 <script setup lang="ts">
 import { onMounted, inject } from "vue";
 import InterfaceBase from "../components/InterfaceBase.vue";
@@ -48,9 +48,7 @@ function nextfun() {
   });
   console.debug(interfaceStorage?.state.currentInterface);
 }
-function wowfun() {
-  alert("WOW!");
-}
+
 
 const emit = defineEmits<{
   (e: "console-log", id: number): void;

@@ -1,23 +1,16 @@
-<!-- 
-when larger than large: list && editor
-large <= size <= small: list fixed width, hide on select, show on editor.back
-      editor width:100% on select
-size < small: list 100%,  hide on select, show on editor.back
-      editor width:100% on select
 
-usable property: element.clientWidth
-https://www.w3schools.com/jsref/dom_obj_all.asp
-https://element-plus.org/en-US/component/drawer.html
- -->
 <template>
 
 <InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @preview="previewfun" @back="backfun" @publish="publishfun" @save="savefun">
 <el-container type="common layout">
-  <el-drawer id="question-list" v-show="largeWindow || !editingQuestion" >
+  <div id="question-list" size="100%" model-value="editingQuestion" >
     <el-card v-for="ques in questions" :key="ques.id" shadow="hover">{{ques.markdown()}}</el-card>
+  </div>
+  <el-drawer v-model="editorShowed" >
+
+    <!--TODO:preset=question content, onswitch:copy content to current question, onsave:copy content from question list to question set in storage-->
+    <VueEditor mode="edit" :question="question" answer="answer"/>
   </el-drawer>
-<!--TODO:preset=question content, onswitch:copy content to current question, onsave:copy content from question list to question set in storage-->
-<VueEditor :modelValue="question"/>
 </el-container>
 
 </InterfaceBase>
@@ -25,14 +18,14 @@ https://element-plus.org/en-US/component/drawer.html
 </template>
 
 <script setup lang="ts">
-import { ref,onMounted,inject,provide,onBeforeMount,computed } from 'vue';
+import { ref,onMounted,inject,provide,onBeforeMount,computed, watch } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
-import {interfaces,question,questionBank,userType} from '../components/Types';
-import {getQuestionBank} from '../components/utils/user'
+import {interfaces,question,questionBank} from '../components/Types';
+import {questionBankStorage} from '../components/utils/user'
 import VueEditor from '../components/editor/VueEditor.vue'
-
+import {ElMessageBox} from 'element-plus'
 
 const title = "";
 const tag = "tag";
@@ -52,10 +45,7 @@ const buttons:button[] = [
 ]
 
 interface Props{
-  title: string
-  id:string
-  interface_tag ?: string
-  buttons?:button[]
+  questionBank_id:number
 }
 const props = defineProps<Props>()
 
@@ -66,39 +56,32 @@ if (!context) throw new Error("must call provide('context') before mount App");
 const interfaceStorage= inject<Storage<{currentInterface:interfaces}>>("interface");
 if (!interfaceStorage) throw new Error("must call provide('interface') before mount App");
 // console.debug('QuestionEditInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
-const userStorage = inject<Storage<userType>>("userStorage")
 
 const emit = defineEmits<{
-(e:'publish',id:string):void
-(e:'back'):void
+(e:'publish',id:number):void
+(e:'update'):void
 }>()
-//http://localhost:4896/?role=admin&uid=tore1umkvvo
 let isSaved = true;
 provide<boolean>('isSaved',isSaved)
 function saveData(){
-  userStorage.questions[props.id] = modifiedQuestionBank;
+  
   isSaved = true;
 }
 function askSave():boolean{
-  return isSaved || window.confirm('您还有未保存的更动，确定离开此界面吗？');
+  ElMessageBox.confirm('您还有未保存的更动，确定离开此界面吗？').then((done)=>{
+    let timer;
+    timer = setTimeout(() => {
+        // 动画关闭需要一定的时间
+        setTimeout(() => {
+          .value = false
+        }, 4000)
+      }, 2000)
+  })
 }
 
 const smallWidth = 424;
 const mediumWidth = 920;
-const smallWindow = computed(()=>{
-  const currentWindowWidth = document.querySelector('div.app-real-time-qa')?.clientWidth;
-  if(currentWindowWidth !== undefined){
-    return currentWindowWidth < smallWidth;
-  }
-  throw Error('app window not found');
-})
-const largeWindow = computed(()=>{
-  const currentWindowWidth = document.querySelector('div.app-real-time-qa')?.clientWidth;
-  if(currentWindowWidth !== undefined){
-    return currentWindowWidth > mediumWidth;
-  }
-  throw Error('app window not found');
-})
+
 
 
 // emit related
@@ -111,35 +94,42 @@ function backfun(){
 }
 function publishfun(){
   console.log("publish hitted.")
-  emit('publish',props.id);
   if(!askSave()) return;
+  emit('publish',props.questionBank_id);
 
   // 转换界面至EmptyInterface
   interfaceStorage?.setState({currentInterface:interfaces.ExampleCounter})
   // console.debug(interfaceStorage?.state.currentInterface)
   return;
 }
+function onSelect(question_id:string)
+{
+  currQuestion = 
+}
 
+
+watch(props.questionBank_id,
+()=>{
+  
+}
+)
 
 // life cycle related
 let thisQuestionBank:questionBank|undefined;
 onBeforeMount(()=>{
   // mount questions to question list
-  thisQuestionBank = getQuestionBank(props.id);
+  thisQuestionBank = questionBankStorage.content[props.questionBank];
   if(!thisQuestionBank){
     // go to previous interface
+
     // show error
   }
 })
 onMounted(()=>{
 })
 
-let openPreview = false;
 
 
-function handleResponse(response:any){
-  console.log('response received:',response);
-}
 
 
 

@@ -1,36 +1,49 @@
-# Netless App Template
+<!-- 内容建议:以下为建议你可以补充的内容要点和方向 -->
 
-[Netless App 文档](https://github.com/netless-io/window-manager/blob/master/docs/develop-app.md)
+# 项目名
+<!-- 请将上面“项目名”替换为你本次参赛作品的项目名 -->
 
-## 快速开始
 
-前置条件：至少需要安装了 `git`、`node 16`、`npm 8`。
+## 项目简介
+<!-- 请描述此次参赛作品的简介，建议用「一句话简介」+ 详细介绍的形式 -->
+xxx
 
-1.  点击右上角 `Use this template` 生成一个属于你自己的仓库
 
-    如果需要选用原生以外的模版，请勾上 `Include all branches`
+## 安装部署指南
+<!-- 请描述该应用的使用步骤，包括下载、依赖安装、参数及软硬件配置（如有）等 -->
+xxx
 
-    > 如果你安装了 [GitHub CLI](https://cli.github.com)，也可以用这个命令一键生成并 clone 本仓库
-    >
-    >     gh repo create your-app-name --template netless-io/community-apps --include-all-branches
 
-2.  在 .env 文件里配置白板房间 UUID 和 Token
+## 功能简介
+<!-- 请给出该应用的主要功能点 -->
+xxx
 
-    请将本目录下的 .env.example 文件复制一份，重命名为 .env 或 .env.local 后，在里面填写必须的白板配置信息。你可以在 [Netless Workshop](https://workshop.netless.link) 申请专用的白板配置。
 
-3.  执行 `npm install` 安装依赖
+## 技术栈
+<!-- 请给出该应用主要的技术栈，包括使用的声网和环信（如有用） SDK 版本 -->
+xxx
 
-4.  执行 `npm start` 进行本地开发
 
-## 提交到社区 App 列表
+## 二次开发
+<!-- 1、如果是基于已有项目进行二次开发的参赛作品，请在此说明主要变更点，并附上原项目链接。2、如果是本次全新开发，请写“无” -->
+xxx
 
-开发完 App 后，可以在 [Community Apps](https://github.com/netless-io/community-apps) 仓库提交你的项目，方便更多人发现和使用。
 
-## 清单
+## 其他资料
+<!-- 能全方位展示你的作品亮点的资料，包括：1、如果是文件，可以放到该仓库你的文件中，在这里附上链接。2、如果是外部视频可以附上链接 -->
 
-- [ ] 添加 .env 或 .env.local
-- [ ] 修改 package.json 里的 `name`，`private` 等字段
-- [ ] (可选) 发布 npm 包
-- [ ] 添加 License
-- [ ] 修改 README
-- [ ] (可选) 添加 Logo
+---
+# 许可协议
+
+该参赛作品的源代码以`MIT`开源协议对外开源
+
+
+
+<!-- 往年作品 README 参考
+https://github.com/AgoraIO-Community/RTE-2021-Innovation-Challenge/blob/master/Application-Challenge/%E3%80%90%E5%8A%A0%E6%B2%B9%EF%BC%8C%E6%89%93%E5%B7%A5%E4%BA%BA%E3%80%91AgoraHomeAI/README.zh.md
+
+https://github.com/AgoraIO-Community/RTE-2021-Innovation-Challenge/blob/master/Application-Challenge/%5Brethinking%5D%E9%83%BD%E5%B8%82%E6%8E%A2%E9%99%A9%E5%AE%B6/Readme.md
+
+https://github.com/AgoraIO-Community/RTE-2021-Innovation-Challenge/blob/master/Application-Challenge/%5B%E5%8F%B2%E5%A4%A7%E4%BC%9F%5D%20%E6%95%99%E5%AD%A6%E5%8A%A9%E6%89%8B/README.md
+
+https://github.com/AgoraIO-Community/RTE-2021-Innovation-Challenge/blob/master/Application-Challenge/%E3%80%90AnakinChen%E3%80%91%E8%BF%9E%E9%BA%A6%E9%97%AE%E7%AD%94PK/README.md -->

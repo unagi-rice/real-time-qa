@@ -196,10 +196,6 @@ export function updateQuestionBank(questionBank1:questionBank, qbid:number,conte
 
 export function updateQuestion(question1:question,qid:number){}
 
-export interface userType {
-  id: string;
-  questionBanks: questionBank[];
-}
 
 
 

@@ -3,7 +3,7 @@ import { onMounted,inject } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
-import {interfaces, questionBank} from '../components/Types';
+import {interfaces, question, questionBank} from '../components/Types';
 import {resetAuth} from '../components/Auth'
 import { ArrowDownBold, Delete, Edit, Histogram } from '@element-plus/icons-vue';
 import {questionBankStorage} from '../components/utils/user'
@@ -23,7 +23,8 @@ const buttons:button[] = [
 
 ]
 const emit = defineEmits<{
-(e:'publish',id:number):void
+(e:'publish',id:questionBank["id"]):void
+(e:'edit',id:questionBank["id"]):void
 // usage: emit('console-log',3) to pass 3 to parent component in event 'console-log'
 }>()
 
@@ -39,8 +40,8 @@ console.debug('EmptyInterface.vue: currentInterface =',interfaceStorage.state.cu
 
 function editfun(questionBankID:string){
   
-    interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
+  interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
+  console.debug(interfaceStorage?.state.currentInterface)
 }
 function statsfun(){
     interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})

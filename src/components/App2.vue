@@ -22,6 +22,7 @@ provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
 const current_interface_displayed = ref(current_interface.state.currentInterface);
 
 const isTeacher = computed(()=>(loginTeacher(context) && checkTeacher(context)))
+const startAnswering = ref(false)
 
 console.debug('App2.vue: isTeacher?',isTeacher.value)
 
@@ -30,6 +31,15 @@ onBeforeMount(()=>{
 })
 
 onMounted(() =>{
+  context.addMagixEventListener('start-answering', ()=>{
+    startAnswering.value = true;
+  } )
+  context.addMagixEventListener('stop-answering', ()=>{
+    startAnswering.value = true;
+  } )
+  context.addMagixEventListener('next-question',()=>{
+    
+  })
   current_interface.addStateChangedListener(() => {
     current_interface_displayed.value = current_interface.state.currentInterface; // DK if it will work 
   })
@@ -43,6 +53,6 @@ function consoleLog(s:number){console.log(s);}
 </script>
 
 <template v-if="!isTeacher">
-<QuestionAnswerInterface v-if="current_interface_displayed == interfaces.QuestionAnswerInterface"/>
+<QuestionAnswerInterface v-if="current_interface_displayed == interfaces.QuestionAnswerInterface && startAnswering"/>
 <div v-else/>
 </template>

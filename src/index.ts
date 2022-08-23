@@ -37,8 +37,8 @@ const RealTimeQA: NetlessApp = {
 
 
     if(isTeacher.value){
-
-      box.mountStyles(styles);// TODO:move login to here
+      
+      box.mountStyles(styles);
       
       const $content = document.createElement("div");
       $content.className = "app-real-time-qa";

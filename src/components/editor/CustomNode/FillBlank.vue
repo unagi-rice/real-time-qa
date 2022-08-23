@@ -10,16 +10,14 @@ export default defineComponent({
 
 </script>
 <template>
-<el-button id="multi-open-editor" @click="openEditor">填空题题</el-button>
 
-<Teleport to="body" >
-    <div v-show="editorShowed">
-请编辑正确答案
-        <el-button type="success" :icon="Check" @click="closeEditor" circle />
-<el-input   v-model="currCorrectAnswer" placeholder="Please input" clearable/>
-    </div>
-
-</Teleport>
+  <el-button id="multi-open-editor" v-if="props.mode === 'edit'" @click="openEditor">填空题题</el-button>
+  <el-input v-else v-model="outputText" placeholder="Please input"/>
+<el-dialog v-show="editorShowed">
+  <template #header>请编辑正确答案</template>
+  <el-input   v-model="currCorrectAnswer" placeholder="Please input" clearable/>
+  <template #footer><el-button type="success" :icon="Check" @click="closeEditor" circle /></template>
+</el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -32,6 +30,7 @@ console.log(attrs);
 const currCorrectAnswer = ref((attrs.correctAnswer));
 
 const editorShowed = ref(false);
+const outputText = ref('');
 
 const openEditor = ()=>{
   console.log(editorShowed.value)
