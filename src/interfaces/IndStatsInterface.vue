@@ -1,10 +1,15 @@
 <!-- 界面模板 -->
 <script setup lang="ts">
-import { onMounted, inject } from "vue";
+import { ref, onMounted, inject } from "vue";
 import InterfaceBase from "../components/InterfaceBase.vue";
 import { button as button } from "../components/InterfaceBase.vue";
 import { AppContext, Storage } from "@netless/window-manager";
-import { interfaces } from "../components/Types";
+import {
+  interfaces,
+  QAStorage,
+  multiChoice,
+  unorderedSequenceChoice,
+} from "../components/Types";
 import { loginTeacher, checkTeacher } from "../components/Auth";
 
 import VueApexCharts from "vue3-apexcharts";
@@ -62,6 +67,11 @@ onMounted(() => {
   emit("console-log", 4);
 });
 
+let pageId = ref(0);
+const storage = context.createStorage<QAStorage>("QAInterface");
+let userUID = ref("");
+const usersUID = Object.keys(storage.state.answerBanks);
+
 const inputQns1 = "两仪式";
 </script>
 
@@ -81,19 +91,18 @@ const inputQns1 = "两仪式";
     @wow="loginTeacher(context) && checkTeacher(context)"
   >
     <el-row type="flex" justify="center">
-      <el-col :span="8"
-        >
+      <el-col :span="8">
         <el-select
-          v-model="value"
+          v-model="userUID"
           class="m-2"
           placeholder="User"
           size="default"
         >
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in usersUID"
+            :key="item"
+            :label="item"
+            :value="item"
           />
         </el-select>
       </el-col>
@@ -105,7 +114,54 @@ const inputQns1 = "两仪式";
     </el-row>
     <el-row type="flex" justify="center">
       <el-space fill direction="vertical" style="width: 85%">
-        <el-card class="box-card">
+        <el-card
+          :key="userUID"
+          v-for="(c, idx) in storage.state.questionBank.content[pageId].content"
+          class="box-card"
+        >
+          <template v-if="typeof c === 'string'" #header>
+            <div class="card-header">
+              <span>{{ c }}</span>
+            </div>
+          </template>
+          <el-input
+            v-else-if="typeof c === 'FillBlank'"
+            v-model="
+              storage.state.answerBanks[userUID].content[pageId].content[idx]
+            "
+            readonly
+          />
+          <div
+            v-if="typeof c === 'Multi' || typeof c === 'UnorderedSequence'"
+            style="text-align: center; display: block"
+          >
+            <el-radio-group
+              v-if="typeof c === 'Multi'"
+              v-model="
+                storage.state.answerBanks[userUID].content[pageId].content[idx]
+              "
+              class="radioDiv"
+              disabled
+            >
+              <div v-for="(cc, cidx) in (c as multiChoice).choice">
+                <el-checkbox :label="cidx" size="large">
+                  {{ cc }}
+                </el-checkbox>
+              </div>
+            </el-radio-group>
+            <el-checkbox-group
+              v-else-if="c.type === 'UnorderedSequence'"
+              v-model="storage.state.answerBanks[userUID].content[pageId].content[idx]"
+            >
+              <div v-for="(cc, cidx) in (c as unorderedSequenceChoice).choice">
+                <el-checkbox :label="cidx">
+                  {{ cc }}
+                </el-checkbox>
+              </div>
+            </el-checkbox-group>
+          </div>
+        </el-card>
+        <!-- <el-card class="box-card">
           <template #header>
             <div class="card-header">
               <span>题目 #1： 你的老婆是谁？</span>
@@ -129,7 +185,7 @@ const inputQns1 = "两仪式";
               </div>
             </el-radio-group>
           </div>
-        </el-card>
+        </el-card> !-->
       </el-space>
     </el-row>
   </InterfaceBase>

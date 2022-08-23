@@ -128,7 +128,8 @@ interface Stats {
 }
 
 let QAStats: Stats[] = [];
-storage.state.questionBank.content.map((qns) => {
+let pageId = ref(0);
+storage.state.questionBank[pageId].content.map((qns) => {
   let QAStat: Stats = {
     name: qns.content[0].toString(),
     answers: [],
