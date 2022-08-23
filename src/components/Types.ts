@@ -201,5 +201,10 @@ export interface userType {
   questionBanks: questionBank[];
 }
 
+export const QuoBankInit=(()=>  ({
+  id: getuuid(),
+  questionBanks: [defaultTestQuestionBank()]
+} as userType));
+
 
 
