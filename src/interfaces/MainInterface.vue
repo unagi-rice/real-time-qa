@@ -32,7 +32,7 @@ const emit = defineEmits<{
 
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
-const interfaceStorage= inject<Storage<{currentInterface:interfaces}>>("interface");
+const interfaceStorage= context.createStorage<{currentInterface:interfaces}>("interface")
 if (!interfaceStorage) throw new Error("must call provide('interface') before mount App");
 console.debug('EmptyInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
 
@@ -65,9 +65,10 @@ function deleteQuestionBank(questionBankID:questionBank["id"]){
 }
 function editfun(questionBankID:string){
   emit('edit',questionBankID)
-  
-  interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
-  console.debug(interfaceStorage?.state.currentInterface)
+  setTimeout(() => {
+    interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
+    console.debug(interfaceStorage?.state.currentInterface)
+  }, 300);
 }
 function statsfun(questionBankID:string){
   setTimeout(() => {

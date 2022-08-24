@@ -36,6 +36,7 @@ console.debug('App.vue: isTeacher?',isTeacher.value)
 onMounted(() =>{
   // initialize currQuestionBankID
   current_interface.addStateChangedListener(() => {
+    console.log("interface changed to ",interfaces[current_interface.state.currentInterface])
     current_interface_displayed.value = current_interface.state.currentInterface;
   })
 });

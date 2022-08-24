@@ -3,13 +3,15 @@
 
 <InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @save="savefun" @back="backfun" @publish="publishfun">
 <el-container type="common layout">
-    <el-card v-for="(ques,index) in currQuestionBank?.content" :body-style="{width:'100%'}" :key="ques.id" @click="onSelect(ques.id)" shadow="hover">{{questionAnswer2Markdown(ques,currAnswerBank?.content[index] as answer)}}</el-card>
-    <el-card @click="createfun" shadow="hover" style="width:50%;text-align: center;"><el-icon :size="20"><Plus/></el-icon></el-card>
-  <el-drawer v-model="editorShowed" size="90%" show-close="false" close-on-click-modal="false" :before-close="handleEditorClose">
 
-    <MilkdownEditor v-if="firstSelected" 
+    <el-card v-for="(ques,index) in currQuestionBank?.content" style="width:100%" :key="ques.id" @click="onSelect(ques.id)" shadow="hover">{{'"'+questionAnswer2Markdown(ques,currAnswerBank?.content[index] as answer)+"\""}}</el-card>
+    <el-card @click="createfun" shadow="hover" style="width:100%;text-align: center;"><el-icon :size="20"><Plus/></el-icon></el-card>
+  <el-drawer v-model="editorShowed" :size="90" show-close="false" close-on-click-modal="false" :before-close="handleEditorClose">
+
+    <MilkdownEditor 
     :question="currQuestionBank?.content.find((elem:question)=>elem.id === currQuestionID) " :answer="currAnswer"
     @update="updatefun"/>
+
   </el-drawer>
 </el-container>
 
@@ -64,6 +66,7 @@ if (!interfaceStorage) throw new Error("must call provide('interface') before mo
 
 // reactive variables
 const editorShowed = ref(false);
+const askingCloseEditor = ref(false);
 const firstSelected = ref(false);
 const currQuestionBank = ref((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === props.questionBank_id)) 
 const currAnswerBank = ref((answerBankStorage.content() as answerBank[]).find((elem)=>elem.qid === props.questionBank_id)) 
@@ -72,6 +75,11 @@ const currAnswerID = ref('')
 const currQuestion = computed(()=>currQuestionBank.value?.content.find((elem:question)=>elem.id === currQuestionID.value)) // TEST-ITEM: ensure not to show when no question is selected
 const currAnswer = computed(()=>currAnswerBank.value?.content.find((elem:answer)=>elem.id === currAnswerID.value)) 
 
+watch(()=>props.questionBank_id,()=>{
+  console.log(`question id changed to ${props.questionBank_id}`)
+  currQuestionBank.value = (questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === props.questionBank_id)
+  currAnswerBank.value = ((answerBankStorage.content() as answerBank[]).find((elem)=>elem.qid === props.questionBank_id)) 
+})
 
 
 let isSaved = true;
@@ -107,11 +115,15 @@ function createfun(){
     id:v1(),
     content:{}
   }
+    currQuestionBank.value = (questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === props.questionBank_id)
+  currAnswerBank.value = ((answerBankStorage.content() as answerBank[]).find((elem)=>elem.qid === props.questionBank_id)) 
+
   console.log(props.questionBank_id)
-  console.log(currQuestionBank.value,currAnswerBank.value)
+  console.log(questionBankStorage.content(),answerBankStorage.content())
   if(!currQuestionBank.value || !currAnswerBank.value)return;
   currQuestionBank.value.content.push(newQuestion);
-  currAnswerBank.value.content.push(newAnswer)
+  (currAnswerBank.value.content as answer[]).push(newAnswer)
+  console.log(currQuestionBank.value.content,currAnswerBank.value.content)
 }
 function updatefun(question_in:question,answer_in:answer){
   isSaved = false;
@@ -122,9 +134,14 @@ function updatefun(question_in:question,answer_in:answer){
 // back to main interface
 function backfun(){
   if(currQuestionID.value !== '' && currQuestionBank.value)bufferQuestion(currQuestionBank.value.content.find((elem)=>elem.id === currQuestionID.value) as question)
-  console.log("back hitted.")
+  // console.log("back hitted.")
 
   // 转换界面至MainInterface
+  setTimeout(() => {
+    // 转换界面至QuestionAnswerInterface
+    interfaceStorage?.setState({currentInterface:interfaces.MainInterface})
+    console.debug(interfaceStorage?.state.currentInterface)
+  }, 300);
   // console.debug(interfaceStorage?.state.currentInterface)
 }
 function publishfun(){
@@ -153,33 +170,21 @@ function publishfun(){
 
 function savefun(){
   isSaved = true;
-
+  saveData();
 }
 
 const loading = ref(false)
 let timer
-const handleEditorClose = (done:any) => {
+const handleEditorClose = (done:()=>void) => {
   if (loading.value) {
     return
   }
-  ElMessageBox.confirm('是否保存？')
-    .then(()=>{
-      loading.value = true
-      if(currQuestionBank.value  &&  currQuestionID.value !== '')bufferQuestion(currQuestionBank.value.content.find((elem)=>elem.id === currQuestionID.value) as question)
-      timer = setTimeout(() => {
-        done()
-        // 动画关闭需要一定的时间
-        setTimeout(() => {
-          loading.value = false
-        }, 500)
-      }, 100)
-      },() => {done(true)})
-    .catch(() => {
-      // catch error
-    })
+  
+  window.confirm('是否保存？')
 }
 function onSelect(question_id:string)
 {
+  console.debug(`onSelect: ${question_id}`);
   if(!editorShowed.value)editorShowed.value = true;
   currQuestionID.value = question_id
 }
