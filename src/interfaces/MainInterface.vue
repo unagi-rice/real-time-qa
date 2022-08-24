@@ -19,7 +19,7 @@ const buttons:button[] = [
   //   event:'edit'
   // },
   {
-    text:'创建卷子',
+    text:'创建试卷',
     event:'create'
   },
 
@@ -126,8 +126,8 @@ onMounted(()=>{
       <div v-else class="empty-content">看起来你还没创建卷子呢...</div>
     </el-container>
       <el-form v-model="newQBank" @submit.prevent>
-    <el-dialog v-model="creatingQBank" title="创建新题集">
-      <el-form-item label="名字"><el-input v-model="newQBank.name"/></el-form-item>
+    <el-dialog v-model="creatingQBank" title="创建试卷">
+      <el-form-item label="名称"><el-input v-model="newQBank.name"/></el-form-item>
         <template #footer> 
           <el-form-item>
             
