@@ -6,7 +6,7 @@
 
     <el-card v-for="(ques,index) in currQuestionBank?.content" style="width:100%" :key="ques.id" @click="onSelect(ques.id)" shadow="hover">{{'"'+questionAnswer2Markdown(ques,currAnswerBank?.content[index] as answer)+"\""}}</el-card>
     <el-card @click="createfun" shadow="hover" style="width:100%;text-align: center;"><el-icon :size="20"><Plus/></el-icon></el-card>
-  <el-drawer v-model="editorShowed" :size="90" show-close="false" close-on-click-modal="false" :before-close="handleEditorClose">
+  <el-drawer v-model="editorShowed" :size="90" :before-close="handleEditorClose">
 
     <MilkdownEditor 
     :question="currQuestionBank?.content.find((elem:question)=>elem.id === currQuestionID) " :answer="currAnswer"
@@ -98,9 +98,9 @@ function bufferQuestion(question_in: question)
 
 // save whole questionBank to localStorage
 function saveData(){
-  if(currQuestionBank.value)questionBankStorage.add(currQuestionBank.value)
-  if(currAnswerBank.value)answerBankStorage.add(currAnswerBank.value)
-  
+  if(currQuestionBank.value)questionBankStorage.add(currQuestionBank.value as questionBank)
+  if(currAnswerBank.value)answerBankStorage.add(currAnswerBank.value as answerBank)
+  console.debug('saveData()')
   isSaved = true;
 }
 
@@ -116,20 +116,20 @@ function createfun(){
     id:v1(),
     content:{}
   }
-    currQuestionBank.value = (questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === props.questionBank_id)
-  currAnswerBank.value = ((answerBankStorage.content() as answerBank[]).find((elem)=>elem.qid === props.questionBank_id)) 
+    currQuestionBank.value = (questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === props.questionBank_id);
+  currAnswerBank.value = ((answerBankStorage.content() as answerBank[]).find((elem)=>elem.qid === props.questionBank_id)) ;
 
   console.log(props.questionBank_id)
   console.log(questionBankStorage.content(),answerBankStorage.content())
+  console.log(currQuestionBank.value,currAnswerBank.value)
   if(!currQuestionBank.value || !currAnswerBank.value)return;
-  currQuestionBank.value.content.push(newQuestion);
-  (currAnswerBank.value.content as answer[]).push(newAnswer)
-  console.log(currQuestionBank.value.content,currAnswerBank.value.content)
+  (currQuestionBank.value as questionBank).content.push(newQuestion);
+  (currAnswerBank.value as answerBank).content.push(newAnswer)
 }
 function updatefun(question_in:question,answer_in:answer){
   isSaved = false;
-  if(currQuestionBank.value)currQuestionBank.value.content[currQuestionBank.value.content.findIndex((elem:question)=>elem.id === question_in.id)] = question_in
- if(currAnswerBank.value) currAnswerBank.value.content[currAnswerBank.value.content.findIndex((elem:answer)=>elem.id === answer_in.id)] = answer_in
+  if(currQuestionBank.value)(currQuestionBank.value as questionBank).content[currQuestionBank.value.content.findIndex((elem:question)=>elem.id === question_in.id)] = question_in
+ if(currAnswerBank.value) (currAnswerBank.value as answerBank).content[currAnswerBank.value.content.findIndex((elem:answer)=>elem.id === answer_in.id)] = answer_in
 }
 
 // back to main interface

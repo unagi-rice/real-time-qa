@@ -74,7 +74,7 @@ function editfun(questionBankID:string){
 function statsfun(questionBankID:string){
   setTimeout(() => {
     interfaceStorage?.changeInterface(interfaces.StatsInterface)
-    console.debug(interfaceStorage?.current_interface_displayed)
+    console.debug(interfaceStorage?.current_interface_displayed.value)
   }, 300);
 }
 
@@ -82,7 +82,7 @@ function pubfun(questionBankID:questionBank['id']){
   emit('publish', questionBankID)
   setTimeout(() => {
     interfaceStorage?.changeInterface(interfaces.QuestionAnswerInterface)
-    console.debug(interfaceStorage?.current_interface_displayed)
+    console.debug(interfaceStorage?.current_interface_displayed.value)
   }, 300);
 }
 

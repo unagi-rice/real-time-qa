@@ -41,18 +41,9 @@ console.debug('App.vue: isTeacher?',isTeacher.value)
 
 onMounted(() =>{
   // initialize currQuestionBankID
-  console.debug('onMounted()')
-  // current_interface.addStateChangedListener(() => {// BUG: current_interface_displayed not working
-  //   console.log("interface changed to ",interfaces[current_interface.state.currentInterface])
-  //   current_interface_displayed.value = current_interface.state.currentInterface;
-  // })
+
 });
 
-// watch(current_interface.state.currentInterface,() => {
-//   current_interface_displayed.value = current_interface.state.currentInterface;
-
-//   console.debug("App.vue: current_interface_displayed =",current_interface_displayed.value);
-// });
 
 
 
@@ -64,8 +55,7 @@ function onPublish(questionBankID:questionBank["id"]){
 }
 function onEdit(questionBankID:questionBank["id"]){
   currQuestionBankID.value = questionBankID;
-currQuestionBank.value = ((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === questionBankID)) as questionBank
-  // current_interface_displayed.value = interfaces.QuestionEditInterface;
+  currQuestionBank.value = ((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === questionBankID)) as questionBank
 }
 
 </script>

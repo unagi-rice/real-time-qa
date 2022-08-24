@@ -21,11 +21,11 @@ export const questionBankStorage = {
     let matchInd:number;
     if ((matchInd = currContent.findIndex((elem:questionBank)=>elem.id === questionBank_in.id)) !== -1)
     {
-      currContent.splice(matchInd,1,structuredClone(questionBank_in));
+      currContent.splice(matchInd,1,(questionBank_in));
     }
     else
     {
-      currContent.push(structuredClone(questionBank_in));
+      currContent.push((questionBank_in));
     }
     questionBankStorage.save(currContent);
     },
@@ -53,13 +53,13 @@ export const answerBankStorage = {
   add:(answerBank_in:answerBank)=>{
     let currContent = answerBankStorage.content();
     let matchInd:number;
-    if ((matchInd = currContent.findIndex((elem:answerBank)=>elem.id === answerBank_in.id)) !== -1)
+    if ((matchInd = currContent.findIndex((elem:answerBank)=>elem.qid === answerBank_in.qid)) !== -1)
     {
-      currContent.splice(matchInd,1,structuredClone(answerBank_in));
+      currContent.splice(matchInd,1,(answerBank_in));
     }
     else
     {
-      currContent.push(structuredClone(answerBank_in));
+      currContent.push((answerBank_in));
     }
     answerBankStorage.save(currContent);
     },
