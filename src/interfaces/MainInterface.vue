@@ -11,8 +11,8 @@ import { v1 as getuuid } from 'uuid';
 import { Content } from '@milkdown/vue';
 
 
-const title = "实时问答插件";
-const tag = "主界面";
+const title = "实时问答插件 | 主页";
+const tag = "";
 const buttons:button[] = [
   // {
   //   text:'edit',

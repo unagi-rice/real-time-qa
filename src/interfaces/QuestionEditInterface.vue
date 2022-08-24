@@ -31,8 +31,8 @@ import {ElMessageBox} from 'element-plus'
 import { questionAnswer2Markdown } from '../components/editor/MarkdownUtils';
 import { Edit, Plus } from '@element-plus/icons-vue';
 import { v1 } from 'uuid';
-const title = "编辑题目";
-const tag = "tag";
+const title = "实时问答插件 | 编辑题目";
+const tag = "";
 const buttons:button[] = [
   
   {
