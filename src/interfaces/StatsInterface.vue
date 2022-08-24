@@ -29,8 +29,10 @@ const buttons: button[] = [
 ];
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
-const interfaceStorage =
-  inject<{current_interface_displayed:Ref<interfaces>,changeInterface:(next:interfaces)=>void}>("interface");
+const interfaceStorage = inject<{
+  current_interface_displayed: Ref<interfaces>;
+  changeInterface: (next: interfaces) => void;
+}>("interface");
 if (!interfaceStorage)
   throw new Error("must call provide('interface') before mount App");
 console.debug(
@@ -39,7 +41,7 @@ console.debug(
 );
 function mainfun() {
   // 转换界面至 EmptyInterface
-  interfaceStorage?.changeInterface(interfaces.EmptyInterface );
+  interfaceStorage?.changeInterface(interfaces.EmptyInterface);
   console.debug(interfaceStorage?.current_interface_displayed.value);
 }
 function nextfun() {
@@ -52,12 +54,16 @@ function wowfun() {
 }
 
 const storage = context.createStorage<QAStorage>("QAInterface");
+if (Object.keys(storage.state.answerBanks).length === 0) {
+  alert("无作答记录");
+  interfaceStorage?.changeInterface(interfaces.MainInterface);
+}
 
 let Answers: {
   [qid: string]: { [key: number]: string | number | number[] }[];
 } = {};
 // calculate stats
-console.log(storage.state.answerBanks)
+console.log(storage.state.answerBanks);
 Object.keys(storage.state.answerBanks).map((key) => {
   const ansBank = storage.state.answerBanks[key];
   if (Answers[ansBank.qid] === undefined) Answers[ansBank.qid] = [];
@@ -132,13 +138,13 @@ storage.state.questionBank.content.map((qns) => {
     QAStat.answers.push({
       type: typeof c.type,
       content: (() => {
-        if (c.type === "FillBlank") {
+        if (typeof c.type === "FillBlank") {
           let ansContent: tableData[] = [];
           Answers[qns.id].map((ans) => {
             ansContent.push({ response: ans[index - 1] });
           });
           return ansContent;
-        } else if (c.type === "Multi") {
+        } else if (typeof c.type === "Multi") {
           let ansContent: chartSeries = {
             data: Array.apply(null, Array(Object.keys(c.choice).length)).map(
               (x, i) => 0
@@ -148,7 +154,7 @@ storage.state.questionBank.content.map((qns) => {
             ansContent.data[ans[index - 1]] += 1;
           });
           return [[ansContent]];
-        } else if (c.type === "UnorderedSequence") {
+        } else if (typeof c.type === "UnorderedSequence") {
           let ansContent: chartSeries = {
             data: Array.apply(null, Array(Object.keys(c.choice).length)).map(
               (x, i) => 0
@@ -163,7 +169,8 @@ storage.state.questionBank.content.map((qns) => {
         }
       })(),
       chartOptions: (() => {
-        if (c.type !== "Multi" || c.type !== "UnorderedSequence") return null;
+        if (typeof c.type !== "Multi" || typeof c.type !== "UnorderedSequence")
+          return null;
         let cOpt: chartOptions = { ...defaultChartOptions };
         c.choice.map((choice) => {
           cOpt.xaxis.categories.push(choice);
