@@ -140,8 +140,19 @@ function createfun(){
 function updatefun(question_in:question,answer_in:answer){
   isSaved = false;
   console.log(question_in,answer_in)
-  if(currQuestionBank.value)(currQuestionBank.value as questionBank).content[(currQuestionBank.value as questionBank).content.findIndex((elem:question)=>elem.id === question_in.id)] = question_in
- if(currAnswerBank.value) (currAnswerBank.value as answerBank).content[ (currAnswerBank.value as answerBank).content.findIndex((elem:answer)=>(elem.id === answer_in.id))] = answer_in
+  if(currQuestionBank.value)
+  {
+    let matchInd:number;
+    let qb = currQuestionBank.value as questionBank
+    const test:(elem:question)=>boolean = (elem:question)=>({return elem.id === question_in.id})
+    (qb).content.findIndex(test)
+    (currQuestionBank.value as questionBank).content[matchInd] = question_in
+  }
+ if(currAnswerBank.value)
+ {
+   let matchInd:number =  (currAnswerBank.value as answerBank).content.findIndex((elem:answer)=>(elem.id === answer_in.id))
+   (currAnswerBank.value as answerBank).content[matchInd] = answer_in
+ }
 }
 
 // back to main interface
@@ -185,6 +196,7 @@ function savefun(){
 }
 
 const handleEditorClose = () => {
+  console.log('close editor')
   bufferQuestion(currQuestion.value)
   editorShowed.value = false;
 
