@@ -12,7 +12,7 @@ export default defineComponent({
 <template>
 
   <el-button id="multi-open-editor" @click="openEditor">填空题</el-button>
-<el-dialog v-show="editorShowed" :before-close="closeEditor" >
+<el-dialog v-model="editorShowed" :before-close="closeEditor" >
   <template #header>请编辑正确答案</template>
   <el-input   v-model="currCorrectAnswer" placeholder="Please input" clearable/>
 </el-dialog>

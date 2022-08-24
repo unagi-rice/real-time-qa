@@ -43,6 +43,7 @@ const newQBank = ref({
 const creatingQBank = ref(false)
 function createfun(){
     newQBank.value.name = "卷子 " + questionBanks.value.length.toString()
+    console.log('create triggered')
   creatingQBank.value = true;
 }
 function closeDialog(){
@@ -108,6 +109,7 @@ onMounted(()=>{
 
     <el-container style="width: 100%">
       <el-space wrap>
+        <div v-if="questionBanks.length>0">
         <el-card v-for="questionBank_i in questionBanks" :key="questionBank_i.id" class="box-card" >
           <el-row justify="space-between" align="middle"> 
             <span>{{ questionBank_i.title }}</span> 
@@ -115,16 +117,18 @@ onMounted(()=>{
               <el-button class="button" text bg @click="editfun(questionBank_i.id)">Edit</el-button>
               <el-button class="button" text bg @click="pubfun(questionBank_i.id)">Publish</el-button>
               <el-button class="button" text bg @click="statsfun(questionBank_i.id)">Statistics</el-button>
-              <el-popconfirm title="确定删除" confirm-button-text="确定" cancel-button-text="取消" @confirm="deleteQuestionBank(questionBAnk_i.id)"><template #reference>
-              <el-button class="button" text bg type="danger" >Delete</el-button>
+              <el-popconfirm title="确定删除" confirm-button-text="确定" cancel-button-text="取消" @confirm="deleteQuestionBank(questionBank_i.id)"><template #reference>
+                <el-button class="button" text bg type="danger" >Delete</el-button>
                   </template></el-popconfirm>
               </el-button-group>
           </el-row>
           
         </el-card>
+        </div>
+        <el-card v-else style="width:100%;">看起来你还没创建卷子呢...</el-card>
       </el-space>
     </el-container>
-    <el-dialog v-if="creatingQBank" title="创建新题集">
+    <el-dialog v-model="creatingQBank" title="创建新题集"><h1>Hello world</h1>
       <el-form v-model="newQBank" @submit.prevent>
 
         <p>新题集名称：</p>
