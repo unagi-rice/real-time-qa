@@ -15,7 +15,7 @@
         <template #body> 
           
           <MilkdownEditor 
-    :question="currQuestionBank?.content.find((elem:question)=>elem.id === currQuestionID) " :answer="currAnswer"
+    :question="currQuestion" :answer="currAnswer"
     @update="updatefun"/>
       </template>
     </Dialog>
@@ -39,6 +39,8 @@ import {ElMessageBox} from 'element-plus'
 import { questionAnswer2Markdown } from '../components/editor/MarkdownUtils';
 import { Edit, Plus } from '@element-plus/icons-vue';
 import { v1 } from 'uuid';
+import "prismjs/themes/prism.css";
+
 import Dialog from '../components/Dialog.vue';
 const title = "编辑题目";
 const tag = "";
@@ -157,15 +159,13 @@ function backfun(){
 }
 function publishfun(){
   console.log("publish hitted.")
-  if(!isSaved){
-    ElMessageBox.confirm('你尚未保存题目，确定继续？').then(()=>{
+  if(!(isSaved || window.confirm('你尚未保存题目，确定继续？'))){
       emit('publish',props.questionBank_id);
     setTimeout(() => {
       // 转换界面至QuestionAnswerInterface
       interfaceStorage?.changeInterface(interfaces.QuestionAnswerInterface)
       console.debug(interfaceStorage?.current_interface_displayed)
     }, 300);
-    })
   }
   else{
     

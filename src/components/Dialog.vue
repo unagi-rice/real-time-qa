@@ -40,11 +40,11 @@ function onClose(){
 <style>
 .modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 98;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  /* width: 100%;
+  height: 100%; */
   background-color: rgba(0, 0, 0, 0.5);
   display: table;
   transition: opacity 0.3s ease;
@@ -60,6 +60,7 @@ function onClose(){
   width: 50%;
   height:50%;
   margin: 0px;
+  left:20%;
   padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;

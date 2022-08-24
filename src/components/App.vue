@@ -67,3 +67,7 @@ function onEdit(questionBankID:questionBank["id"]){
 <QuestionAnswerInterface v-if="current_interface_displayed == interfaces.QuestionAnswerInterface" :questionBank="currQuestionBank"/>
 <QuestionEditInterface v-if="current_interface_displayed == interfaces.QuestionEditInterface" :questionBank_id="currQuestionBankID" @publish="onPublish"/>
 </template>
+<style>
+
+@import "@material-design-icons/font/outlined.css";
+</style>
