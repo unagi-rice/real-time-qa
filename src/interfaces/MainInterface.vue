@@ -107,7 +107,7 @@ onMounted(()=>{
     @create="createfun" >
     <!-- @edit="editfun"  -->
 
-    <el-container >
+    <el-container>
       <div style="width: 100%" v-if="questionBanks.length>0">
         <el-card class="question-set-item" v-for="questionBank_i in questionBankStorage.content()" :key="questionBank_i.id" >
           <el-row justify="space-between" align="middle"> 
@@ -121,9 +121,6 @@ onMounted(()=>{
               </template></el-popconfirm>
             </el-button-group>
           </el-row>
-            
-          
-          
         </el-card>
       </div>
       <div v-else class="empty-content">看起来你还没创建卷子呢...</div>
