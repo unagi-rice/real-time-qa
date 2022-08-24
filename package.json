@@ -34,6 +34,7 @@
         "crypto-browserify": "^3.12.0",
         "element-plus": "^2.2.13",
         "events": "^3.3.0",
+        "micromark": "^3.0.10",
         "node": "^16.17.0",
         "process": "^0.11.10",
         "remark-directive": "^2.0.1",

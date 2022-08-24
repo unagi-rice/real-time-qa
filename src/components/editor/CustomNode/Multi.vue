@@ -9,62 +9,14 @@ export default defineComponent({
 });
 
 </script>
-<!-- 
-<template>
-  <el-button text @click="dialogVisible = true"
-    >click to open the Dialog</el-button
-  >
 
-  <el-dialog
-    v-model="dialogVisible"
-    title="Tips"
-    width="30%"
-    :before-close="handleClose"
-  >
-    <span>This is a message</span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >Confirm</el-button
-        >
-      </span>
-    </template>
-  </el-dialog>
-</template>
-
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { ElMessageBox } from 'element-plus'
-
-const dialogVisible = ref(false)
-
-const handleClose = (done: () => void) => {
-  ElMessageBox.confirm('Are you sure to close this dialog?')
-    .then(() => {
-      done()
-    })
-    .catch(() => {
-      // catch error
-    })
-}
-</script>
-<style scoped>
-.dialog-footer button:first-child {
-  margin-right: 10px;
-}
-</style>
-
-
-
- -->
 
 <template>
 <el-button id="multi-open-editor" @click="openEditor">单选题</el-button>
-<Teleport to="body" >
+<el-dialog v-model="editorShowed" title="请编辑" width="30%"
+    :before-close="closeEditor" >
   <el-card id="answerContainer-editor multi-editor" v-if="editorShowed" >
-    <el-button type="success" :icon="Check" @click="closeEditor" circle />
-    <span>请编辑题目</span><br/>
+    <template #header>请编辑选项</template>
     <el-radio-group :id="attrs.identity" v-model="currCorrectAnswer" >
     <el-space direction="vertical">
 
@@ -76,7 +28,7 @@ const handleClose = (done: () => void) => {
     </el-space>
 </el-radio-group>
 </el-card>
-</Teleport>
+</el-dialog>
 
 </template>
 
@@ -91,7 +43,7 @@ import type { multiChoice,objectiveAnswerKeyType } from '../../Types';
 import "./style.css"
 
 const metadata = useNodeCtx<Node>();
-const attrs = metadata.node.value.attrs;
+let attrs = structuredClone(metadata.node.value.attrs);
 console.log(attrs);
 const currChoice = ref((attrs.choice));
 const currCorrectAnswer = ref((attrs.correctAnswer));
@@ -119,35 +71,10 @@ function addOption(){
 }
 // if editor is not editable, show ansewering 
 
-function closeEditor(e:Event){
-  console.log('editing ended\nchoice:',attrs.choice,'\ncorrectAnswer:',attrs.correctAnswer);
-  // force refresh markdown
-  editor?.editor.value?.action(()=>{
-    console.debug('refreshed editor');
-    return forceUpdate()});
-      const view = metadata.view;
-    const node = metadata.node;
-    const getPos = metadata.getPos;
-    console.log('getPos():',getPos());
-//    editor?.editor.value?.action(setAttr(getPos(),(prevAttrs:Attrs)=>{
-//     console.log(prevAttrs);
-//   let newChoice = structuredClone(currChoice.value)
-//     console.log({
-//   identity:prevAttrs.identity,
-//   type:prevAttrs.type,
-//   choice:newChoice,
-//   correctAnswer:currCorrectAnswer.value,
-//   })
-//     return {
-//   identity:prevAttrs.identity,
-//   type:prevAttrs.type,
-//   choice:newChoice,
-//   correctAnswer:currCorrectAnswer.value,
-//   }
-// }))
-
-  editorShowed.value = false;
-  // BUG: markdown not updated after closing editor
+function closeEditor(done:any){
+  const {tr} = metadata.view.state
+  metadata.view.dispatch(tr.setNodeMarkup(metadata.getPos(),metadata.node.value.type,attrs))
+  done()
 }
 
 function deleteOption(optKey:string){

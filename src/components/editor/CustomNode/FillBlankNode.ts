@@ -16,7 +16,6 @@ import { inject } from "vue";
 import {objectiveQuestionType } from "../../Types";
 import { v1 } from "uuid";
 
-// TODO: question types
 
 export const id = "FillBlankNode";
 

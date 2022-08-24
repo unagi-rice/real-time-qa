@@ -16,7 +16,6 @@ import { inject } from "vue";
 import { subjectiveQuestionType } from "../../Types";
 import { v1 } from "uuid";
 import "./style.css"
-// TODO: question types
 
 export const id = "FreeResponseNode";
 

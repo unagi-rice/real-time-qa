@@ -10,7 +10,6 @@ import {
   multiChoice,
   unorderedSequenceChoice,
 } from "../components/Types";
-import { loginTeacher, checkTeacher } from "../components/Auth";
 
 import VueApexCharts from "vue3-apexcharts";
 // import { emitter } from '@netless/window-manager/dist/InternalEmitter';
@@ -86,7 +85,6 @@ const inputQns1 = "两仪式";
     :buttons="buttons"
     @back="backfun"
     @next="nextfun"
-    @wow="loginTeacher(context) && checkTeacher(context)"
   >
     <el-row type="flex" justify="center">
       <el-col :span="8">

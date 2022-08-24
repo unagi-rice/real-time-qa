@@ -11,12 +11,10 @@ export default defineComponent({
 </script>
 <template>
 
-  <el-button id="multi-open-editor" v-if="props.mode === 'edit'" @click="openEditor">填空题题</el-button>
-  <el-input v-else v-model="outputText" placeholder="Please input"/>
-<el-dialog v-show="editorShowed">
+  <el-button id="multi-open-editor" @click="openEditor">填空题</el-button>
+<el-dialog v-show="editorShowed" :before-close="closeEditor" >
   <template #header>请编辑正确答案</template>
   <el-input   v-model="currCorrectAnswer" placeholder="Please input" clearable/>
-  <template #footer><el-button type="success" :icon="Check" @click="closeEditor" circle /></template>
 </el-dialog>
 </template>
 
@@ -25,7 +23,7 @@ export default defineComponent({
 import {Check,Delete,Plus,  Edit,  Message,  Search,  Star,} from '@element-plus/icons-vue'
 
 const metadata = useNodeCtx<Node>();
-const attrs = metadata.node.value.attrs;
+let attrs = structuredClone(metadata.node.value.attrs);
 console.log(attrs);
 const currCorrectAnswer = ref((attrs.correctAnswer));
 
@@ -36,9 +34,10 @@ const openEditor = ()=>{
   console.log(editorShowed.value)
   editorShowed.value = true;
   }
-
-function closeEditor(){
+function closeEditor(done:any){
+  const {tr} = metadata.view.state
   console.log('editing ended\nchoice:',attrs.choice,'\ncorrectAnswer:',attrs.correctAnswer);
-  editorShowed.value = false;
+  metadata.view.dispatch(tr.setNodeMarkup(metadata.getPos(),metadata.node.value.type,attrs))
+  done()
 }
 </script>

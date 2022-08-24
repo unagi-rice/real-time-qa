@@ -16,10 +16,8 @@ import { inject } from "vue";
 import { type question,type answer,defaultTestMultiChoice,initAnswerBank, objectiveQuestionType } from "../../Types";
 import { v1 } from "uuid";
 
-// TODO: question types
 
 export const id = "MultiNode";
-// TODO: correctAnswer
 const defaultObj = ()=>({ 
   identity:v1(),
   type:objectiveQuestionType[objectiveQuestionType.Multi],
@@ -84,7 +82,7 @@ export const MultiNode:(view:ReturnType<RenderVue<Node>>)=>NodeCreator<string,Un
       },
       parseMarkdown: { // running along with syntax of https://github.com/micromark/micromark-extension-directive#syntax to ease parsing and serializing
         match: (node) => {
-          return node.type === 'leafDirective' && node.name === id;// TODO: test if name match is buggy
+          return node.type === 'leafDirective' && node.name === id;
         },
         runner: (state, node, type) => {
           console.log(node)

@@ -8,7 +8,6 @@ main().catch(console.error);
 
 async function main() {
   await registering;
-  await registering2;// HACK: delete
   const netlessRoomToken = roomToken(
     import.meta.env.VITE_AK, // 将 Your AK 替换成你从控制台获取的 AK。
     import.meta.env.VITE_SK, // 将 Your SK 替换成你从控制台获取的 SK。

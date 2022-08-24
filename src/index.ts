@@ -3,7 +3,7 @@ import type { NetlessApp } from "@netless/window-manager";
 import { createApp ,computed} from "vue";
 import styles from "./style.css?inline";
 import App from "./components/App.vue";
-import App2 from "./components/App2.vue";
+import AppStudent from "./components/AppStudent.vue";
 import {loginTeacher, checkTeacher} from "./components/Auth";
 import {interfaces} from "./components/Types"
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
@@ -32,10 +32,10 @@ const RealTimeQA: NetlessApp = {
   },
   setup(context) {
     const box = context.getBox();
-    const isTeacher = computed(()=>(loginTeacher(context) && checkTeacher(context)))
+    const isTeacher = computed(()=>{loginTeacher(context);return checkTeacher(context)})
 
 
-
+    // potential change: let 
     if(isTeacher.value){
       
       box.mountStyles(styles);
@@ -63,7 +63,7 @@ const RealTimeQA: NetlessApp = {
       $content.className = "app-real-time-qa";
       box.mountContent($content);
 
-      const app = createApp(App2).provide("context", context);
+      const app = createApp(AppStudent).provide("context", context);
 
       for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
         app.component(key, component)

@@ -24,36 +24,13 @@ onMounted(()=>{
 </script>
 <style>
 
-/* TODO: fit title bar to whole window; spread title , tag , buttons evenly */
-.grid {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto minmax(160px, auto);
-  grid-template-areas: 
-  'header'
-  'main';
-  column-gap: 37px;
-  row-gap: 0px;
-}
+
 .full-fit-size{
   height:100%;
   width:100%;
 }
 
-.page-header {
-  grid-area: header;
 
-}
-
-.page-leftbar {
-  grid-area: leftbar;
-}
-
-.page-main {
-  height:100%;
-  width:100%;
-  grid-area: main;
-}
 .header-background {
   background-color: #2b665e;
 }
@@ -142,7 +119,7 @@ onMounted(()=>{
         </el-button>
     </div>
   </el-header>
-  <el-main class="page-main">
+  <el-main >
     <slot/>
   </el-main>
 </el-container>

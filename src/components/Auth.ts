@@ -31,8 +31,8 @@ export function login(context: AppContext): boolean {
  * @param context AppContext provided by root component of app
  * @returns true
  */
-export function loginTeacher(context: AppContext): boolean {
-  const uid = getUid(context);
+export function loginTeacher(context: AppContext): void {
+  const uid = getUid(context) as string;
   const defaultState:AuthSnapshot = { teacher: [], student: [] };
   const storage = context.createStorage<AuthSnapshot>("TeacherStudent", defaultState);
   let tempState = structuredClone(storage.state);
@@ -41,15 +41,14 @@ export function loginTeacher(context: AppContext): boolean {
   else if(storage.state.teacher[0] !== uid && !storage.state.student.includes(uid)) 
     tempState.student.push(uid);
   storage.setState(tempState);
-  return true;
 }
 
 /**
- * 
+ * check if current user is an autheticated teacher
  * @param context AppContext provided by root component of app
  * @returns 
  */
-export function checkTeacher(context: AppContext): boolean { // TODO: return void
+export function checkTeacher(context: AppContext): boolean {
   const uid = getUid(context);
   const storage = context.createStorage<AuthSnapshot>("TeacherStudent");
   console.log(JSON.stringify(storage.state));

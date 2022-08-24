@@ -88,8 +88,7 @@ export interface subjectiveAnswerContainer <contentType=string>{
   readonly type:string,
   marking:(answer:contentType)=>boolean
 }
-export const  questionType = {...objectiveQuestionType , ...subjectiveQuestionType};// TODO: deprecate
-export type questionType = typeof questionType;
+
 export type answerContainer = objectiveAnswerContainer | subjectiveAnswerContainer;
 
 export interface question {
@@ -111,7 +110,7 @@ export interface questionBank {
 /* 单题答案 */
 export interface answer {
   id: string;
-  content: {[key: number]: (string | number | number[])}// {出现答题点的索引:答题点的答案}
+  content: {[key: number]: (string | number | number[])}// {对应question.content中出现答题点的索引:答题点的答案}
 }
 
 // 答案库，又称“答卷”
@@ -121,12 +120,13 @@ export interface answerBank {
   content: answer[];
 }
 
+// 答题环节数据
 export interface QAStorage {
   pageid: number;
   questionBank: questionBank;
   answerBanks: { [key: string]: answerBank };
   tag: string;
-  allowAnswer: boolean;
+  allowAnswer: boolean;// 控制是否在“正在答题”中
 }
 
 export function defaultTestMultiChoice() {
@@ -197,10 +197,10 @@ export function updateQuestionBank(questionBank1:questionBank, qbid:number,conte
 export function updateQuestion(question1:question,qid:number){}
 
 
-export const QuoBankInit=(()=>  ({
+export const QuestionBankInit=(()=>  ({
   id: getuuid(),
   questionBanks: [defaultTestQuestionBank()]
-} as userType));
+}));
 
 
 

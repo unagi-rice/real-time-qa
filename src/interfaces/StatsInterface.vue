@@ -11,7 +11,6 @@ import {
   fillBlank,
   unorderedSequenceChoice,
 } from "../components/Types";
-import { loginTeacher, checkTeacher } from "../components/Auth";
 
 import VueApexCharts from "vue3-apexcharts";
 // import { emitter } from '@netless/window-manager/dist/InternalEmitter';
@@ -21,15 +20,11 @@ const tag = "tag";
 const buttons: button[] = [
   {
     text: "主页面",
-    event: "back",
+    event: "main",
   },
   {
     text: "stat",
     event: "stat",
-  },
-  {
-    text: "wow",
-    event: "wow",
   },
 ];
 const context = inject<AppContext>("context");
@@ -42,7 +37,7 @@ console.debug(
   "EmptyInterface.vue: currentInterface =",
   interfaceStorage.state.currentInterface
 );
-function backfun() {
+function mainfun() {
   // 转换界面至 EmptyInterface
   interfaceStorage?.setState({ currentInterface: interfaces.EmptyInterface });
   console.debug(interfaceStorage?.state.currentInterface);
@@ -237,18 +232,12 @@ const chartOptions = {
 
 <!--定义展示的模块-->
 <template>
-  <!--     
-需要至少传入：title（界面标题，预计用来展示题集名字）
-传入
-@back, @next为以上buttons中所定义的事件event，backfun、nextfun为事件的处理函数
--->
   <InterfaceBase
     :title="title"
     :interface_tag="tag"
     :buttons="buttons"
-    @back="backfun"
+    @main="mainfun"
     @stat="nextfun"
-    @wow="loginTeacher(context) && checkTeacher(context)"
   >
     <el-container>
       <el-row type="flex" justify="center">

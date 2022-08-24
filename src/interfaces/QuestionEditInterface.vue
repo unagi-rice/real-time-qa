@@ -1,16 +1,17 @@
 
 <template>
 
-<InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @preview="previewfun" @back="backfun" @publish="publishfun" @save="savefun">
+<InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @save="savefun" @back="backfun" @publish="publishfun">
 <el-container type="common layout">
   <div id="question-list" size="100%" model-value="editingQuestion" >
-    <el-card v-for="(ques,index) in questions?.content" :key="ques.id" @click="onSelect(index)" shadow="hover">{{questionAnswer2Markdown(ques,answers[index])}}</el-card>
+    <el-card v-for="(ques,index) in currQuestionBank?.content" :key="ques.id" @click="onSelect(ques.id)" shadow="hover">{{questionAnswer2Markdown(ques,currAnswerBank?.content[index] as answer)}}</el-card>
     <el-card @click="createfun" shadow="hover"><Plus/></el-card>
   </div>
-  <el-drawer v-model="editorShowed" >
+  <el-drawer v-model="editorShowed" size="90%" show-close="false" close-on-click-modal="false" :before-close="handleEditorClose">
 
-    <!--TODO:preset=question content, onswitch:copy content to current question, onsave:copy content from question list to question set in storage-->
-    <VueEditor v-if="firstSelected" mode="edit" :question="currQuestion" :answer="currAnswer"/>
+    <MilkdownEditor v-if="firstSelected" 
+    :question="currQuestionBank?.content.find((elem:question)=>elem.id === currQuestionID) " :answer="currAnswer"
+    @update="updatefun"/>
   </el-drawer>
 </el-container>
 
@@ -25,7 +26,7 @@ import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
 import {answer, answerBank, interfaces,question,questionBank} from '../components/Types';
 import {questionBankStorage,answerBankStorage} from '../components/utils/user'
-import VueEditor from '../components/editor/VueEditor.vue'
+import MilkdownEditor from '../components/editor/MilkdownEditor.vue'
 import {ElMessageBox} from 'element-plus'
 import { questionAnswer2Markdown } from '../components/editor/MarkdownUtils';
 import { Edit, Plus } from '@element-plus/icons-vue';
@@ -38,8 +39,8 @@ const buttons:button[] = [
     event:'back'
   },
   {
-    text:'preview',
-    event:'preview'
+    text:'save',
+    event:'save'
   },
   {
     text:'publish',
@@ -52,8 +53,7 @@ interface Props{
 }
 const props = defineProps<Props>()
 const emit = defineEmits<{
-(e:'publish',id:number):void
-(e:'update'):void
+(e:'publish',id:questionBank["id"]):void
 }>()
 
 
@@ -65,24 +65,25 @@ if (!interfaceStorage) throw new Error("must call provide('interface') before mo
 // console.debug('QuestionEditInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
 
 // reactive variables
-const questions = ref((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === props.questionBank_id))
-const answers = ref((answerBankStorage.content() as answerBank[]).find((elem)=>elem.qid === props.questionBank_id))
 const editorShowed = ref(false);
 const firstSelected = ref(false);
-const currQuestionBank = ref() // TODO: reactive questionBank clone, initialize 
-const currAnswerBank = ref() 
-const currQuestionID = ref('') // TODO: initialize at first select, trigger 
+const currQuestionBank = ref((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === props.questionBank_id)) 
+const currAnswerBank = ref((answerBankStorage.content() as answerBank[]).find((elem)=>elem.qid === props.questionBank_id)) 
+const currQuestionID = ref('')
 const currAnswerID = ref('')
-const currQuestion = ref<question | undefined>(undefined) // TODO: ensure not to show when no question is selected
+const currQuestion = computed(()=>currQuestionBank.value?.content.find((elem:question)=>elem.id === currQuestionID.value)) // TEST-ITEM: ensure not to show when no question is selected
+const currAnswer = computed(()=>currAnswerBank.value?.content.find((elem:answer)=>elem.id === currAnswerID.value)) 
+
+
 
 let isSaved = true;
-provide<boolean>('isSaved',isSaved)
 
 // save a question to questionBank
 function bufferQuestion(question_in: question)
 {
-  let matchInd
-  if(matchInd = currQuestionBank.value.content.find((elem:question)=>elem.id === question_in.id)){
+  let matchInd:number
+  if(!currQuestionBank.value)return
+  if((matchInd = currQuestionBank.value?.content.findIndex((elem:question)=>elem.id === question_in.id)) !== -1){
     currQuestionBank.value.content[matchInd] = structuredClone(question_in);
   }
   else currQuestionBank.value.content.push(structuredClone(question_in));
@@ -90,12 +91,8 @@ function bufferQuestion(question_in: question)
 
 // save whole questionBank to localStorage
 function saveData(){
-  let currData = questionBankStorage.content();
-  let matchInd = currData.find((elem:questionBank)=>elem.id === props.questionBank_id)
-  let currQuestionBankSaved = currData[matchInd];
-  currQuestionBankSaved.content = structuredClone(currQuestionBank);
-  // TODO: update answerBank
-  questionBankStorage.save(questionBankStorage.content())// replace this questionBank to questionBankStorage.content() and save all into it
+  if(currQuestionBank.value)questionBankStorage.add(currQuestionBank.value)
+  if(currAnswerBank.value)answerBankStorage.add(currAnswerBank.value)
   
   isSaved = true;
 }
@@ -112,94 +109,86 @@ function createfun(){
     id:v1(),
     content:{}
   }
-  // TODO: append empty question,answer to questionbank,answerBank
-  currQuestionBank.value.push(newQuestion);
-  currAnswerBank.value.push(newAnswer)
+  if(!currQuestionBank.value || !currAnswerBank.value)return;
+  currQuestionBank.value.content.push(newQuestion);
+  currAnswerBank.value.content.push(newAnswer)
+}
+function updatefun(question_in:question,answer_in:answer){
+  isSaved = false;
+  if(currQuestionBank.value)currQuestionBank.value.content[currQuestionBank.value.content.findIndex((elem:question)=>elem.id === question_in.id)] = question_in
+ if(currAnswerBank.value) currAnswerBank.value.content[currAnswerBank.value.content.findIndex((elem:answer)=>elem.id === answer_in.id)] = answer_in
 }
 
 // back to main interface
 function backfun(){
-  // TODO: 
-  if(questionBankSaved)return;
-  ElMessageBox.confirm('您还有未保存的更动，确定离开此界面吗？').then(()=>{
-    let timer;
-    timer = setTimeout(() => {
-        // 动画关闭需要一定的时间
-        setTimeout(() => {
-          editorShowed.value = false
-        }, 4000)
-      }, 2000)
-  })
+  if(currQuestionID.value !== '' && currQuestionBank.value)bufferQuestion(currQuestionBank.value.content.find((elem)=>elem.id === currQuestionID.value) as question)
   console.log("back hitted.")
 
-  // 转换界面至EmptyInterface
-  interfaceStorage?.setState({currentInterface:interfaces.EmptyInterface})
+  // 转换界面至MainInterface
   // console.debug(interfaceStorage?.state.currentInterface)
 }
 function publishfun(){
   console.log("publish hitted.")
-  if(!askSave()) return;
-  emit('publish',props.questionBank_id);
+  if(!isSaved){
+    ElMessageBox.confirm('你尚未保存题目，确定继续？').then(()=>{
+      emit('publish',props.questionBank_id);
+    setTimeout(() => {
+      // 转换界面至QuestionAnswerInterface
+      interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
+      console.debug(interfaceStorage?.state.currentInterface)
+    }, 300);
+    })
+  }
+  else{
+    
+    emit('publish',props.questionBank_id);
+      setTimeout(() => {
+        // 转换界面至QuestionAnswerInterface
+        interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
+        console.debug(interfaceStorage?.state.currentInterface)
+      }, 300);
+  }
 
-  // 转换界面至MainInterface
-  // console.debug(interfaceStorage?.state.currentInterface)
-  return;
 }
-// TODO: handleClose needed: node editor close, question editor close
 
-const handleClose = (done) => {
+function savefun(){
+  isSaved = true;
+
+}
+
+const loading = ref(false)
+let timer
+const handleEditorClose = (done:any) => {
   if (loading.value) {
     return
   }
-  ElMessageBox.confirm('Do you want to submit?')
-    .then(() => {
+  ElMessageBox.confirm('是否保存？')
+    .then(()=>{
       loading.value = true
+      if(currQuestionBank.value  &&  currQuestionID.value !== '')bufferQuestion(currQuestionBank.value.content.find((elem)=>elem.id === currQuestionID.value) as question)
       timer = setTimeout(() => {
         done()
         // 动画关闭需要一定的时间
         setTimeout(() => {
           loading.value = false
-        }, 4000)
-      }, 2000)
-    })
+        }, 500)
+      }, 100)
+      },() => {done(true)})
     .catch(() => {
       // catch error
     })
 }
 function onSelect(question_id:string)
 {
-  if (!firstSelected.value) firstSelected.value = true;
-  currQuestion.value = thisQuestionBank?.content.find((elem)=>elem.id === question_id) as question
-  currAnswer.value = thisAnswerBank?.content.find((elem)=>elem.id === question_id) as question
+  if(!editorShowed.value)editorShowed.value = true;
+  currQuestionID.value = question_id
 }
 
 
 watch(()=>props.questionBank_id,
 ()=>{
-  // TODO: change content of questionBank Clone
-}
-)
-
-// life cycle related
-let thisQuestionBank:questionBank|undefined;
-onBeforeMount(()=>{
-  // mount questions to question list
-  thisQuestionBank = questionBankStorage.content[props.questionBank];
-  if(!thisQuestionBank){
-    // go to previous interface
-
-    // show error
-  }
+  currQuestionBank.value = (questionBankStorage.content() as questionBank[]).find((elem: questionBank)=>elem.id === props.questionBank_id)
 })
-onMounted(()=>{
-})
-
-
-
-
-
-
-
 
 </script>
 
@@ -208,34 +197,3 @@ onMounted(()=>{
 
 
 
-
-<style lang="css">
-
-
-.left-column.large-window,.left-column.medium-window{
-  width:424px;
-}
-.left-column.small-window{
-  width: 100%;
-}
-
-.items {
-  max-width: 24vx;
-  min-width: 12rem;
-  width: 100%;
-  background: $sec;
-  box-shadow: 0 3px 6px rgba(black,0.16), 0 3px 6px rgba(black,0.23);
-  border-top: 10px solid $dark-pri;
-}
-
-@media(min-width: 1276px){
-
-.back-button.large-window{
-  visibility:hidden;
-}
-.back-button.medium-window.showing-editor, .back-button.small-window.showing-editor{
-  visibility:block;
-}
-
-
-</style>

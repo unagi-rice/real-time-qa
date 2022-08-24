@@ -16,7 +16,6 @@ import { inject } from "vue";
 import { type question,type answer,defaultTestUnorderedSequenceChoice,initAnswerBank, objectiveQuestionType } from "../../Types";
 import { v1 } from "uuid";
 
-// TODO: question types
 
 export const id = "UnorderedSequenceNode";
 

@@ -5,7 +5,6 @@ import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
 import {interfaces} from '../components/Types';
-import {loginTeacher, checkTeacher} from '../components/Auth'
 // import { emitter } from '@netless/window-manager/dist/InternalEmitter';
 
 const title = "Empty Interface";
@@ -75,7 +74,7 @@ onMounted(()=>{
 @back, @next为以上buttons中所定义的事件event，backfun、nextfun为事件的处理函数
 -->
 <InterfaceBase :title="title" :interface_tag="tag" :buttons="buttons" 
-@back="backfun" @next="nextfun" @wow="loginTeacher(context) && checkTeacher(context)" @main="mainfun">
+@back="backfun" @next="nextfun" @main="mainfun">
 
 
 

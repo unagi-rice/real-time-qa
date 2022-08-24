@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { h,inject,ref, provide, watch} from "vue";
+import { h,inject,ref, provide, watch, watchEffect} from "vue";
 import { answer, type question,type multiChoice,type unorderedSequenceChoice} from "../Types";
 import { micromark } from "micromark";
 
@@ -55,13 +55,17 @@ import FillBlankNodeVue from "./CustomNode/FillBlank.vue";
 import UnorderedSequenceVue from "./CustomNode/UnorderedSeqNode.vue";
 import { questionAnswer2Markdown } from "./MarkdownUtils";
 
+interface Props{
+  question?:question 
+  answer?:answer
+}
 
-const props = defineProps<{
-  question:question 
-  answer:answer
-}>();
+const props = withDefaults(defineProps<Props>(),{
+  question:()=>({id:'',content:[]}),
+  answer:()=>({id:'',content:{}}),
+});
 
-const emit = defineEmits<{
+const emit =  defineEmits<{
   (e: "update", question: question,answer:answer): void
 }>();
 
@@ -73,14 +77,11 @@ const currEditorValue = ref('')
 const openPreview = ()=>{dialogPreviewVisible.value = true;}
 
 
-// TODO: set dafault value of editor when loaded
 watch(()=>props.question.id,()=>{
   currEditorValue.value = questionAnswer2Markdown(props.question,props.answer)
+})
 
-}
-)
 
-// TODO: listen to props.question.id, load question-answer to markdown onchange
 
 // setting up editor
 let commands:MenuConfig = (defaultConfig);

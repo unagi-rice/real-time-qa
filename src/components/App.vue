@@ -27,9 +27,9 @@ const current_interface_displayed = ref(interfaces.MainInterface);
 
 // inter-interface variables
 const currQuestionBankID = ref(0)
+const currQuestionBank = ref<questionBank>({id:'',title:'',content:[],})
 
-const isTeacher = computed(()=>(loginTeacher(context) && checkTeacher(context)))
-
+const isTeacher = computed(()=>{loginTeacher(context);return checkTeacher(context)})
 console.debug('App.vue: isTeacher?',isTeacher.value)
 
 
@@ -44,14 +44,17 @@ watchEffect(() => {
   console.debug("App.vue: current_interface_displayed =",current_interface_displayed.value);
 });
 
+
+
 // emit handler
 function consoleLog(s:number){console.log(s);}
 function onPublish(questionBankID:questionBank["id"]){
-  currQuestionBank.value = ((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === questionBankID;))
-  current_interface_displayed.value = interfaces.QuestionAnswerInterface;
+  currQuestionBank.value = ((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === questionBankID)) as questionBank
+  // current_interface_displayed.value = interfaces.QuestionAnswerInterface;
 }
 function onEdit(questionBankID:questionBank["id"]){
-  questionBankStorage.content
+  currQuestionBank.value = ((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === questionBankID)) as questionBank
+  // current_interface_displayed.value = interfaces.QuestionEditInterface;
 }
 
 </script>
@@ -60,6 +63,6 @@ function onEdit(questionBankID:questionBank["id"]){
 <MainInterface v-if="current_interface_displayed == interfaces.MainInterface" @edit="onEdit" @publish="onPublish"/>
 <StatsInterface v-if="current_interface_displayed == interfaces.StatsInterface"/>
 <IndividualStatsInterface v-if="current_interface_displayed == interfaces.IndividualStatsInterface"/>
-<QuestionAnswerInterface v-if="current_interface_displayed == interfaces.QuestionAnswerInterface" :questionBank_id="currQuestionBankID"/>
+<QuestionAnswerInterface v-if="current_interface_displayed == interfaces.QuestionAnswerInterface" :questionBank="currQuestionBank"/>
 <QuestionEditInterface v-if="current_interface_displayed == interfaces.QuestionEditInterface" :questionBank_id="currQuestionBankID" @publish="onPublish"/>
 </template>

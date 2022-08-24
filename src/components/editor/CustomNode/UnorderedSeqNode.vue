@@ -12,10 +12,10 @@ export default defineComponent({
 
 <template>
 <el-button id="multi-open-editor" @click="openEditor">多选题</el-button>
-<Teleport to="body" >
+<el-dialog v-model="editorShowed" title="请编辑" width="30%"
+    :before-close="closeEditor" >
   <el-card id="answerContainer-editor multi-editor" v-if="editorShowed" >
-    <el-button type="success" :icon="Check" @click="closeEditor" circle />
-    <span>请编辑题目</span>
+    <template #header>请编辑选项</template>
     <el-checkbox-group :id="attrs.identity" v-model="currCorrectAnswer" >
     <el-space direction="vertical">
 
@@ -27,7 +27,7 @@ export default defineComponent({
     </el-space>
 </el-checkbox-group>
 </el-card>
-</Teleport>
+</el-dialog>
 
 </template>
 
@@ -42,7 +42,7 @@ import type { multiChoice,objectiveAnswerKeyType } from '../../Types';
 import "./style.css"
 
 const metadata = useNodeCtx<Node>();
-const attrs = metadata.node.value.attrs;
+let attrs = structuredClone(metadata.node.value.attrs);
 console.log(attrs);
 const currChoice = ref((attrs.choice));
 const currCorrectAnswer = ref((attrs.correctAnswer));
@@ -67,14 +67,12 @@ function addOption(){
   console.log(attrs.choice)
   // console.log('after',totalChoice.length)
 }
-
-function closeEditor(){
-  console.log('editing ended\nchoice:',attrs.choice,'\ncorrectAnswer:',attrs.correctAnswer);
-  editorShowed.value = false;
-  // force refresh markdowncts
-  const editor = inject<EditorInfo>('editor');
-  if(editor)editor.action(forceUpdate());
+function closeEditor(done:any){
+  const {tr} = metadata.view.state
+  metadata.view.dispatch(tr.setNodeMarkup(metadata.getPos(),metadata.node.value.type,attrs))
+  done()
 }
+
 
 function deleteOption(optKey:string){
   if(Object.keys(attrs.choice).includes((optKey))){
