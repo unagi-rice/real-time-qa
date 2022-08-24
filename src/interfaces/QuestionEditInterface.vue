@@ -3,10 +3,8 @@
 
 <InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @save="savefun" @back="backfun" @publish="publishfun">
 <el-container type="common layout">
-  <div id="question-list" size="100%" model-value="editingQuestion" >
-    <el-card v-for="(ques,index) in currQuestionBank?.content" :key="ques.id" @click="onSelect(ques.id)" shadow="hover">{{questionAnswer2Markdown(ques,currAnswerBank?.content[index] as answer)}}</el-card>
-    <el-card @click="createfun" shadow="hover"><Plus/></el-card>
-  </div>
+    <el-card v-for="(ques,index) in currQuestionBank?.content" :body-style="{width:'100%'}" :key="ques.id" @click="onSelect(ques.id)" shadow="hover">{{questionAnswer2Markdown(ques,currAnswerBank?.content[index] as answer)}}</el-card>
+    <el-card @click="createfun" shadow="hover" style="width:50%;text-align: center;"><el-icon :size="20"><Plus/></el-icon></el-card>
   <el-drawer v-model="editorShowed" size="90%" show-close="false" close-on-click-modal="false" :before-close="handleEditorClose">
 
     <MilkdownEditor v-if="firstSelected" 
@@ -39,7 +37,7 @@ const buttons:button[] = [
     event:'back'
   },
   {
-    text:'save',
+    text:'保存',
     event:'save'
   },
   {
@@ -109,6 +107,8 @@ function createfun(){
     id:v1(),
     content:{}
   }
+  console.log(props.questionBank_id)
+  console.log(currQuestionBank.value,currAnswerBank.value)
   if(!currQuestionBank.value || !currAnswerBank.value)return;
   currQuestionBank.value.content.push(newQuestion);
   currAnswerBank.value.content.push(newAnswer)

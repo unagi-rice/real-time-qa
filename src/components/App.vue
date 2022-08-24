@@ -26,7 +26,7 @@ provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
 const current_interface_displayed = ref(interfaces.MainInterface);
 
 // inter-interface variables
-const currQuestionBankID = ref(0)
+const currQuestionBankID = ref('')
 const currQuestionBank = ref<questionBank>({id:'',title:'',content:[],})
 
 const isTeacher = computed(()=>{loginTeacher(context);return checkTeacher(context)})
@@ -53,7 +53,8 @@ function onPublish(questionBankID:questionBank["id"]){
   // current_interface_displayed.value = interfaces.QuestionAnswerInterface;
 }
 function onEdit(questionBankID:questionBank["id"]){
-  currQuestionBank.value = ((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === questionBankID)) as questionBank
+  currQuestionBankID.value = questionBankID;
+currQuestionBank.value = ((questionBankStorage.content() as questionBank[]).find((elem)=>elem.id === questionBankID)) as questionBank
   // current_interface_displayed.value = interfaces.QuestionEditInterface;
 }
 

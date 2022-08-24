@@ -11,13 +11,13 @@ import { v1 as getuuid } from 'uuid';
 import { Content } from '@milkdown/vue';
 
 
-const title = "主界面";
-const tag = "tag";
+const title = "实时问答插件";
+const tag = "主界面";
 const buttons:button[] = [
-  {
-    text:'edit',
-    event:'edit'
-  },
+  // {
+  //   text:'edit',
+  //   event:'edit'
+  // },
   {
     text:'create',
     event:'create'
@@ -65,10 +65,9 @@ function deleteQuestionBank(questionBankID:questionBank["id"]){
 }
 function editfun(questionBankID:string){
   emit('edit',questionBankID)
-  setTimeout(() => {
-    interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
-  }, 300);
+  
+  interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
+  console.debug(interfaceStorage?.state.currentInterface)
 }
 function statsfun(questionBankID:string){
   setTimeout(() => {
@@ -105,13 +104,12 @@ onMounted(()=>{
     :title="title" 
     :interface_tag="tag" 
     :buttons="buttons" 
-    @edit="editfun" 
     @create="createfun" >
+    <!-- @edit="editfun"  -->
 
-    <el-container style="width: 100%">
-      <el-space wrap>
-        <div v-if="questionBanks.length>0">
-        <el-card v-for="questionBank_i in questionBankStorage.content()" :key="questionBank_i.id" class="box-card" >
+    <el-container >
+      <div style="width: 100%" v-if="questionBanks.length>0">
+        <el-card class="question-set-item" v-for="questionBank_i in questionBankStorage.content()" :key="questionBank_i.id" >
           <el-row justify="space-between" align="middle"> 
             <span>{{ questionBank_i.title }}</span> 
             <el-button-group class="ml-4">
@@ -125,21 +123,36 @@ onMounted(()=>{
           </el-row>
           
         </el-card>
-        </div>
-        <el-card v-else style="width:100%;">看起来你还没创建卷子呢...</el-card>
-      </el-space>
+      </div>
+      <div v-else class="empty-content">看起来你还没创建卷子呢...</div>
     </el-container>
-    <el-dialog v-model="creatingQBank" title="创建新题集">
       <el-form v-model="newQBank" @submit.prevent>
-
-        <p>新题集名称：</p>
+    <el-dialog v-model="creatingQBank" title="创建新题集">
       <el-form-item label="名字"><el-input v-model="newQBank.name"/></el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">创建</el-button>
+        <template #footer> 
+          <el-form-item>
+            
+            <el-button type="primary" @click="onSubmit">创建</el-button>
         <el-button @click="closeDialog">取消</el-button>
-      </el-form-item>
-      </el-form>
+  </el-form-item>
+        </template>
       
     </el-dialog>
+            </el-form>
   </InterfaceBase>
 </template>
+<style scoped>
+div.question-set-item{
+  width:100%;
+  
+}
+.el-container{
+  height:100%
+}
+.empty-content{
+  width:100%;
+  height: 100%;
+  text-align: center;
+  padding-top:10px
+}
+</style>

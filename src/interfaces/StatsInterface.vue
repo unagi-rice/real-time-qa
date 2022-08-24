@@ -59,6 +59,7 @@ let Answers: {
   [qid: string]: { [key: number]: string | number | number[] }[];
 } = {};
 // calculate stats
+console.log(storage.state.answerBanks)
 Object.keys(storage.state.answerBanks).map((key) => {
   const ansBank = storage.state.answerBanks[key];
   if (Answers[ansBank.qid] === undefined) Answers[ansBank.qid] = [];
