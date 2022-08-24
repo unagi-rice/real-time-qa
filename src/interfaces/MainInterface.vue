@@ -3,7 +3,7 @@ import { onMounted,inject, ref, computed } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
-import {answerBank, interfaces, questionBank,} from '../components/Types';
+import {answerBank, interfaces, questionBank} from '../components/Types';
 import {getUid, resetAuth} from '../components/Auth'
 import { ArrowDownBold, Delete, Edit, Histogram } from '@element-plus/icons-vue';
 import {answerBankStorage, questionBankStorage} from '../components/utils/user'
@@ -115,7 +115,7 @@ onMounted(()=>{
               <el-button class="button" text bg @click="editfun(questionBank_i.id)">Edit</el-button>
               <el-button class="button" text bg @click="pubfun(questionBank_i.id)">Publish</el-button>
               <el-button class="button" text bg @click="statsfun(questionBank_i.id)">Statistics</el-button>
-              <el-popconfirm title="确定删除" confirm-button-text="确定" cancel-button-text="取消" @confirm="deleteQuestionBank(questionBAnk_i.id)"><template #reference>
+              <el-popconfirm title="确定删除" confirm-button-text="确定" cancel-button-text="取消" @confirm="deleteQuestionBank(questionBank_i.id)"><template #reference>
               <el-button class="button" text bg type="danger" >Delete</el-button>
                   </template></el-popconfirm>
               </el-button-group>
