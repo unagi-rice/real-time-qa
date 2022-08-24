@@ -15,7 +15,7 @@ const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
 
 
-
+// TODO: improve definition and provide
 const current_interface = context.createStorage<{currentInterface: interfaces}>("interface");
 provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
 const current_interface_displayed = ref(current_interface.state.currentInterface);

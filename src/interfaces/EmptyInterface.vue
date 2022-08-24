@@ -1,6 +1,6 @@
 <!-- 界面模板 -->
 <script setup lang="ts">
-import { onMounted,inject } from 'vue';
+import { onMounted,inject, Ref } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
@@ -31,25 +31,25 @@ const buttons:button[] = [
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
 const interfaceStorage = 
-    inject<Storage<{currentInterface:interfaces}>>("interface");
+    inject<{current_interface_displayed:Ref<interfaces>,changeInterface:(next:interfaces)=>void}>("interface");
 if (!interfaceStorage) 
     throw new Error("must call provide('interface') before mount App");
 
-console.debug('EmptyInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
+console.debug('EmptyInterface.vue: currentInterface =',interfaceStorage?.current_interface_displayed)
 function backfun(){
     // 转换界面至EmptyInterface
-    interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
+    interfaceStorage?.changeInterface(interfaces.StatsInterface)
+    console.debug(interfaceStorage?.current_interface_displayed)
 }
 function nextfun(){
     // 转换界面至ExampleCounter
-    interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
+    interfaceStorage?.changeInterface(interfaces.QuestionAnswerInterface)
+    console.debug(interfaceStorage?.current_interface_displayed)
 }
 function mainfun(){
     // 转换界面至ExampleCounter
-    interfaceStorage?.setState({currentInterface:interfaces.MainInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
+    interfaceStorage?.changeInterface(interfaces.MainInterface)
+    console.debug(interfaceStorage?.current_interface_displayed)
 }
 function wowfun(){
     alert('WOW!');

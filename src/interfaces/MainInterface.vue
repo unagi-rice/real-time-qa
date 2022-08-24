@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted,inject, ref, computed } from 'vue';
+import { onMounted,inject, ref, computed, Ref } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
@@ -32,9 +32,10 @@ const emit = defineEmits<{
 
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
-const interfaceStorage= context.createStorage<{currentInterface:interfaces}>("interface")
+const interfaceStorage= inject<{current_interface_displayed:Ref<interfaces>,changeInterface:(next:interfaces)=>void}>("interface")
+// const interfaceStorage= context.createStorage<{currentInterface:interfaces}>("interface")
 if (!interfaceStorage) throw new Error("must call provide('interface') before mount App");
-console.debug('EmptyInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
+console.debug('currentInterface =',interfaceStorage?.current_interface_displayed)
 
 const questionBanks = ref((()=>questionBankStorage.content() as questionBank[])());
 const newQBank = ref({
@@ -66,22 +67,22 @@ function deleteQuestionBank(questionBankID:questionBank["id"]){
 function editfun(questionBankID:string){
   emit('edit',questionBankID)
   setTimeout(() => {
-    interfaceStorage?.setState({currentInterface:interfaces.QuestionEditInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
-  }, 300);
+    interfaceStorage?.changeInterface(interfaces.QuestionEditInterface)// BUG: state changed but interface displayed not changed
+    console.debug('switch to interface',interfaces[interfaceStorage?.current_interface_displayed.value??-1])
+    }, 300);
 }
 function statsfun(questionBankID:string){
   setTimeout(() => {
-    interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
+    interfaceStorage?.changeInterface(interfaces.StatsInterface)
+    console.debug(interfaceStorage?.current_interface_displayed)
   }, 300);
 }
 
 function pubfun(questionBankID:questionBank['id']){
   emit('publish', questionBankID)
   setTimeout(() => {
-    interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
+    interfaceStorage?.changeInterface(interfaces.QuestionAnswerInterface)
+    console.debug(interfaceStorage?.current_interface_displayed)
   }, 300);
 }
 
@@ -89,7 +90,7 @@ function pubfun(questionBankID:questionBank['id']){
 
 
 onMounted(()=>{
-    console.debug('switched interface:title=',title,'tag=',tag);
+    console.debug('interface:title=',title,'tag=',tag);
   })
 </script>
 

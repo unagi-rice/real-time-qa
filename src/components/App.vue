@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // dependencies
 import { AppContext ,Storage} from "@netless/window-manager";
-import { computed, inject, onBeforeMount, onMounted, provide, ref, watchEffect } from "vue";
+import { computed, inject, onBeforeMount, onMounted, provide, Ref, ref, watchEffect } from "vue";
 import {loginTeacher, checkTeacher} from "./Auth";
 import {interfaces, questionBank} from "./Types"
 
@@ -21,9 +21,15 @@ const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
 const $globVar = ref({})
 
-const current_interface = context.createStorage<{currentInterface: interfaces}>("interface", {currentInterface: interfaces.EmptyInterface});
-provide<Storage<{currentInterface:interfaces}>>("interface",current_interface)
 const current_interface_displayed = ref(interfaces.MainInterface);
+function changeInterface(next:interfaces){
+  current_interface_displayed.value = next;
+}
+provide("interface",{
+  current_interface_displayed,
+  changeInterface,
+  })
+// const current_interface_displayed = ref(interfaces.MainInterface);
 
 // inter-interface variables
 const currQuestionBankID = ref('')
@@ -35,15 +41,18 @@ console.debug('App.vue: isTeacher?',isTeacher.value)
 
 onMounted(() =>{
   // initialize currQuestionBankID
-  current_interface.addStateChangedListener(() => {
-    console.log("interface changed to ",interfaces[current_interface.state.currentInterface])
-    current_interface_displayed.value = current_interface.state.currentInterface;
-  })
+  console.debug('onMounted()')
+  // current_interface.addStateChangedListener(() => {// BUG: current_interface_displayed not working
+  //   console.log("interface changed to ",interfaces[current_interface.state.currentInterface])
+  //   current_interface_displayed.value = current_interface.state.currentInterface;
+  // })
 });
 
-watchEffect(() => {
-  console.debug("App.vue: current_interface_displayed =",current_interface_displayed.value);
-});
+// watch(current_interface.state.currentInterface,() => {
+//   current_interface_displayed.value = current_interface.state.currentInterface;
+
+//   console.debug("App.vue: current_interface_displayed =",current_interface_displayed.value);
+// });
 
 
 

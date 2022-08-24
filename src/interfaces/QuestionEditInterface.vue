@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref,onMounted,inject,provide,onBeforeMount,computed, watch } from 'vue';
+import { ref,onMounted,inject,provide,onBeforeMount,computed, watch, Ref } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import {button as button} from '../components/InterfaceBase.vue';
 import {AppContext,Storage} from '@netless/window-manager'
@@ -61,9 +61,9 @@ const emit = defineEmits<{
 // App-wide variables
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
-const interfaceStorage= inject<Storage<{currentInterface:interfaces}>>("interface");
+const interfaceStorage= inject<{current_interface_displayed:Ref<interfaces>,changeInterface:(next:interfaces)=>void}>("interface");
 if (!interfaceStorage) throw new Error("must call provide('interface') before mount App");
-// console.debug('QuestionEditInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
+// console.debug('QuestionEditInterface.vue: currentInterface =',interfaceStorage?.current_interface_displayed)
 
 // reactive variables
 const editorShowed = ref(false);
@@ -140,10 +140,10 @@ function backfun(){
   // 转换界面至MainInterface
   setTimeout(() => {
     // 转换界面至QuestionAnswerInterface
-    interfaceStorage?.setState({currentInterface:interfaces.MainInterface})
-    console.debug(interfaceStorage?.state.currentInterface)
+    interfaceStorage?.changeInterface(interfaces.MainInterface)
+    console.debug(interfaceStorage?.current_interface_displayed)
   }, 300);
-  // console.debug(interfaceStorage?.state.currentInterface)
+  // console.debug(interfaceStorage?.current_interface_displayed)
 }
 function publishfun(){
   console.log("publish hitted.")
@@ -152,8 +152,8 @@ function publishfun(){
       emit('publish',props.questionBank_id);
     setTimeout(() => {
       // 转换界面至QuestionAnswerInterface
-      interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
-      console.debug(interfaceStorage?.state.currentInterface)
+      interfaceStorage?.changeInterface(interfaces.QuestionAnswerInterface)
+      console.debug(interfaceStorage?.current_interface_displayed)
     }, 300);
     })
   }
@@ -162,8 +162,8 @@ function publishfun(){
     emit('publish',props.questionBank_id);
       setTimeout(() => {
         // 转换界面至QuestionAnswerInterface
-        interfaceStorage?.setState({currentInterface:interfaces.QuestionAnswerInterface})
-        console.debug(interfaceStorage?.state.currentInterface)
+        interfaceStorage?.changeInterface(interfaces.QuestionAnswerInterface)
+        console.debug(interfaceStorage?.current_interface_displayed)
       }, 300);
   }
 

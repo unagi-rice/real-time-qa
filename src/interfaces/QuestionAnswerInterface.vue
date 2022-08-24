@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, inject, provide, defineComponent, DefineComponent, onBeforeMount, Prop, computed, h } from 'vue';
+import { ref, onMounted, inject, provide, defineComponent, DefineComponent, onBeforeMount, Prop, computed, h, Ref } from 'vue';
 import InterfaceBase from '../components/InterfaceBase.vue'
 import { button as button } from '../components/InterfaceBase.vue';
 import { AppContext, Storage } from '@netless/window-manager'
@@ -32,11 +32,11 @@ const buttons: button[] = [
 
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
-const interfaceStorage = inject<Storage<{ currentInterface: interfaces }>>("interface");
+const interfaceStorage = inject<{current_interface_displayed:Ref<interfaces>,changeInterface:(next:interfaces)=>void}>("interface");
 if (!interfaceStorage) throw new Error("must call provide('interface') before mount App");
 console.debug(
   "QAInterface.vue: currentInterface =",
-  interfaceStorage.state.currentInterface
+  interfaceStorage?.current_interface_displayed
 );
 
 

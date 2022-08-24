@@ -1,6 +1,6 @@
 <!--  -->
 <script setup lang="ts">
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted, inject, Ref } from "vue";
 import InterfaceBase from "../components/InterfaceBase.vue";
 import { button as button } from "../components/InterfaceBase.vue";
 import { AppContext, Storage } from "@netless/window-manager";
@@ -33,24 +33,22 @@ const buttons: button[] = [
 const context = inject<AppContext>("context");
 if (!context) throw new Error("must call provide('context') before mount App");
 const interfaceStorage =
-  inject<Storage<{ currentInterface: interfaces }>>("interface");
+  inject<{current_interface_displayed:Ref<interfaces>,changeInterface:(next:interfaces)=>void}>("interface");
 if (!interfaceStorage)
   throw new Error("must call provide('interface') before mount App");
 console.debug(
   "EmptyInterface.vue: currentInterface =",
-  interfaceStorage.state.currentInterface
+  interfaceStorage?.current_interface_displayed
 );
 function backfun() {
   // 转换界面至 StatsInterface
-  interfaceStorage?.setState({ currentInterface: interfaces.StatsInterface });
-  console.debug(interfaceStorage?.state.currentInterface);
+  interfaceStorage?.changeInterface(interfaces.StatsInterface );
+  console.debug(interfaceStorage?.current_interface_displayed);
 }
 function nextfun() {
   // 转换界面至 IndividualStatsInterface
-  interfaceStorage?.setState({
-    currentInterface: interfaces.IndividualStatsInterface,
-  });
-  console.debug(interfaceStorage?.state.currentInterface);
+  interfaceStorage?.changeInterface( interfaces.IndividualStatsInterface);
+  console.debug(interfaceStorage?.current_interface_displayed);
 }
 
 
