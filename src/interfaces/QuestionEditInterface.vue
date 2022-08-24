@@ -1,18 +1,26 @@
 
-<template>
-
+<template >
+<div id="QEInterface"/>
 <InterfaceBase class="container" :title="title" :interface_tag="tag" :buttons="buttons" @save="savefun" @back="backfun" @publish="publishfun">
 <el-container type="common layout">
 
     <el-card v-for="(ques,index) in currQuestionBank?.content" style="width:100%" :key="ques.id" @click="onSelect(ques.id)" shadow="hover">{{'"'+questionAnswer2Markdown(ques,currAnswerBank?.content[index] as answer)+"\""}}</el-card>
     <el-card @click="createfun" shadow="hover" style="width:100%;text-align: center;"><el-icon :size="20"><Plus/></el-icon></el-card>
-  <el-drawer v-model="editorShowed" :size="90" :before-close="handleEditorClose">
+    <Teleport to="#QEInterface">
 
-    <MilkdownEditor 
+      <Dialog :show="editorShowed" @close="handleEditorClose">
+      <template #header> 
+        <h3>请编辑</h3>
+      </template>
+        <template #body> 
+          
+          <MilkdownEditor 
     :question="currQuestionBank?.content.find((elem:question)=>elem.id === currQuestionID) " :answer="currAnswer"
     @update="updatefun"/>
+      </template>
+    </Dialog>
+          </Teleport>
 
-  </el-drawer>
 </el-container>
 
 </InterfaceBase>
@@ -31,6 +39,7 @@ import {ElMessageBox} from 'element-plus'
 import { questionAnswer2Markdown } from '../components/editor/MarkdownUtils';
 import { Edit, Plus } from '@element-plus/icons-vue';
 import { v1 } from 'uuid';
+import Dialog from '../components/Dialog.vue';
 const title = "编辑题目";
 const tag = "tag";
 const buttons:button[] = [
@@ -73,8 +82,8 @@ const currQuestionBank = ref((questionBankStorage.content() as questionBank[]).f
 const currAnswerBank = ref((answerBankStorage.content() as answerBank[]).find((elem)=>elem.qid === props.questionBank_id)) 
 const currQuestionID = ref('')
 const currAnswerID = ref('')
-const currQuestion = computed(()=>currQuestionBank.value?.content.find((elem:question)=>elem.id === currQuestionID.value)) // TEST-ITEM: ensure not to show when no question is selected
-const currAnswer = computed(()=>currAnswerBank.value?.content.find((elem:answer)=>elem.id === currAnswerID.value)) 
+const currQuestion = ref<question>({id:'',content:[]}) // TEST-ITEM: ensure not to show when no question is selected
+const currAnswer = ref<answer>({id:'',content:{}}) 
 
 watch(()=>props.questionBank_id,()=>{
   console.log(`question id changed to ${props.questionBank_id}`)
@@ -91,9 +100,9 @@ function bufferQuestion(question_in: question)
   let matchInd:number
   if(!currQuestionBank.value)return
   if((matchInd = currQuestionBank.value?.content.findIndex((elem:question)=>elem.id === question_in.id)) !== -1){
-    currQuestionBank.value.content[matchInd] = structuredClone(question_in);
+    currQuestionBank.value.content[matchInd] = (question_in);
   }
-  else currQuestionBank.value.content.push(structuredClone(question_in));
+  else currQuestionBank.value.content.push((question_in));
 }
 
 // save whole questionBank to localStorage
@@ -174,20 +183,22 @@ function savefun(){
   saveData();
 }
 
-const loading = ref(false)
-let timer
-const handleEditorClose = (done:()=>void) => {
-  if (loading.value) {
-    return
-  }
-  
-  window.confirm('是否保存？')
+const handleEditorClose = () => {
+  bufferQuestion(currQuestion.value)
+  editorShowed.value = false;
+
 }
 function onSelect(question_id:string)
 {
   console.debug(`onSelect: ${question_id}`);
-  if(!editorShowed.value)editorShowed.value = true;
+  editorShowed.value = true;
   currQuestionID.value = question_id
+  let matchInd
+  if(currQuestionBank.value && (matchInd = currQuestionBank.value?.content.findIndex((elem)=>elem.id === question_id)) !== -1){
+    currQuestion.value = currQuestionBank.value.content[matchInd as number];
+  currAnswer.value = (currAnswerBank.value as answerBank).content[matchInd as number];
+  }
+
 }
 
 
@@ -200,6 +211,16 @@ watch(()=>props.questionBank_id,
 
 
 
+<style scoped>
 
+.modal {
+  position: fixed;
+  z-index: 999;
+  top: 20%;
+  left:25%;
+  width:50%;
+  margin-left: -150px;
+}
+</style>
 
 

@@ -96,4 +96,5 @@ function deleteOption(optKey:string){
   width:80%;
   left:10%;
 }
+
 </style>
