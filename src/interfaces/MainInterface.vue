@@ -109,10 +109,9 @@ onMounted(()=>{
     @create="createfun" >
 
     <el-container style="width: 100%">
-      
-        <div v-if="questionBanks.length>0">
+      <div v-if="questionBanks.length>0">
         <el-space wrap>
-        <el-card v-for="questionBank_i in questionBankStorage.content()" :key="questionBank_i.id" class="box-card" style="width: 18vmax">
+          <el-card v-for="questionBank_i in questionBankStorage.content()" :key="questionBank_i.id" class="box-card" style="width: 18vmax">
           
             <template #header>
               <el-row justify="center" align="middle"> 
@@ -128,22 +127,15 @@ onMounted(()=>{
                 <el-button class="button" text bg type="danger" >Delete</el-button>
               </template></el-popconfirm>
             </el-button-group>
-            
-            
-          
-          
-        </el-card>
+          </el-card>
         </el-space>
-        </div>
+      </div>
         
-        <div v-else>
-          <el-space alignment="center">
-            <el-card style="width:100%;">看起来你还没创建卷子呢...</el-card>
-          </el-space>
-        </div>
-        
-        
-      
+      <div v-else>
+        <el-space alignment="center">
+          <el-card style="width:100%;">看起来你还没创建卷子呢...</el-card>
+        </el-space>
+      </div>
     </el-container>
     <el-dialog v-model="creatingQBank" title="创建新题集">
       <el-form v-model="newQBank" @submit.prevent>
