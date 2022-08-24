@@ -41,7 +41,7 @@ import { Edit, Plus } from '@element-plus/icons-vue';
 import { v1 } from 'uuid';
 import Dialog from '../components/Dialog.vue';
 const title = "编辑题目";
-const tag = "tag";
+const tag = "";
 const buttons:button[] = [
   
   {
