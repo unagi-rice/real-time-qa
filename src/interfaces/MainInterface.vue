@@ -19,7 +19,7 @@ const buttons:button[] = [
   //   event:'edit'
   // },
   {
-    text:'create',
+    text:'创建卷子',
     event:'create'
   },
 

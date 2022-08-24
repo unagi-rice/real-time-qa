@@ -96,7 +96,7 @@ onMounted(()=>{
   padding:15px 30px;
 }
 .page-header > button{
-  margin:15px 0px;
+  margin:10px 33px;
 }
 *{
   font-family: 'PingFang SC';
