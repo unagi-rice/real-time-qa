@@ -119,8 +119,10 @@ onMounted(()=>{
               <el-popconfirm title="确定删除" confirm-button-text="确定" cancel-button-text="取消" @confirm="deleteQuestionBank(questionBank_i.id)"><template #reference>
                 <el-button class="button" text bg type="danger" >Delete</el-button>
               </template></el-popconfirm>
-              </el-button-group>
-          </el-row>
+            </el-button-group>
+            </el-row>
+            
+          
           
         </el-card>
       </div>
