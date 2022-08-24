@@ -11,7 +11,7 @@ export const getId = (node?: Node) => {node?.attrs?.['identity'] || uuidv1()};
  */
 export const questionBankStorage = {
   content:()=>JSON.parse(localStorage.getItem("questionBanks") ?? JSON.stringify([])), // questionBank's are saved locally in browser
-  save:(storage_in?:questionBank[])=>localStorage.setItem("questionBanks", storage_in ?? questionBankStorage.content()),
+  save:(storage_in?:questionBank[])=>localStorage.setItem("questionBanks", JSON.stringify(storage_in ?? questionBankStorage.content())),
   /**
    * insert a questionBank into storage, if it exists already in storage, then replace the existing one with new one
    * @param questionBank_in 
@@ -45,7 +45,7 @@ export const questionBankStorage = {
  */
 export const answerBankStorage = {
   content:()=>JSON.parse(localStorage.getItem("answerBanks") ?? JSON.stringify([])), // answerBank's are saved locally in browser
-  save:(storage_in?:answerBank[])=>localStorage.setItem("answerBanks", storage_in ?? answerBankStorage.content()),
+  save:(storage_in?:answerBank[])=>localStorage.setItem("answerBanks", JSON.stringify(storage_in ?? answerBankStorage.content())),
     /**
    * insert a answerBank into storage, if it exists already in storage, then replace the existing one with new one
    * @param answerBank_in 

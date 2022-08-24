@@ -36,7 +36,7 @@ const interfaceStorage= inject<Storage<{currentInterface:interfaces}>>("interfac
 if (!interfaceStorage) throw new Error("must call provide('interface') before mount App");
 console.debug('EmptyInterface.vue: currentInterface =',interfaceStorage.state.currentInterface)
 
-const questionBanks = computed(()=>questionBankStorage.content() as questionBank[]);
+const questionBanks = ref((()=>questionBankStorage.content() as questionBank[])());
 const newQBank = ref({
   name:"questionBank " + questionBanks.value.length.toString()
 })
@@ -50,15 +50,18 @@ function closeDialog(){
   creatingQBank.value = false;
 }
 function onSubmit(){
+  console.log( newQBank.value.name)
   let newQuestionBank= {id: getuuid(), title: newQBank.value.name, content: []} as questionBank
-    // dialog
+  // dialog
   let newAnswerBank= {uid: getUid(context), qid: newQuestionBank.id, content: {}} as answerBank
   questionBankStorage.add(newQuestionBank)
   answerBankStorage.add(newAnswerBank)
+  questionBanks.value = questionBankStorage.content();
   closeDialog();
 }
 function deleteQuestionBank(questionBankID:questionBank["id"]){
   questionBankStorage.remove(questionBankID)
+  questionBanks.value = questionBankStorage.content();
 }
 function editfun(questionBankID:string){
   emit('edit',questionBankID)
@@ -69,10 +72,8 @@ function editfun(questionBankID:string){
 }
 function statsfun(questionBankID:string){
   setTimeout(() => {
-    
     interfaceStorage?.setState({currentInterface:interfaces.StatsInterface})
     console.debug(interfaceStorage?.state.currentInterface)
-    
   }, 300);
 }
 
@@ -110,7 +111,7 @@ onMounted(()=>{
     <el-container style="width: 100%">
       <el-space wrap>
         <div v-if="questionBanks.length>0">
-        <el-card v-for="questionBank_i in questionBanks" :key="questionBank_i.id" class="box-card" >
+        <el-card v-for="questionBank_i in questionBankStorage.content()" :key="questionBank_i.id" class="box-card" >
           <el-row justify="space-between" align="middle"> 
             <span>{{ questionBank_i.title }}</span> 
             <el-button-group class="ml-4">
@@ -128,7 +129,7 @@ onMounted(()=>{
         <el-card v-else style="width:100%;">看起来你还没创建卷子呢...</el-card>
       </el-space>
     </el-container>
-    <el-dialog v-model="creatingQBank" title="创建新题集"><h1>Hello world</h1>
+    <el-dialog v-model="creatingQBank" title="创建新题集">
       <el-form v-model="newQBank" @submit.prevent>
 
         <p>新题集名称：</p>
