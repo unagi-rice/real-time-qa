@@ -107,17 +107,11 @@ onMounted(()=>{
     @create="createfun" >
     <!-- @edit="editfun"  -->
 
-    <el-container style="width: 100%">
-      <div v-if="questionBanks.length>0">
-        <el-space wrap>
-          <el-card v-for="questionBank_i in questionBankStorage.content()" :key="questionBank_i.id" class="box-card" style="width: 18vmax">
-          
-            <template #header>
-              <el-row justify="center" align="middle"> 
-                <span>{{ questionBank_i.title }}</span> 
-              </el-row>
-            </template>
-            
+    <el-container >
+      <div style="width: 100%" v-if="questionBanks.length>0">
+        <el-card class="question-set-item" v-for="questionBank_i in questionBankStorage.content()" :key="questionBank_i.id" >
+          <el-row justify="space-between" align="middle"> 
+            <span>{{ questionBank_i.title }}</span> 
             <el-button-group class="ml-4">
               <el-button class="button" text bg @click="editfun(questionBank_i.id)">Edit</el-button>
               <el-button class="button" text bg @click="pubfun(questionBank_i.id)">Publish</el-button>
@@ -126,15 +120,13 @@ onMounted(()=>{
                 <el-button class="button" text bg type="danger" >Delete</el-button>
               </template></el-popconfirm>
             </el-button-group>
-          </el-card>
-        </el-space>
+          </el-row>
+            
+          
+          
+        </el-card>
       </div>
-        
-      <div v-else>
-        <el-space alignment="center">
-          <el-card style="width:100%;">看起来你还没创建卷子呢...</el-card>
-        </el-space>
-      </div>
+      <div v-else class="empty-content">看起来你还没创建卷子呢...</div>
     </el-container>
       <el-form v-model="newQBank" @submit.prevent>
     <el-dialog v-model="creatingQBank" title="创建新题集">
