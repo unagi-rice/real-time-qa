@@ -31,20 +31,21 @@ import {ElMessageBox} from 'element-plus'
 import { questionAnswer2Markdown } from '../components/editor/MarkdownUtils';
 import { Edit, Plus } from '@element-plus/icons-vue';
 import { v1 } from 'uuid';
-const title = "";
+const title = "编辑题目";
 const tag = "tag";
 const buttons:button[] = [
-  {
-    text:'主页面',
-    event:'back'
-  },
+  
   {
     text:'保存',
     event:'save'
   },
   {
-    text:'publish',
+    text:'发布',
     event:'publish'
+  },
+  {
+    text:'返回',
+    event:'back'
   },
 ]
 

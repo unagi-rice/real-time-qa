@@ -19,7 +19,7 @@ const buttons:button[] = [
   //   event:'edit'
   // },
   {
-    text:'create',
+    text:'创建试卷',
     event:'create'
   },
 
@@ -108,7 +108,7 @@ onMounted(()=>{
     @create="createfun" >
     <!-- @edit="editfun"  -->
 
-    <el-container >
+    <el-container>
       <div style="width: 100%" v-if="questionBanks.length>0">
         <el-card class="question-set-item" v-for="questionBank_i in questionBankStorage.content()" :key="questionBank_i.id" >
           <el-row justify="space-between" align="middle"> 
@@ -122,16 +122,13 @@ onMounted(()=>{
               </template></el-popconfirm>
             </el-button-group>
           </el-row>
-            
-          
-          
         </el-card>
       </div>
       <div v-else class="empty-content">看起来你还没创建卷子呢...</div>
     </el-container>
       <el-form v-model="newQBank" @submit.prevent>
-    <el-dialog v-model="creatingQBank" title="创建新题集">
-      <el-form-item label="名字"><el-input v-model="newQBank.name"/></el-form-item>
+    <el-dialog v-model="creatingQBank" title="创建试卷">
+      <el-form-item label="名称"><el-input v-model="newQBank.name"/></el-form-item>
         <template #footer> 
           <el-form-item>
             
