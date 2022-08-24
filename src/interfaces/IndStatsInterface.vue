@@ -125,7 +125,7 @@ const inputQns1 = "两仪式";
             </div>
           </template>
           <el-input
-            v-else-if="typeof c === 'FillBlank'"
+            v-if="typeof c === 'FillBlank'"
             v-model="
               storage.state.answerBanks[userUID].content[pageId].content[idx]
             "
@@ -161,31 +161,6 @@ const inputQns1 = "两仪式";
             </el-checkbox-group>
           </div>
         </el-card>
-        <!-- <el-card class="box-card">
-          <template #header>
-            <div class="card-header">
-              <span>题目 #1： 你的老婆是谁？</span>
-            </div>
-          </template>
-          <el-input v-model="inputQns1" readonly />
-        </el-card>
-        <el-card class="box-card">
-          <template #header>
-            <div class="card-header">
-              <span>题目 #3： 最希望成为谁的老公 / 老婆</span>
-            </div>
-          </template>
-          <div style="text-align: center; display: block">
-            <el-radio-group v-model="radio1" class="radioDiv">
-              <div>
-                <el-radio label="1" size="large">Option 1</el-radio>
-              </div>
-              <div>
-                <el-radio label="2" size="large">Option 2</el-radio>
-              </div>
-            </el-radio-group>
-          </div>
-        </el-card> !-->
       </el-space>
     </el-row>
   </InterfaceBase>

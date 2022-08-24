@@ -190,49 +190,6 @@ onMounted(() => {
   console.debug("emptyInterface.vue:tag=", tag);
   emit("console-log", 4);
 });
-/*const tableData = [
-  {
-    response: "两仪式",
-  },
-  {
-    response: "两仪式 ❤",
-  },
-];*/
-/*
-const series = [
-  {
-    data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380],
-  },
-];
-const chartOptions = {
-  chart: {
-    type: "bar",
-    height: 350,
-  },
-  plotOptions: {
-    bar: {
-      borderRadius: 4,
-      horizontal: true,
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  xaxis: {
-    categories: [
-      "两仪式",
-      "两仪式 ❤",
-      "两仪式 ❤❤",
-      "两仪式 ❤❤❤",
-      "两仪式 ❤❤❤❤",
-      "两仪式 ❤❤❤❤❤",
-      "两仪式 ❤❤❤❤❤❤",
-      "两仪式 ❤❤❤❤❤❤❤",
-      "两仪式 ❤❤❤❤❤❤❤❤",
-      "两仪式 ❤❤❤❤❤❤❤❤❤",
-    ],
-  },
-};*/
 </script>
 
 <!--定义展示的模块-->
@@ -282,47 +239,5 @@ const chartOptions = {
         </el-space>
       </el-row>
     </el-container>
-    <!-- demo 
-    <el-container>
-      <el-row type="flex" justify="center">
-        <el-space fill direction="vertical" style="width: 85%">
-          <el-card class="box-card">
-            <template #header>
-              <div class="card-header">
-                <span>题目 #1： 你的老婆是谁？</span>
-              </div>
-            </template>
-            <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column prop="response" label="Response" />
-            </el-table>
-          </el-card>
-
-          <el-card class="box-card">
-            <template #header>
-              <div class="card-header">
-                <span>题目 #2： 你的老婆是谁？</span>
-              </div>
-            </template>
-            <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column prop="response" label="Response" />
-            </el-table>
-          </el-card>
-          <el-card class="box-card">
-            <template #header>
-              <div class="card-header">
-                <span>题目 #3： 最希望成为谁的老公 / 老婆</span>
-              </div>
-            </template>
-            <VueApexCharts
-              type="bar"
-              height="350"
-              :options="chartOptions"
-              :series="series"
-            ></VueApexCharts>
-          </el-card>
-        </el-space>
-      </el-row>
-    </el-container>
-    !-->
   </InterfaceBase>
 </template>
