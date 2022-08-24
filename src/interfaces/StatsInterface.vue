@@ -54,9 +54,20 @@ function wowfun() {
 }
 
 const storage = context.createStorage<QAStorage>("QAInterface");
-if (Object.keys(storage.state.answerBanks).length === 0) {
+if (Object.keys(storage.state).length === 0) {
   alert("无作答记录");
-  interfaceStorage?.changeInterface(interfaces.MainInterface);
+  setTimeout(() => {
+    interfaceStorage?.changeInterface(interfaces.MainInterface);
+    console.debug(interfaceStorage?.current_interface_displayed);
+  }, 300);
+  throw new Error();
+} else if (Object.keys(storage.state.answerBanks).length === 0) {
+  alert("无作答记录");
+  setTimeout(() => {
+    interfaceStorage?.changeInterface(interfaces.MainInterface);
+    console.debug(interfaceStorage?.current_interface_displayed);
+  }, 300);
+  throw new Error();
 }
 
 let Answers: {
