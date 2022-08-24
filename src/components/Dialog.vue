@@ -53,11 +53,13 @@ function onClose(){
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
+  /* left:10%; */
 }
 
 .modal-container {
-  width: 300px;
-  margin: 0px auto;
+  width: 50%;
+  height:50%;
+  margin: 0px;
   padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;

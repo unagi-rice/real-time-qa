@@ -2,7 +2,7 @@
   <el-button @click="openPreview">预览</el-button>
   <VueEditor :editor="editor" />
   <el-dialog v-model="dialogPreviewVisible" title="预览">
-    <div v-for="(c, index) in question.content">
+    <div v-for="(c, index) in currQuestion.content">
         <span v-if="typeof (c) == 'string'" v-html="micromark(c)"/>
         <el-input v-else-if="c.type === 'FillBlank'" placeholder="输入你的答案" />
         <div v-else-if="c.type === 'Multi'">
@@ -24,6 +24,7 @@
         </div>
     </div>
   </el-dialog>
+  
 </template>
 
 <script setup lang="ts">
@@ -53,7 +54,7 @@ import {InsertMulti,InsertUnorderedSequence,InsertFillBlank,InsertFreeResponse} 
 import MultiVue from "./CustomNode/Multi.vue";
 import FillBlankNodeVue from "./CustomNode/FillBlank.vue";
 import UnorderedSequenceVue from "./CustomNode/UnorderedSeqNode.vue";
-import { questionAnswer2Markdown } from "./MarkdownUtils";
+import { Markdown2QuestionAnswer, questionAnswer2Markdown } from "./MarkdownUtils";
 
 interface Props{
   question?:question 
@@ -68,6 +69,9 @@ const props = withDefaults(defineProps<Props>(),{
 const emit =  defineEmits<{
   (e: "update", question: question,answer:answer): void
 }>();
+
+const currQuestion = ref<question>({id:'',content:[]}) // TEST-ITEM: ensure not to show when no question is selected
+const currAnswer = ref<answer>({id:'',content:{}}) 
 
 
 // reactive controlling variable
@@ -139,15 +143,27 @@ const { editor } = useEditor((root,renderVue) =>{
         })
         .beforeMount((ctx)=>{
           console.log('output initialized to',output)
+          currAnswer.value = props.answer;
+          currQuestion.value = props.question;
+          console.debug('check props',props.question.id,',',props.answer.id)
         })
+        .destroy((ctx) => {
+                // when editor loses focus
+                            let qa = Markdown2QuestionAnswer(output)
+                currQuestion.value = qa.question;
+                currAnswer.value = qa.answer;
+                console.log('editor destroyed',currQuestion.value,currAnswer.value)
+                emit('update',currQuestion.value,currAnswer.value)
 
+
+            })
     })
     .use(nord)
     .use(commonmark)
-    .use(block)
+    // .use(block)
     .use(history)
-    .use(tooltip)
-    .use(indent)
+    // .use(tooltip)
+    // .use(indent)
     .use(clipboard)
     .use(listener)
     .use(customNodes)

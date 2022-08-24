@@ -137,8 +137,9 @@ function createfun(){
 }
 function updatefun(question_in:question,answer_in:answer){
   isSaved = false;
-  if(currQuestionBank.value)(currQuestionBank.value as questionBank).content[currQuestionBank.value.content.findIndex((elem:question)=>elem.id === question_in.id)] = question_in
- if(currAnswerBank.value) (currAnswerBank.value as answerBank).content[currAnswerBank.value.content.findIndex((elem:answer)=>elem.id === answer_in.id)] = answer_in
+  console.log(question_in,answer_in)
+  if(currQuestionBank.value)(currQuestionBank.value as questionBank).content[(currQuestionBank.value as questionBank).content.findIndex((elem:question)=>elem.id === question_in.id)] = question_in
+ if(currAnswerBank.value) (currAnswerBank.value as answerBank).content[ (currAnswerBank.value as answerBank).content.findIndex((elem:answer)=>(elem.id === answer_in.id))] = answer_in
 }
 
 // back to main interface
